@@ -1,6 +1,16 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "%@ %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ %@"
+          }
+        }
+      }
+    },
     "%@ (former)": {
       "localizations": {
         "de": {
@@ -61,6 +71,16 @@
         }
       }
     },
+    "Add %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ hinzufügen"
+          }
+        }
+      }
+    },
     "Add Child Profile": {
       "localizations": {
         "de": {
@@ -81,12 +101,32 @@
         }
       }
     },
+    "Add items above. Tap an item once it is in the cart.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Füge oben Artikel hinzu. Tippe einen Artikel an, sobald er im Wagen liegt."
+          }
+        }
+      }
+    },
     "After": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Nach"
+          }
+        }
+      }
+    },
+    "Aisle": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abteilung"
           }
         }
       }
@@ -111,6 +151,36 @@
         }
       }
     },
+    "Assigned To": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zuständig"
+          }
+        }
+      }
+    },
+    "Automatic (%@ %@)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatisch (%@ %@)"
+          }
+        }
+      }
+    },
+    "Baby": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Baby"
+          }
+        }
+      }
+    },
     "Birthday": {
       "localizations": {
         "de": {
@@ -127,6 +197,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Geboren am %@"
+          }
+        }
+      }
+    },
+    "Bread & Bakery": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brot & Backwaren"
+          }
+        }
+      }
+    },
+    "Breakfast & Coffee": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Frühstück & Kaffee"
           }
         }
       }
@@ -191,12 +281,22 @@
         }
       }
     },
-    "Coming in a later version.": {
+    "Clear": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kommt in einer späteren Version."
+            "value": "Leeren"
+          }
+        }
+      }
+    },
+    "Clear recently bought items?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„Zuletzt gekauft“ leeren?"
           }
         }
       }
@@ -217,6 +317,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kommentare"
+          }
+        }
+      }
+    },
+    "Completed (%lld)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erledigt (%lld)"
           }
         }
       }
@@ -271,6 +381,26 @@
         }
       }
     },
+    "Dairy & Eggs": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Milch, Käse & Eier"
+          }
+        }
+      }
+    },
+    "Date": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datum"
+          }
+        }
+      }
+    },
     "Date of Birth": {
       "localizations": {
         "de": {
@@ -311,6 +441,16 @@
         }
       }
     },
+    "Delete Completed": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erledigte löschen"
+          }
+        }
+      }
+    },
     "Delete Event": {
       "localizations": {
         "de": {
@@ -331,12 +471,42 @@
         }
       }
     },
+    "Delete To-do": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Todo löschen"
+          }
+        }
+      }
+    },
     "Delete this event?": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Diesen Termin löschen?"
+          }
+        }
+      }
+    },
+    "Drinks": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Getränke"
+          }
+        }
+      }
+    },
+    "Due Date": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fällig am"
           }
         }
       }
@@ -377,6 +547,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Termin bearbeiten"
+          }
+        }
+      }
+    },
+    "Edit Item": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Artikel bearbeiten"
+          }
+        }
+      }
+    },
+    "Edit To-do": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Todo bearbeiten"
           }
         }
       }
@@ -591,6 +781,36 @@
         }
       }
     },
+    "Frozen": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiefkühl"
+          }
+        }
+      }
+    },
+    "Fruit & Vegetables": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obst & Gemüse"
+          }
+        }
+      }
+    },
+    "Household": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Haushalt"
+          }
+        }
+      }
+    },
     "Invite Members": {
       "localizations": {
         "de": {
@@ -651,12 +871,72 @@
         }
       }
     },
+    "List": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liste"
+          }
+        }
+      }
+    },
+    "List: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liste: %@"
+          }
+        }
+      }
+    },
     "Location": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Ort"
+          }
+        }
+      }
+    },
+    "Mark as done": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Als erledigt markieren"
+          }
+        }
+      }
+    },
+    "Mark as not done": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Als offen markieren"
+          }
+        }
+      }
+    },
+    "Marks the item as bought": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Markiert den Artikel als gekauft"
+          }
+        }
+      }
+    },
+    "Meat & Fish": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fleisch & Fisch"
           }
         }
       }
@@ -731,6 +1011,16 @@
         }
       }
     },
+    "New To-do": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neues Todo"
+          }
+        }
+      }
+    },
     "Next Month": {
       "localizations": {
         "de": {
@@ -781,6 +1071,16 @@
         }
       }
     },
+    "No one": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Niemand"
+          }
+        }
+      }
+    },
     "No one selected means the whole family.": {
       "localizations": {
         "de": {
@@ -807,6 +1107,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Notizen"
+          }
+        }
+      }
+    },
+    "Nothing to buy": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nichts zu kaufen"
+          }
+        }
+      }
+    },
+    "Nothing to do": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nichts zu tun"
           }
         }
       }
@@ -841,6 +1161,16 @@
         }
       }
     },
+    "Other": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sonstiges"
+          }
+        }
+      }
+    },
     "Owner": {
       "localizations": {
         "de": {
@@ -851,12 +1181,42 @@
         }
       }
     },
+    "Pantry": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vorrat & Konserven"
+          }
+        }
+      }
+    },
     "Person": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Person"
+          }
+        }
+      }
+    },
+    "Personal Care": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drogerie"
+          }
+        }
+      }
+    },
+    "Pets": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tierbedarf"
           }
         }
       }
@@ -877,6 +1237,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Voriges Jahr"
+          }
+        }
+      }
+    },
+    "Puts the item back on the list": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Setzt den Artikel wieder auf die Liste"
+          }
+        }
+      }
+    },
+    "Quantity, e.g. 2 or 500 g": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menge, z. B. 2 oder 500 g"
+          }
+        }
+      }
+    },
+    "Recently Bought": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zuletzt gekauft"
           }
         }
       }
@@ -1001,6 +1391,26 @@
         }
       }
     },
+    "Suggestions while typing will no longer include them.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sie erscheinen dann nicht mehr als Vorschläge beim Tippen."
+          }
+        }
+      }
+    },
+    "Sweets & Snacks": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Süßes & Snacks"
+          }
+        }
+      }
+    },
     "The age is shown and counts up every year.": {
       "localizations": {
         "de": {
@@ -1017,6 +1427,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Die Daten der Familie liegen in deiner iCloud. Andere Erwachsene kannst du danach einladen."
+          }
+        }
+      }
+    },
+    "The list is sorted in the order you walk through the supermarket.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Liste ist so sortiert, wie man durch den Supermarkt läuft."
           }
         }
       }
@@ -1061,6 +1481,16 @@
         }
       }
     },
+    "Tomorrow": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Morgen"
+          }
+        }
+      }
+    },
     "Turns %lld": {
       "localizations": {
         "de": {
@@ -1097,6 +1527,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Willkommen bei „%@“"
+          }
+        }
+      }
+    },
+    "What do you need?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Was brauchst du?"
+          }
+        }
+      }
+    },
+    "When you check it off, the to-do moves to the next date.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beim Abhaken rückt das Todo auf das nächste Datum."
           }
         }
       }
@@ -1147,6 +1597,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Geburtsjahr bekannt"
+          }
+        }
+      }
+    },
+    "Yesterday": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gestern"
           }
         }
       }

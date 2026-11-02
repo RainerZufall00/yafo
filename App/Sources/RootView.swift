@@ -10,10 +10,10 @@ struct RootView: View {
                 MonthView()
             }
             Tab("Shopping", systemImage: "cart") {
-                ComingSoonView(title: "Shopping", systemImage: "cart")
+                ShoppingView()
             }
             Tab("To-dos", systemImage: "checklist") {
-                ComingSoonView(title: "To-dos", systemImage: "checklist")
+                TodoView()
             }
             Tab("Family", systemImage: "person.3") {
                 FamilyView()
@@ -27,20 +27,6 @@ struct RootView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text(model.errorMessage ?? "")
-        }
-    }
-}
-
-/// Platzhalter für Einkauf und Todos (Phase 3 der Roadmap).
-struct ComingSoonView: View {
-    let title: LocalizedStringKey
-    let systemImage: String
-
-    var body: some View {
-        NavigationStack {
-            ContentUnavailableView(title, systemImage: systemImage,
-                                   description: Text("Coming in a later version."))
-                .navigationTitle(title)
         }
     }
 }

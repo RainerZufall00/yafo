@@ -18,6 +18,10 @@ final class AppModel {
     /// Familien, denen man beigetreten ist, ohne dort schon ein Profil zu haben.
     private(set) var familiesNeedingProfile: [Family] = []
     var errorMessage: String?
+    /// Gewählte Liste in Einkauf und Todos: `id` der Familie oder „personal“ für „Nur ich“.
+    var listScopeKey: String = UserDefaults.standard.string(forKey: "listScope") ?? "" {
+        didSet { UserDefaults.standard.set(listScopeKey, forKey: "listScope") }
+    }
 
     private var started = false
 
@@ -90,6 +94,15 @@ final class AppModel {
     /// Wer angelegt hat: im Familienkalender die eigene Member-ID, sonst die User-ID.
     func creatorID(for calendar: EventCalendar) -> String? {
         me(in: calendar.family)?.id?.uuidString ?? userID
+    }
+
+    /// Liste für Einkauf und Todos; ohne gültige Wahl die erste Familie, sonst „Nur ich“.
+    func listScope(families: some Collection<Family>) -> ListScope {
+        if listScopeKey == "personal" { return .personal }
+        if let family = families.first(where: { $0.id?.uuidString == listScopeKey }) ?? families.first {
+            return .family(family)
+        }
+        return .personal
     }
 
     func isOwner(of family: Family) -> Bool {

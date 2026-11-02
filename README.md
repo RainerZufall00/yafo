@@ -34,7 +34,7 @@ Startargumente fürs Entwickeln (im Scheme unter *Run › Arguments*, dort schon
 | --- | --- |
 | `-yafoLocalOnly` | Kein CloudKit, nur lokale Stores |
 | `-yafoInMemory` | Leere Stores in einem temporären Ordner |
-| `-yafoDemoData` | Beispielfamilie mit Terminen und Serien (nur Debug) |
+| `-yafoDemoData` | Beispielfamilie mit Terminen, Serien, Listen und Todos (nur Debug) |
 | `-com.apple.CoreData.CloudKitDebug 1` | Ausführliches CloudKit-Sync-Log |
 
 Tests des Packages:
@@ -50,9 +50,12 @@ Roadmap aus dem Architektur-Dokument:
 - [x] **1. Fundament:** Datenmodell, Core Data mit CloudKit (privat + geteilt), Familien anlegen und einladen,
       Beitreten mit eigenem Profil oder verknüpftem Kinderprofil, Kinderprofile, mehrere Familien
 - [ ] Prototyp Owner-Übertragung (V1.1)
-- [ ] **2. Kalender:** ~~Monatsansicht~~, ~~Termine mit Teilnehmern~~, ~~Farbsystem~~, ~~Personenfilter~~,
-      ~~Serien (RRULE, Ausnahmen, nur dieser / folgende / alle)~~ – offen: Jahresansicht, Kommentare
-- [ ] 3. Einkaufsliste und Todos
+- [x] **2. Kalender:** Monatsansicht zum Blättern, Jahresansicht, Termine mit Teilnehmern, Farbsystem,
+      Personenfilter, Serien (RRULE, Ausnahmen, nur dieser / folgende / alle), Kommentare,
+      Geburtstage mit mitzählendem Alter
+- [x] **3. Listen:** Einkaufsliste als Kacheln mit Piktogrammen, sortiert nach Abteilungen in Laufreihenfolge
+      (mitgelieferter Artikelkatalog DE/EN), „Zuletzt gekauft“ und Vorschläge; Todos mit Fälligkeit,
+      Zuständigen und Serien, die beim Abhaken weiterrollen; je Familie und „Nur ich“
 - [ ] 4. Erinnerungen und Widgets
 - [ ] 5. Abos und Import (Feiertage, Ferien, ICS, EventKit)
 - [ ] 6. Export und Backup

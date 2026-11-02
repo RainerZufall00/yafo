@@ -32,6 +32,21 @@ enum DemoData {
                                in: sports, participants: [mia], recurrenceRule: "FREQ=WEEKLY", createdBy: by)
         repository.createEvent(title: "Parents' evening", start: at(3, 19), end: at(3, 21), isAllDay: false,
                                in: shared, participants: [anna], createdBy: ben.id?.uuidString)
+        let list = ListScope.family(family)
+        for name in ["Bananen", "Vollmilch", "Brot", "Eier", "Klopapier", "Kaffee", "Tomaten", "Joghurt"] {
+            repository.addShoppingItem(name, to: list)
+        }
+        repository.addShoppingItem("Äpfel", quantity: "1 kg", to: list)
+        for name in ["Butter", "Nudeln", "Waschmittel", "Gummibärchen"] {
+            repository.setChecked(repository.addShoppingItem(name, to: list), true)
+        }
+        repository.addShoppingItem("Batterien", to: .personal)
+        repository.addTodo("Bins out", dueDate: at(1, 0), recurrenceRule: "FREQ=WEEKLY", to: list, createdBy: by)
+        repository.addTodo("Tidy room", dueDate: at(0, 0), assignee: mia, to: list, createdBy: by)
+        repository.addTodo("Book holiday flat", dueDate: at(-2, 0), assignee: ben, to: list, createdBy: by)
+        repository.addTodo("Buy present for Grandma", dueDate: at(10, 0), assignee: anna, to: list, createdBy: by)
+        repository.addTodo("Fix bike light", to: list, createdBy: by)
+        repository.addTodo("Renew passport", dueDate: at(20, 0), to: .personal, createdBy: nil)
         repository.createBirthday(name: "Mia", day: at(6, 0), birthYear: cal.component(.year, from: .now) - 8,
                                   in: shared, createdBy: by)
         repository.createBirthday(name: "Grandma", day: at(18, 0), birthYear: 1952, in: shared, createdBy: by)

@@ -45,7 +45,8 @@ nonisolated public enum YafoModel {
         ])
         let shopping = entity(ShoppingItem.self, [
             uuid("id"), string("name"), string("quantity"), bool("isChecked"),
-            date("checkedAt"), double("sortKey"), date("createdAt")
+            date("checkedAt"), double("sortKey"), date("createdAt"),
+            string("categoryRaw")
         ])
         let todo = entity(TodoItem.self, [
             uuid("id"), string("title"), date("dueDate"), bool("isDone"), date("doneAt"),

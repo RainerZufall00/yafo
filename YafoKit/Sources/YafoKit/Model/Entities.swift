@@ -101,6 +101,8 @@ nonisolated public final class ShoppingItem: NSManagedObject, Identifiable {
     @NSManaged public var isChecked: Bool
     @NSManaged public var checkedAt: Date?
     @NSManaged public var sortKey: Double
+    /// Von Hand gewählte Abteilung (`ShoppingCategory`); `nil` = aus dem Katalog.
+    @NSManaged public var categoryRaw: String?
     @NSManaged public var createdAt: Date?
     /// `nil` bedeutet private Liste („Nur ich“).
     @NSManaged public var family: Family?
