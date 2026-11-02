@@ -32,6 +32,7 @@ enum DemoData {
                                in: sports, participants: [mia], recurrenceRule: "FREQ=WEEKLY", createdBy: by)
         repository.createEvent(title: "Parents' evening", start: at(3, 19), end: at(3, 21), isAllDay: false,
                                in: shared, participants: [anna], createdBy: ben.id?.uuidString)
+        repository.setHolidayRegion(.by, for: shared)
         let list = ListScope.family(family)
         for name in ["Bananen", "Vollmilch", "Brot", "Eier", "Klopapier", "Kaffee", "Tomaten", "Joghurt"] {
             repository.addShoppingItem(name, to: list)

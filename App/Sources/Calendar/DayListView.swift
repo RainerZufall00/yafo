@@ -32,6 +32,9 @@ struct DayListView: View {
                         .foregroundStyle(.secondary)
                         .padding(.bottom, 2)
                 }
+                ForEach(style.holidays(in: interval)[day] ?? [], id: \.germanName) { holiday in
+                    HolidayRow(name: holiday.name())
+                }
                 if visible.isEmpty {
                     Text("No events")
                         .foregroundStyle(.secondary)
@@ -144,5 +147,27 @@ struct DayPage: View {
             .sheet(isPresented: $showingEditor) {
                 EventEditorView(initialDay: day)
             }
+    }
+}
+
+/// Feiertag in der Tagesliste: rote Fahne und Name.
+struct HolidayRow: View {
+    let name: String
+
+    var body: some View {
+        let red = Color(hex: CalendarColors.publicHoliday)
+        HStack(spacing: 10) {
+            Image(systemName: "flag.fill")
+                .foregroundStyle(red)
+                .frame(width: 52, alignment: .trailing)
+            Text(name)
+                .font(.body.weight(.semibold))
+                .foregroundStyle(red)
+            Spacer()
+        }
+        .padding(.vertical, 8)
+        .background(RoundedRectangle(cornerRadius: 10).fill(red.opacity(0.1)))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text("Public holiday: \(name)"))
     }
 }

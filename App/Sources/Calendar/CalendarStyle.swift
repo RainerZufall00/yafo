@@ -7,6 +7,8 @@ struct CalendarStyle {
     var colors: [UUID: Color] = [:]
     var hiddenCalendars: Set<UUID> = []
     var person: Member?
+    /// Feiertagsregionen der sichtbaren Kalender; jede Quelle zählt einmal.
+    var holidayRegions: Set<HolidayRegion> = []
 
     init(calendars: some Sequence<EventCalendar>, appearances: some Sequence<CalendarAppearance>,
          person: Member?) {
@@ -18,9 +20,16 @@ struct CalendarStyle {
             colors[id] = Color(hex: appearance?.color ?? calendar.defaultColor ?? CalendarColors.sharedDefault)
             if appearance?.isVisible == false {
                 hiddenCalendars.insert(id)
+            } else if let region = (calendar.subscriptions ?? []).first(where: { $0.kind == .publicHolidays })?
+                        .region.flatMap(HolidayRegion.init(rawValue:)) {
+                holidayRegions.insert(region)
             }
         }
         self.person = person
+    }
+
+    func holidays(in interval: DateInterval) -> [Date: [Holiday]] {
+        holidayRegions.isEmpty ? [:] : Holidays.holidays(in: holidayRegions, overlapping: interval)
     }
 
     func color(for event: Event) -> Color {

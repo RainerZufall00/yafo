@@ -31,6 +31,7 @@ struct YearView: View {
         let busyDays = Set(events.filter(style.includes)
             .flatMap { $0.occurrences(overlapping: interval) }
             .flatMap { calendar.days(from: $0.start, to: $0.end) })
+        let holidayDays = Set(style.holidays(in: interval).keys)
         let columns = sizeClass == .regular ? 4 : 3
 
         ScrollView {
@@ -39,7 +40,7 @@ struct YearView: View {
                     Button {
                         onSelectMonth(month)
                     } label: {
-                        MiniMonth(month: month, busyDays: busyDays)
+                        MiniMonth(month: month, busyDays: busyDays, holidayDays: holidayDays)
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(month.formatted(.dateTime.month(.wide).year()))
@@ -54,6 +55,7 @@ struct YearView: View {
 private struct MiniMonth: View {
     let month: Date
     let busyDays: Set<Date>
+    let holidayDays: Set<Date>
 
     var body: some View {
         let calendar = Calendar.current
@@ -83,7 +85,9 @@ private struct MiniMonth: View {
             let isToday = calendar.isDateInToday(day.date)
             Text(day.date.formatted(.dateTime.day()))
                 .font(.system(size: 9, weight: isToday ? .bold : .regular))
-                .foregroundStyle(isToday ? Color.white : calendar.isDateInWeekend(day.date) ? Color.secondary : Color.primary)
+                .foregroundStyle(isToday ? Color.white
+                                 : holidayDays.contains(day.date) ? Color(hex: CalendarColors.publicHoliday)
+                                 : calendar.isDateInWeekend(day.date) ? Color.secondary : Color.primary)
                 .frame(maxWidth: .infinity, minHeight: 14)
                 .background {
                     if isToday {

@@ -186,15 +186,19 @@ private struct CalendarRow: View {
 
     var body: some View {
         let _ = appearances.count // neu zeichnen, wenn sich Farbe oder Sichtbarkeit ändert
-        HStack {
-            ColorPicker(selection: Binding(
-                get: { Color(hex: model.repository.color(of: calendar)) },
-                set: { color in
-                    model.repository.setAppearance(of: calendar, color: color.hexString)
-                    model.save()
+        NavigationLink {
+            CalendarSettingsView(calendar: calendar)
+        } label: {
+            HStack {
+                Image(systemName: "circle.fill")
+                    .foregroundStyle(Color(hex: model.repository.color(of: calendar)))
+                Text(calendar.displayName)
+                Spacer()
+                if let region = model.repository.holidayRegion(of: calendar) {
+                    Text(region.shortName)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Color(hex: CalendarColors.publicHoliday))
                 }
-            ), supportsOpacity: false) {
-                Label(calendar.displayName, systemImage: "calendar")
             }
         }
     }

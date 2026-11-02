@@ -221,6 +221,16 @@
         }
       }
     },
+    "Already subscribed via “%@”. It still shows only once.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bereits über „%@“ abonniert. Es erscheint trotzdem nur einmal."
+          }
+        }
+      }
+    },
     "Assigned To": {
       "localizations": {
         "de": {
@@ -237,6 +247,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zum Termin"
+          }
+        }
+      }
+    },
+    "Austria": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Österreich"
+          }
+        }
+      }
+    },
+    "Austria & Switzerland": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Österreich & Schweiz"
           }
         }
       }
@@ -377,6 +407,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "„Zuletzt gekauft“ leeren?"
+          }
+        }
+      }
+    },
+    "Color": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Farbe"
+          }
+        }
+      }
+    },
+    "Color and visibility only apply to you.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Farbe und Sichtbarkeit gelten nur für dich."
           }
         }
       }
@@ -901,6 +951,26 @@
         }
       }
     },
+    "Germany": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deutschland"
+          }
+        }
+      }
+    },
+    "Holidays appear for everyone who sees this calendar.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Feiertage sieht jeder, der diesen Kalender sieht."
+          }
+        }
+      }
+    },
     "Household": {
       "localizations": {
         "de": {
@@ -1281,6 +1351,16 @@
         }
       }
     },
+    "Only the owner of the family changes subscriptions of shared calendars.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abos geteilter Kalender ändert nur der Owner der Familie."
+          }
+        }
+      }
+    },
     "Other": {
       "localizations": {
         "de": {
@@ -1357,6 +1437,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Voriges Jahr"
+          }
+        }
+      }
+    },
+    "Public Holidays": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feiertage"
+          }
+        }
+      }
+    },
+    "Public holiday: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feiertag: %@"
           }
         }
       }
@@ -1491,6 +1591,16 @@
         }
       }
     },
+    "Show in Calendar": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Im Kalender zeigen"
+          }
+        }
+      }
+    },
     "Sign in to iCloud to invite family members.": {
       "localizations": {
         "de": {
@@ -1521,6 +1631,16 @@
         }
       }
     },
+    "Subscriptions": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abos"
+          }
+        }
+      }
+    },
     "Suggestions while typing will no longer include them.": {
       "localizations": {
         "de": {
@@ -1537,6 +1657,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Süßes & Snacks"
+          }
+        }
+      }
+    },
+    "Switzerland (general)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schweiz (allgemein)"
           }
         }
       }

@@ -23,9 +23,13 @@ struct MonthView: View {
     private var appearances: FetchedResults<CalendarAppearance>
     @FetchRequest(sortDescriptors: [SortDescriptor(\.name)])
     private var families: FetchedResults<Family>
+    /// Nur damit Abo-Änderungen (Feiertage) die Ansicht neu zeichnen.
+    @FetchRequest(sortDescriptors: [])
+    private var subscriptions: FetchedResults<CalendarSubscription>
 
     private var style: CalendarStyle {
-        CalendarStyle(calendars: calendars, appearances: appearances, person: person)
+        let _ = subscriptions.count
+        return CalendarStyle(calendars: calendars, appearances: appearances, person: person)
     }
 
     var body: some View {

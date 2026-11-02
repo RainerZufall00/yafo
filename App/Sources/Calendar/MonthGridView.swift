@@ -28,6 +28,7 @@ struct MonthGridView: View {
 
     var body: some View {
         let visible = events.filter(style.includes).flatMap { $0.occurrences(overlapping: interval) }
+        let holidays = style.holidays(in: interval)
         VStack(spacing: 0) {
             HStack(spacing: 0) {
                 ForEach(Array(MonthGrid.weekdaySymbols().enumerated()), id: \.offset) { _, symbol in
@@ -39,7 +40,8 @@ struct MonthGridView: View {
             }
             .padding(.bottom, 4)
             ForEach(grid.weeks, id: \.first?.date) { week in
-                WeekRow(week: week, occurrences: visible, style: style, selectedDay: $selectedDay, onOpenDay: onOpenDay)
+                WeekRow(week: week, occurrences: visible, holidays: holidays, style: style, selectedDay: $selectedDay,
+                        onOpenDay: onOpenDay)
                     .frame(maxHeight: .infinity)
             }
         }
@@ -50,6 +52,7 @@ private struct WeekRow: View {
     @Environment(\.horizontalSizeClass) private var sizeClass
     let week: [MonthGrid.Day]
     let occurrences: [Occurrence]
+    let holidays: [Date: [Holiday]]
     let style: CalendarStyle
     @Binding var selectedDay: Date
     let onOpenDay: ((Date) -> Void)?
@@ -71,7 +74,9 @@ private struct WeekRow: View {
                 HStack(spacing: 0) {
                     ForEach(week) { day in
                         DayBackground(day: day, isSelected: day.date == selectedDay,
-                                      titles: titles(on: day.date), fontSize: isRegular ? 15 : 12.5)
+                                      isHoliday: holidays[day.date] != nil,
+                                      titles: (holidays[day.date] ?? []).map { $0.name() } + titles(on: day.date),
+                                      fontSize: isRegular ? 15 : 12.5)
                             .frame(width: columnWidth)
                             .onTapGesture {
                                 selectedDay = day.date
@@ -130,6 +135,7 @@ private struct WeekRow: View {
 private struct DayBackground: View {
     let day: MonthGrid.Day
     let isSelected: Bool
+    let isHoliday: Bool
     let titles: [String]
     let fontSize: CGFloat
 
@@ -140,7 +146,8 @@ private struct DayBackground: View {
         VStack(alignment: .leading, spacing: 0) {
             Text(day.date.formatted(.dateTime.day()))
                 .font(.system(size: fontSize, weight: isToday || isSelected ? .bold : .medium))
-                .foregroundStyle(isToday ? Color.white : day.isInMonth ? Color.primary : Color.secondary)
+                .foregroundStyle(isToday ? Color.white : isHoliday ? Color(hex: CalendarColors.publicHoliday)
+                                 : day.isInMonth ? Color.primary : Color.secondary)
                 .frame(minWidth: fontSize + 6, minHeight: fontSize + 6)
                 .background {
                     if isToday { Circle().fill(Color.accentColor) }
