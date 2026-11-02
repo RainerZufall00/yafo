@@ -55,6 +55,7 @@ final class AppModel {
 
     func refreshAfterSync() {
         repository.mergeDuplicatePersonalCalendars()
+        if let userID { repository.claimOwnerProfiles(userID: userID) }
         save()
         familiesNeedingProfile = repository.familiesNeedingProfile(userID: userID)
     }
@@ -79,7 +80,11 @@ final class AppModel {
     // MARK: - Abgeleitete Werte für die Oberfläche
 
     func me(in family: Family?) -> Member? {
-        family.flatMap { repository.me(in: $0, userID: userID) }
+        guard let family else { return nil }
+        if let userID { return repository.me(in: family, userID: userID) }
+        // Ohne iCloud (lokal, Demo): in eigenen Familien das älteste Erwachsenen-Profil.
+        guard isOwner(of: family) else { return nil }
+        return repository.activeMembers(of: family).first { $0.kind == .adult }
     }
 
     /// Wer angelegt hat: im Familienkalender die eigene Member-ID, sonst die User-ID.

@@ -24,8 +24,10 @@ enum DemoData {
         let personal = repository.ensurePersonalCalendar(name: "My Calendar")
         let by = anna.id?.uuidString
 
-        repository.createEvent(title: "Zoo", start: at(1, 10), end: at(1, 16), isAllDay: false,
-                               in: shared, participants: [anna, ben, mia], createdBy: by)
+        let zoo = repository.createEvent(title: "Zoo", start: at(1, 10), end: at(1, 16), isAllDay: false,
+                                         in: shared, participants: [anna, ben, mia], createdBy: by)
+        repository.addComment("Who brings snacks?", to: zoo, author: ben)
+        repository.addComment("I'll pack sandwiches and apples.", to: zoo, author: anna)
         repository.createEvent(title: "Swimming", start: at(0, 16), end: at(0, 17), isAllDay: false,
                                in: sports, participants: [mia], recurrenceRule: "FREQ=WEEKLY", createdBy: by)
         repository.createEvent(title: "Parents' evening", start: at(3, 19), end: at(3, 21), isAllDay: false,

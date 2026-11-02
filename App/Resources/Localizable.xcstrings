@@ -181,6 +181,26 @@
         }
       }
     },
+    "Comment": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kommentar"
+          }
+        }
+      }
+    },
+    "Comments": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kommentare"
+          }
+        }
+      }
+    },
     "Create": {
       "localizations": {
         "de": {
@@ -227,6 +247,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Benutzerdefiniert"
+          }
+        }
+      }
+    },
+    "Delete": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Löschen"
           }
         }
       }
@@ -287,6 +317,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bearbeiten"
+          }
+        }
+      }
+    },
+    "Edit Comment": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kommentar bearbeiten"
           }
         }
       }
@@ -591,6 +631,16 @@
         }
       }
     },
+    "Month": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Monat"
+          }
+        }
+      }
+    },
     "My Calendar": {
       "localizations": {
         "de": {
@@ -637,6 +687,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nächster Monat"
+          }
+        }
+      }
+    },
+    "Next Year": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nächstes Jahr"
+          }
+        }
+      }
+    },
+    "No comments yet": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch keine Kommentare"
           }
         }
       }
@@ -741,6 +811,16 @@
         }
       }
     },
+    "Previous Year": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voriges Jahr"
+          }
+        }
+      }
+    },
     "Repeat": {
       "localizations": {
         "de": {
@@ -797,6 +877,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nur diesen Termin sichern"
+          }
+        }
+      }
+    },
+    "Send": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Senden"
           }
         }
       }
@@ -901,6 +991,16 @@
         }
       }
     },
+    "Unknown": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unbekannt"
+          }
+        }
+      }
+    },
     "Welcome to %@": {
       "localizations": {
         "de": {
@@ -931,6 +1031,26 @@
         }
       }
     },
+    "Write a comment": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kommentar schreiben"
+          }
+        }
+      }
+    },
+    "Year": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jahr"
+          }
+        }
+      }
+    },
     "You": {
       "localizations": {
         "de": {
@@ -957,6 +1077,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "bis %@"
+          }
+        }
+      }
+    },
+    "· edited": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "· bearbeitet"
           }
         }
       }

@@ -7,10 +7,13 @@ struct MonthView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.horizontalSizeClass) private var sizeClass
 
-    @State private var month = Date.now
+    /// Erster Tag des angezeigten Monats; folgt dem Blättern im Pager.
+    @State private var month = MonthView.startOfMonth(.now)
+    @State private var scrolledMonth: Date? = MonthView.startOfMonth(.now)
     @State private var selectedDay = Calendar.current.startOfDay(for: .now)
     @State private var person: Member?
     @State private var showingEditor = false
+    @State private var showingYear = false
 
     @FetchRequest(sortDescriptors: [SortDescriptor(\.createdAt)])
     private var calendars: FetchedResults<EventCalendar>
@@ -26,7 +29,16 @@ struct MonthView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if sizeClass == .regular {
+                if showingYear {
+                    VStack(spacing: 0) {
+                        yearHeader
+                        YearView(year: month, style: style) { selected in
+                            month = Self.startOfMonth(selected)
+                            scrolledMonth = month
+                            withAnimation(.snappy) { showingYear = false }
+                        }
+                    }
+                } else if sizeClass == .regular {
                     HStack(alignment: .top, spacing: 0) {
                         monthGrid.frame(maxWidth: .infinity)
                         Divider()
@@ -52,13 +64,37 @@ struct MonthView: View {
     private var monthGrid: some View {
         VStack(spacing: 0) {
             monthHeader
-            MonthGridView(grid: MonthGrid(containing: month), selectedDay: $selectedDay, style: style)
+            monthPager
         }
-            .contentShape(Rectangle())
-            .gesture(DragGesture(minimumDistance: 30).onEnded { value in
-                if value.translation.width < -60 { showMonth(offset: 1) }
-                if value.translation.width > 60 { showMonth(offset: -1) }
-            })
+    }
+
+    /// Monate als Seiten: Beim Wischen laufen alter und neuer Monat mit dem Finger mit.
+    /// Zehn Jahre in jede Richtung; gebaut werden nur die sichtbaren Seiten.
+    private var monthPager: some View {
+        ScrollView(.horizontal) {
+            LazyHStack(spacing: 0) {
+                ForEach(Self.pagedMonths, id: \.self) { page in
+                    MonthGridView(grid: MonthGrid(containing: page), selectedDay: $selectedDay, style: style)
+                        .containerRelativeFrame([.horizontal, .vertical])
+                }
+            }
+            .scrollTargetLayout()
+        }
+        .scrollTargetBehavior(.viewAligned(limitBehavior: .alwaysByOne))
+        .scrollIndicators(.hidden)
+        .scrollPosition(id: $scrolledMonth)
+        .onChange(of: scrolledMonth) {
+            if let scrolledMonth, scrolledMonth != month { month = scrolledMonth }
+        }
+    }
+
+    private static let pagedMonths: [Date] = {
+        let current = startOfMonth(.now)
+        return (-120...120).compactMap { Calendar.current.date(byAdding: .month, value: $0, to: current) }
+    }()
+
+    static func startOfMonth(_ date: Date) -> Date {
+        Calendar.current.dateInterval(of: .month, for: date)?.start ?? date
     }
 
     /// Monatsname mit Pfeilen; Wischen allein wäre für VoiceOver nicht erreichbar.
@@ -79,10 +115,33 @@ struct MonthView: View {
         .padding(.bottom, 6)
     }
 
-    private func showMonth(offset: Int) {
-        withAnimation(.snappy) {
-            month = Calendar.current.date(byAdding: .month, value: offset, to: month) ?? month
+    private var yearHeader: some View {
+        HStack {
+            Text(month.formatted(.dateTime.year()))
+                .font(.title2.weight(.bold))
+                .accessibilityAddTraits(.isHeader)
+            Spacer()
+            Button("Previous Year", systemImage: "chevron.left") { showYear(offset: -1) }
+            Button("Next Year", systemImage: "chevron.right") { showYear(offset: 1) }
         }
+        .labelStyle(.iconOnly)
+        .imageScale(.large)
+        .buttonStyle(.borderless)
+        .padding(.horizontal, 16)
+        .padding(.top, 4)
+        .padding(.bottom, 6)
+    }
+
+    private func showYear(offset: Int) {
+        withAnimation(.snappy) {
+            month = Calendar.current.date(byAdding: .year, value: offset, to: month) ?? month
+            scrolledMonth = month
+        }
+    }
+
+    private func showMonth(offset: Int) {
+        guard let target = Calendar.current.date(byAdding: .month, value: offset, to: month) else { return }
+        withAnimation(.snappy) { scrolledMonth = target }
     }
 
     @ToolbarContentBuilder
@@ -90,12 +149,17 @@ struct MonthView: View {
         ToolbarItem(placement: .topBarLeading) {
             Button("Today") {
                 withAnimation(.snappy) {
-                    month = .now
+                    scrolledMonth = Self.startOfMonth(.now)
                     selectedDay = Calendar.current.startOfDay(for: .now)
                 }
+                if showingYear { month = Self.startOfMonth(.now) }
             }
         }
         ToolbarItemGroup(placement: .topBarTrailing) {
+            Button(showingYear ? "Month" : "Year",
+                   systemImage: showingYear ? "calendar" : "square.grid.3x3") {
+                withAnimation(.snappy) { showingYear.toggle() }
+            }
             filterMenu
             Button("New Event", systemImage: "plus") { showingEditor = true }
         }

@@ -1,7 +1,7 @@
 import SwiftUI
 import YafoKit
 
-/// Termin-Detail eines Vorkommens. Kommentare als Chat-Verlauf folgen noch.
+/// Termin-Detail eines Vorkommens, bei Familienterminen mit Kommentaren.
 struct EventDetailView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
@@ -77,6 +77,9 @@ struct EventDetailView: View {
                 Section("Notes") {
                     Text(notes)
                 }
+            }
+            if event.calendar?.family != nil {
+                CommentsSection(event: event, me: model.me(in: event.calendar?.family))
             }
             Section {
                 if let creator {
