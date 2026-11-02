@@ -2,6 +2,7 @@ import CloudKit
 import CoreData
 import Observation
 import SwiftUI
+import WidgetKit
 import YafoKit
 
 /// Zentraler Zustand der App: Stores, Repository, Sharing und die eigene CloudKit-User-ID.
@@ -81,16 +82,18 @@ final class AppModel {
         } catch {
             errorMessage = error.localizedDescription
         }
-        scheduleReminders()
+        refreshDerivedData()
     }
 
-    /// Plant Erinnerungen neu, gebündelt: mehrere Änderungen kurz hintereinander lösen
-    /// nur ein Neuplanen aus.
-    func scheduleReminders() {
+    /// Plant Erinnerungen neu und aktualisiert die Widgets, gebündelt: mehrere Änderungen
+    /// kurz hintereinander lösen das nur einmal aus.
+    func refreshDerivedData() {
         reminderTask?.cancel()
         reminderTask = Task {
             try? await Task.sleep(for: .seconds(1))
             guard !Task.isCancelled else { return }
+            try? repository.widgetSnapshot().write()
+            WidgetCenter.shared.reloadAllTimelines()
             let reminders = repository.plannedReminders(me: { self.me(in: $0) })
             await ReminderScheduler.replace(with: reminders)
         }

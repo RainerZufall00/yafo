@@ -1,0 +1,136 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "%@ %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ %@"
+          }
+        }
+      }
+    },
+    "All day": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ganztägig"
+          }
+        }
+      }
+    },
+    "Dentist": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zahnarzt"
+          }
+        }
+      }
+    },
+    "Next Event": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nächster Termin"
+          }
+        }
+      }
+    },
+    "No upcoming events": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine anstehenden Termine"
+          }
+        }
+      }
+    },
+    "Swimming": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schwimmen"
+          }
+        }
+      }
+    },
+    "Today": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heute"
+          }
+        }
+      }
+    },
+    "Today's and the next events as colored cards.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heutige und nächste Termine als farbige Karten."
+          }
+        }
+      }
+    },
+    "Tomorrow": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Morgen"
+          }
+        }
+      }
+    },
+    "Turns %lld": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wird %lld"
+          }
+        }
+      }
+    },
+    "Upcoming": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nächste Termine"
+          }
+        }
+      }
+    },
+    "Your next event on the Lock Screen.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dein nächster Termin auf dem Sperrbildschirm."
+          }
+        }
+      }
+    },
+    "Zoo": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zoo"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

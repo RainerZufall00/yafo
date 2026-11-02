@@ -106,3 +106,37 @@ import Testing
         #expect(planned.first?.fireDate == at(3, 6, 30))
     }
 }
+
+@Suite struct WidgetSnapshotTests {
+    @Test func snapshotListsVisibleUpcomingEvents() throws {
+        let persistence = try PersistenceController.makeTemporary()
+        let repository = Repository(persistence: persistence)
+        let personal = repository.ensurePersonalCalendar(name: "Me")
+        let family = repository.createFamily(name: "Millers", ownerName: "Anna", ownerUserID: nil, calendarName: "Family")
+        let shared = family.calendars!.first!
+        let cal = Calendar.current
+        func at(_ day: Int, _ hour: Int) -> Date {
+            cal.date(from: DateComponents(year: 2026, month: 11, day: day, hour: hour))!
+        }
+        let now = at(2, 12)
+        repository.createEvent(title: "Past", start: at(2, 8), end: at(2, 9), isAllDay: false, in: personal, createdBy: nil)
+        repository.createEvent(title: "Lunch", start: at(2, 11), end: at(2, 13), isAllDay: false, in: personal, createdBy: nil)
+        repository.createEvent(title: "Zoo", start: at(3, 10), end: at(3, 16), isAllDay: false, in: shared,
+                               participants: [family.members!.first!], createdBy: nil)
+        repository.createEvent(title: "Trip", start: at(3, 0), end: at(4, 0), isAllDay: true, in: personal, createdBy: nil)
+        repository.createBirthday(name: "Mia", day: at(4, 0), birthYear: 2018, in: shared, createdBy: nil)
+        let hidden = repository.addSharedCalendar(name: "Hidden", to: family)
+        repository.setAppearance(of: hidden, isVisible: false)
+        repository.createEvent(title: "Secret", start: at(3, 9), end: at(3, 10), isAllDay: false, in: hidden, createdBy: nil)
+
+        let snapshot = repository.widgetSnapshot(now: now)
+        #expect(snapshot.items.map(\.title) == ["Lunch", "Trip", "Zoo", "Mia"])
+        #expect(snapshot.items[2].initials == [family.members!.first!.initials!])
+        #expect(snapshot.items[3].isBirthday && snapshot.items[3].age == 8)
+        #expect(snapshot.upcoming(from: at(3, 0)).map(\.title) == ["Trip", "Zoo", "Mia"])
+
+        let url = FileManager.default.temporaryDirectory.appending(path: "snapshot-\(UUID()).json")
+        try snapshot.write(to: url)
+        #expect(WidgetSnapshot.load(from: url) == snapshot)
+    }
+}

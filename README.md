@@ -10,6 +10,7 @@ Architektur und Feature-Umfang: [docs/yafo – Architektur & Features.pdf](docs/
 | Ordner | Inhalt |
 | --- | --- |
 | `App/` | SwiftUI-App (iOS/iPadOS 27, Mac als iPad-App), Ressourcen, Entitlements |
+| `Widgets/` | Widget-Extension; liest nur einen Schnappschuss, den die App in die App Group schreibt |
 | `YafoKit/` | Swift Package mit Datenmodell, Persistenz (Core Data + CloudKit), Sharing und Logik, inkl. Tests |
 | `docs/` | Architektur-Dokument |
 
@@ -26,7 +27,8 @@ Architektur und Feature-Umfang: [docs/yafo – Architektur & Features.pdf](docs/
 2. `Config/Local.xcconfig.example` nach `Config/Local.xcconfig` kopieren und die eigene Team-ID eintragen
    (die Datei wird nicht eingecheckt). Bundle-ID `de.yafo.app`, iCloud-Container `iCloud.de.yafo.app`
    und App Group `group.de.yafo.app` registriert Xcode beim ersten Start mit automatischer Signierung.
-3. Ohne Team oder iCloud-Account läuft die App rein lokal.
+3. Ohne Team oder iCloud-Account läuft die App rein lokal. Die Widgets brauchen die App Group und damit
+   einen signierten Build, auch im Simulator.
 
 Startargumente fürs Entwickeln (im Scheme unter *Run › Arguments*, dort schon angelegt und abgeschaltet):
 
@@ -56,7 +58,9 @@ Roadmap aus dem Architektur-Dokument:
 - [x] **3. Listen:** Einkaufsliste als Kacheln mit Piktogrammen, sortiert nach Abteilungen in Laufreihenfolge
       (mitgelieferter Artikelkatalog DE/EN), „Zuletzt gekauft“ und Vorschläge; Todos mit Fälligkeit,
       Zuständigen und Serien, die beim Abhaken weiterrollen; je Familie und „Nur ich“
-- [ ] 4. Erinnerungen und Widgets
+- [x] **4. Erinnerungen und Widgets:** lokale Benachrichtigungen (die nächsten 64, an Teilnehmer bzw.
+      Zuständige, Zeit pro Person änderbar oder stumm), Widget „Nächste Termine“ (klein, mittel, groß)
+      und „Nächster Termin“ für den Sperrbildschirm
 - [ ] 5. Abos und Import (Feiertage, Ferien, ICS, EventKit)
 - [ ] 6. Export und Backup
 - [ ] 7. Screenshot zu Termin

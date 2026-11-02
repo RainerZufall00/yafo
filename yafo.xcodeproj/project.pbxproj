@@ -8,12 +8,39 @@
 
 /* Begin PBXBuildFile section */
 		A1000000000000000000B001 /* YafoKit in Frameworks */ = {isa = PBXBuildFile; productRef = A1000000000000000000D001 /* YafoKit */; };
+		A1000000000000000000B002 /* YafoKit in Frameworks */ = {isa = PBXBuildFile; productRef = A1000000000000000000D002 /* YafoKit */; };
+		A1000000000000000000B003 /* yafoWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A1000000000000000000F004 /* yafoWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A1000000000000000000X001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A1000000000000000000R001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A1000000000000000000A002;
+			remoteInfo = yafoWidgets;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A1000000000000000000P004 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A1000000000000000000B003 /* yafoWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A1000000000000000000F001 /* yafo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = yafo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1000000000000000000F002 /* YafoKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = YafoKit; sourceTree = "<group>"; };
 		A1000000000000000000F003 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
+		A1000000000000000000F004 /* yafoWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = yafoWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -24,6 +51,14 @@
 				yafo.entitlements,
 			);
 			target = A1000000000000000000A001 /* yafo */;
+		};
+		A1000000000000000000E002 /* Exceptions for "Widgets" folder in "yafoWidgets" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+				yafoWidgets.entitlements,
+			);
+			target = A1000000000000000000A002 /* yafoWidgets */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -41,6 +76,14 @@
 			path = docs;
 			sourceTree = "<group>";
 		};
+		A1000000000000000000C003 /* Widgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A1000000000000000000E002 /* Exceptions for "Widgets" folder in "yafoWidgets" target */,
+			);
+			path = Widgets;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +95,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A1000000000000000000P006 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000000000000000000B002 /* YafoKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -60,6 +111,7 @@
 			children = (
 				A1000000000000000000C001 /* App */,
 				A1000000000000000000F002 /* YafoKit */,
+				A1000000000000000000C003 /* Widgets */,
 				A1000000000000000000G003 /* Config */,
 				A1000000000000000000C002 /* docs */,
 				A1000000000000000000G002 /* Products */,
@@ -78,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				A1000000000000000000F001 /* yafo.app */,
+				A1000000000000000000F004 /* yafoWidgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -92,10 +145,12 @@
 				A1000000000000000000P002 /* Sources */,
 				A1000000000000000000P001 /* Frameworks */,
 				A1000000000000000000P003 /* Resources */,
+				A1000000000000000000P004 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A1000000000000000000T001 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				A1000000000000000000C001 /* App */,
@@ -108,6 +163,29 @@
 			productReference = A1000000000000000000F001 /* yafo.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A1000000000000000000A002 /* yafoWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1000000000000000000L003 /* Build configuration list for PBXNativeTarget "yafoWidgets" */;
+			buildPhases = (
+				A1000000000000000000P005 /* Sources */,
+				A1000000000000000000P006 /* Frameworks */,
+				A1000000000000000000P007 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A1000000000000000000C003 /* Widgets */,
+			);
+			name = yafoWidgets;
+			packageProductDependencies = (
+				A1000000000000000000D002 /* YafoKit */,
+			);
+			productName = yafoWidgets;
+			productReference = A1000000000000000000F004 /* yafoWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -119,6 +197,9 @@
 				LastUpgradeCheck = 2720;
 				TargetAttributes = {
 					A1000000000000000000A001 = {
+						CreatedOnToolsVersion = 27.2;
+					};
+					A1000000000000000000A002 = {
 						CreatedOnToolsVersion = 27.2;
 					};
 				};
@@ -142,12 +223,20 @@
 			projectRoot = "";
 			targets = (
 				A1000000000000000000A001 /* yafo */,
+				A1000000000000000000A002 /* yafoWidgets */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		A1000000000000000000P003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1000000000000000000P007 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -164,7 +253,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A1000000000000000000P005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A1000000000000000000T001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A1000000000000000000A002 /* yafoWidgets */;
+			targetProxy = A1000000000000000000X001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		A1000000000000000000S001 /* Debug */ = {
@@ -291,6 +395,62 @@
 			};
 			name = Release;
 		};
+		A1000000000000000000S005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1000000000000000000F003 /* Base.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Widgets/yafoWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Widgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = yafo;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = de.yafo.app.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A1000000000000000000S006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1000000000000000000F003 /* Base.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Widgets/yafoWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Widgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = yafo;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = de.yafo.app.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -312,6 +472,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		A1000000000000000000L003 /* Build configuration list for PBXNativeTarget "yafoWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000000000000000000S005 /* Debug */,
+				A1000000000000000000S006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
@@ -323,6 +492,10 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		A1000000000000000000D001 /* YafoKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = YafoKit;
+		};
+		A1000000000000000000D002 /* YafoKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = YafoKit;
 		};

@@ -18,7 +18,7 @@ public final class PersistenceController {
     }
 
     public static let containerIdentifier = "iCloud.de.yafo.app"
-    public static let appGroupIdentifier = "group.de.yafo.app"
+    nonisolated public static let appGroupIdentifier = "group.de.yafo.app"
 
     public let container: NSPersistentCloudKitContainer
     public let mode: Mode
