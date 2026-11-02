@@ -7,19 +7,21 @@ struct DayListView: View {
     let day: Date
     let style: CalendarStyle
 
+    private let interval: DateInterval
     @FetchRequest private var events: FetchedResults<Event>
 
     init(day: Date, style: CalendarStyle) {
         self.day = day
         self.style = style
-        let end = Calendar.current.date(byAdding: .day, value: 1, to: day)!
-        _events = FetchRequest(sortDescriptors: [SortDescriptor(\.isAllDay, order: .reverse),
-                                                 SortDescriptor(\.start)],
-                               predicate: overlapPredicate(day, end))
+        interval = DateInterval(start: day, end: Calendar.current.date(byAdding: .day, value: 1, to: day)!)
+        _events = FetchRequest(sortDescriptors: [SortDescriptor(\.start)],
+                               predicate: Repository.overlapPredicate(interval))
     }
 
     var body: some View {
         let visible = events.filter(style.includes)
+            .flatMap { $0.occurrences(overlapping: interval) }
+            .sorted { ($0.isAllDay ? 0 : 1, $0.start) < ($1.isAllDay ? 0 : 1, $1.start) }
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 6) {
                 Text(day.formatted(.dateTime.weekday(.wide).day().month(.wide)))
@@ -31,11 +33,12 @@ struct DayListView: View {
                         .foregroundStyle(.secondary)
                         .padding(.vertical, 8)
                 }
-                ForEach(visible) { event in
+                ForEach(visible) { occurrence in
                     NavigationLink {
-                        EventDetailView(event: event, color: style.color(for: event))
+                        EventDetailView(event: occurrence.event, originalStart: occurrence.originalStart,
+                                        color: style.color(for: occurrence.event))
                     } label: {
-                        EventRow(event: event, color: style.color(for: event))
+                        EventRow(occurrence: occurrence, color: style.color(for: occurrence.event))
                     }
                     .buttonStyle(.plain)
                 }
@@ -49,19 +52,21 @@ struct DayListView: View {
 /// Termin als farbig getönte Karte: Uhrzeit links, Farbstreifen, Titel, Teilnehmer.
 struct EventRow: View {
     @Environment(\.colorScheme) private var colorScheme
-    @ObservedObject var event: Event
+    let occurrence: Occurrence
     let color: Color
+
+    private var event: Event { occurrence.event }
 
     var body: some View {
         HStack(spacing: 10) {
             VStack(alignment: .trailing, spacing: 1) {
-                if event.isAllDay {
+                if occurrence.isAllDay {
                     Text("All day")
                         .font(.caption.weight(.semibold))
-                } else if let start = event.start, let end = event.end {
-                    Text(start.formatted(date: .omitted, time: .shortened))
+                } else {
+                    Text(occurrence.start.formatted(date: .omitted, time: .shortened))
                         .font(.caption.weight(.semibold))
-                    Text(end.formatted(date: .omitted, time: .shortened))
+                    Text(occurrence.end.formatted(date: .omitted, time: .shortened))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -73,10 +78,18 @@ struct EventRow: View {
                 .frame(width: 4)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(event.title ?? "")
-                    .font(.body.weight(.semibold))
-                    .lineLimit(2)
-                if let subtitle = event.location ?? event.calendar?.displayName {
+                HStack(spacing: 4) {
+                    Text(occurrence.title)
+                        .font(.body.weight(.semibold))
+                        .lineLimit(2)
+                    if occurrence.isRecurring {
+                        Image(systemName: "repeat")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                            .accessibilityLabel("Repeating")
+                    }
+                }
+                if let subtitle = occurrence.location ?? event.calendar?.displayName {
                     Text(subtitle)
                         .font(.caption)
                         .foregroundStyle(.secondary)

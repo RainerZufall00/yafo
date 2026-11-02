@@ -1,0 +1,5 @@
+// Gemeinsame Einstellungen der App. Das eigene Developer-Team steht in Local.xcconfig,
+// die nicht eingecheckt wird (Vorlage: Local.xcconfig.example).
+DEVELOPMENT_TEAM =
+
+#include? "Local.xcconfig"

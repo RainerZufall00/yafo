@@ -119,8 +119,8 @@ import Testing
                                end: day.addingTimeInterval(-3600), isAllDay: false,
                                in: calendar, createdBy: nil)
         try repository.save()
-        let found = repository.events(overlapping: DateInterval(start: day, duration: 86_400))
-        #expect(found == [inside])
+        let found = repository.occurrences(overlapping: DateInterval(start: day, duration: 86_400))
+        #expect(found.map(\.event) == [inside])
     }
 
     @Test func leftMembersAreHiddenButKept() throws {

@@ -9,6 +9,7 @@ struct MonthGridView: View {
     @Binding var selectedDay: Date
     let style: CalendarStyle
 
+    private let interval: DateInterval
     @FetchRequest private var events: FetchedResults<Event>
 
     init(grid: MonthGrid, selectedDay: Binding<Date>, style: CalendarStyle) {
@@ -17,11 +18,13 @@ struct MonthGridView: View {
         self.style = style
         let start = grid.days.first?.date ?? grid.month
         let end = Calendar.current.date(byAdding: .day, value: 1, to: grid.days.last?.date ?? grid.month)!
-        _events = FetchRequest(sortDescriptors: [SortDescriptor(\.start)], predicate: overlapPredicate(start, end))
+        interval = DateInterval(start: start, end: end)
+        _events = FetchRequest(sortDescriptors: [SortDescriptor(\.start)],
+                               predicate: Repository.overlapPredicate(interval))
     }
 
     var body: some View {
-        let visible = events.filter(style.includes)
+        let visible = events.filter(style.includes).flatMap { $0.occurrences(overlapping: interval) }
         VStack(spacing: 0) {
             HStack(spacing: 0) {
                 ForEach(Array(MonthGrid.weekdaySymbols().enumerated()), id: \.offset) { _, symbol in
@@ -33,7 +36,7 @@ struct MonthGridView: View {
             }
             .padding(.bottom, 4)
             ForEach(grid.weeks, id: \.first?.date) { week in
-                WeekRow(week: week, events: visible, style: style, selectedDay: $selectedDay)
+                WeekRow(week: week, occurrences: visible, style: style, selectedDay: $selectedDay)
                     .frame(maxHeight: .infinity)
             }
         }
@@ -43,7 +46,7 @@ struct MonthGridView: View {
 private struct WeekRow: View {
     @Environment(\.horizontalSizeClass) private var sizeClass
     let week: [MonthGrid.Day]
-    let events: [Event]
+    let occurrences: [Occurrence]
     let style: CalendarStyle
     @Binding var selectedDay: Date
 
@@ -58,7 +61,7 @@ private struct WeekRow: View {
             let columnWidth = geometry.size.width / 7
             let lanes = Int((geometry.size.height - headerHeight - 2) / (chipHeight + chipSpacing))
             let layout = layout(maxLanes: max(lanes, 0))
-            let byID = Dictionary(events.map { ($0.objectID, $0) }, uniquingKeysWith: { first, _ in first })
+            let byID = Dictionary(occurrences.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
 
             ZStack(alignment: .topLeading) {
                 HStack(spacing: 0) {
@@ -71,8 +74,9 @@ private struct WeekRow: View {
                 }
 
                 ForEach(layout.items) { item in
-                    if let event = byID[item.id] {
-                        EventChip(title: event.title ?? "", color: style.color(for: event), isSpanning: item.isSpanning,
+                    if let occurrence = byID[item.id] {
+                        EventChip(title: occurrence.title, color: style.color(for: occurrence.event),
+                                  isSpanning: item.isSpanning,
                                   continuesBefore: item.continuesBefore, continuesAfter: item.continuesAfter,
                                   fontSize: isRegular ? 12.5 : 10)
                             .frame(width: CGFloat(item.lastColumn - item.firstColumn + 1) * columnWidth - 3,
@@ -103,21 +107,16 @@ private struct WeekRow: View {
         .clipped()
     }
 
-    private func layout(maxLanes: Int) -> WeekLayout<NSManagedObjectID> {
-        let entries = events.compactMap { event -> WeekLayout<NSManagedObjectID>.Entry? in
-            guard let start = event.start, let end = event.end else { return nil }
-            return .init(id: event.objectID, start: start, end: end, isAllDay: event.isAllDay)
+    private func layout(maxLanes: Int) -> WeekLayout<Occurrence.ID> {
+        let entries = occurrences.map {
+            WeekLayout<Occurrence.ID>.Entry(id: $0.id, start: $0.start, end: $0.end, isAllDay: $0.isAllDay)
         }
         return WeekLayout(weekStart: week[0].date, entries: entries, maxLanes: maxLanes)
     }
 
     private func titles(on day: Date) -> [String] {
         let calendar = Calendar.current
-        return events.filter { event in
-            guard let start = event.start, let end = event.end else { return false }
-            return calendar.days(from: start, to: end).contains(day)
-        }
-        .compactMap(\.title)
+        return occurrences.filter { calendar.days(from: $0.start, to: $0.end).contains(day) }.map(\.title)
     }
 }
 

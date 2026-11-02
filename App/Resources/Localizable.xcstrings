@@ -31,12 +31,12 @@
         }
       }
     },
-    "%lld events": {
+    "%lld times": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lld Termine"
+            "value": "%lld-mal"
           }
         }
       }
@@ -77,6 +77,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Geteilten Kalender anlegen"
+          }
+        }
+      }
+    },
+    "After": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach"
           }
         }
       }
@@ -211,12 +221,52 @@
         }
       }
     },
+    "Custom": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Benutzerdefiniert"
+          }
+        }
+      }
+    },
+    "Delete All Events": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle Termine löschen"
+          }
+        }
+      }
+    },
+    "Delete All Future Events": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle zukünftigen Termine löschen"
+          }
+        }
+      }
+    },
     "Delete Event": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Termin löschen"
+          }
+        }
+      }
+    },
+    "Delete This Event Only": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nur diesen Termin löschen"
           }
         }
       }
@@ -251,6 +301,26 @@
         }
       }
     },
+    "End Date": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enddatum"
+          }
+        }
+      }
+    },
+    "End Repeat": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wiederholung endet"
+          }
+        }
+      }
+    },
     "Ends": {
       "localizations": {
         "de": {
@@ -267,6 +337,126 @@
           "stringUnit": {
             "state": "translated",
             "value": "Termin"
+          }
+        }
+      }
+    },
+    "Every 2 Weeks": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle 2 Wochen"
+          }
+        }
+      }
+    },
+    "Every 2 weeks": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle 2 Wochen"
+          }
+        }
+      }
+    },
+    "Every 2 weeks on %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle 2 Wochen am %@"
+          }
+        }
+      }
+    },
+    "Every Day": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Täglich"
+          }
+        }
+      }
+    },
+    "Every Month": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Monatlich"
+          }
+        }
+      }
+    },
+    "Every Week": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wöchentlich"
+          }
+        }
+      }
+    },
+    "Every Year": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jährlich"
+          }
+        }
+      }
+    },
+    "Every day": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Täglich"
+          }
+        }
+      }
+    },
+    "Every month": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Monatlich"
+          }
+        }
+      }
+    },
+    "Every week": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wöchentlich"
+          }
+        }
+      }
+    },
+    "Every week on %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wöchentlich am %@"
+          }
+        }
+      }
+    },
+    "Every year": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jährlich"
           }
         }
       }
@@ -421,6 +611,16 @@
         }
       }
     },
+    "Never": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nie"
+          }
+        }
+      }
+    },
     "New Event": {
       "localizations": {
         "de": {
@@ -501,6 +701,16 @@
         }
       }
     },
+    "On Date": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Am Datum"
+          }
+        }
+      }
+    },
     "Owner": {
       "localizations": {
         "de": {
@@ -531,12 +741,62 @@
         }
       }
     },
+    "Repeat": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wiederholen"
+          }
+        }
+      }
+    },
+    "Repeating": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wiederholt sich"
+          }
+        }
+      }
+    },
     "Save": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Sichern"
+          }
+        }
+      }
+    },
+    "Save for All Events": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Für alle Termine sichern"
+          }
+        }
+      }
+    },
+    "Save for Future Events": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Für zukünftige Termine sichern"
+          }
+        }
+      }
+    },
+    "Save for This Event Only": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nur diesen Termin sichern"
           }
         }
       }
@@ -597,6 +857,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Die Daten der Familie liegen in deiner iCloud. Andere Erwachsene kannst du danach einladen."
+          }
+        }
+      }
+    },
+    "This is a repeating event.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dies ist ein wiederholter Termin."
           }
         }
       }
@@ -677,6 +947,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dein Name"
+          }
+        }
+      }
+    },
+    "until %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bis %@"
           }
         }
       }

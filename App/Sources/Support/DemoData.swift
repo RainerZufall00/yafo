@@ -27,9 +27,7 @@ enum DemoData {
         repository.createEvent(title: "Zoo", start: at(1, 10), end: at(1, 16), isAllDay: false,
                                in: shared, participants: [anna, ben, mia], createdBy: by)
         repository.createEvent(title: "Swimming", start: at(0, 16), end: at(0, 17), isAllDay: false,
-                               in: sports, participants: [mia], createdBy: by)
-        repository.createEvent(title: "Swimming", start: at(7, 16), end: at(7, 17), isAllDay: false,
-                               in: sports, participants: [mia], createdBy: by)
+                               in: sports, participants: [mia], recurrenceRule: "FREQ=WEEKLY", createdBy: by)
         repository.createEvent(title: "Parents' evening", start: at(3, 19), end: at(3, 21), isAllDay: false,
                                in: shared, participants: [anna], createdBy: ben.id?.uuidString)
         repository.createEvent(title: "Grandma visiting", start: at(5, 0), end: at(8, 0), isAllDay: true,
@@ -46,8 +44,13 @@ enum DemoData {
                                in: school, participants: [mia], createdBy: by)
         repository.createEvent(title: "Football", start: at(2, 15), end: at(2, 16, 30), isAllDay: false,
                                in: sports, participants: [ben], createdBy: by)
-        repository.createEvent(title: "Piano", start: at(4, 15), end: at(4, 16), isAllDay: false,
-                               in: school, participants: [mia], createdBy: by)
+        let piano = repository.createEvent(title: "Piano", start: at(4, 15), end: at(4, 16), isAllDay: false,
+                                           in: school, participants: [mia], recurrenceRule: "FREQ=WEEKLY;COUNT=8",
+                                           createdBy: by)
+        // Eine Stunde fällt aus.
+        repository.delete(piano, occurrence: at(11, 15), scope: .thisOccurrence)
+        repository.createEvent(title: "Recycling", start: at(1, 0), end: at(2, 0), isAllDay: true,
+                               in: shared, recurrenceRule: "FREQ=WEEKLY;INTERVAL=2", createdBy: by)
         repository.createEvent(title: "Car service", start: at(11, 9), end: at(11, 10), isAllDay: false,
                                in: personal, createdBy: nil)
         try? repository.save()

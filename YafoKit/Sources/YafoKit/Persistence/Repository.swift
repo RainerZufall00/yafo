@@ -168,29 +168,29 @@ public final class Repository {
     @discardableResult
     public func createEvent(title: String, start: Date, end: Date, isAllDay: Bool,
                             in calendar: EventCalendar, participants: Set<Member> = [],
-                            createdBy: String?) -> Event {
+                            recurrenceRule: String? = nil, createdBy: String?) -> Event {
         let event = insert(Event.self, near: calendar)
-        event.title = title
-        event.start = start
-        event.end = end
-        event.isAllDay = isAllDay
-        event.timeZone = isAllDay ? nil : TimeZone.current.identifier
-        event.defaultAlertOffset = isAllDay ? AlertDefaults.allDayEventOffset : AlertDefaults.timedEventOffset
         event.createdBy = createdBy
-        event.updatedAt = .now
-        event.calendar = calendar
-        // Teilnehmer nur aus derselben Familie: keine Beziehungen zwischen Stores.
-        event.participants = participants.filter { $0.family != nil && $0.family == calendar.family }
+        apply(EventDraft(title: title, start: start, end: end, isAllDay: isAllDay, calendar: calendar,
+                         participants: participants, recurrenceRule: recurrenceRule), to: event)
+        event.defaultAlertOffset = isAllDay ? AlertDefaults.allDayEventOffset : AlertDefaults.timedEventOffset
         return event
     }
 
-    /// Termine, die das Intervall berühren. Serien werden in Phase 2 expandiert.
-    public func events(overlapping interval: DateInterval) -> [Event] {
+    /// Alle Vorkommen (Serien expandiert, Ausnahmen angewendet), die das Intervall berühren.
+    public func occurrences(overlapping interval: DateInterval) -> [Occurrence] {
         let request = makeRequest(Event.self)
-        request.predicate = NSPredicate(format: "start < %@ AND end > %@",
-                                        interval.end as NSDate, interval.start as NSDate)
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.start, ascending: true)]
-        return (try? context.fetch(request)) ?? []
+        request.predicate = Self.overlapPredicate(interval)
+        return ((try? context.fetch(request)) ?? [])
+            .flatMap { $0.occurrences(overlapping: interval) }
+            .sorted { $0.start < $1.start }
+    }
+
+    /// Normale Termine, die das Intervall berühren, und alle Serien, die vor seinem Ende beginnen.
+    public static func overlapPredicate(_ interval: DateInterval) -> NSPredicate {
+        NSPredicate(format: "(start < %@ AND (end > %@ OR start >= %@)) OR (recurrenceRule != nil AND start < %@)",
+                    interval.end as NSDate, interval.start as NSDate, interval.start as NSDate,
+                    interval.end as NSDate)
     }
 
     public func delete(_ object: NSManagedObject) {

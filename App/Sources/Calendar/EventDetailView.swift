@@ -1,15 +1,19 @@
 import SwiftUI
 import YafoKit
 
-/// Termin-Detail. Kommentare als Chat-Verlauf folgen in Phase 2.
+/// Termin-Detail eines Vorkommens. Kommentare als Chat-Verlauf folgen noch.
 struct EventDetailView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var event: Event
+    /// Ursprünglicher Beginn des Vorkommens; bei normalen Terminen der Beginn.
+    let originalStart: Date
     let color: Color
 
     @State private var editing = false
     @State private var confirmingDelete = false
+
+    private var occurrence: Occurrence { event.occurrence(originalStart: originalStart) }
 
     private var creator: Member? {
         guard let id = event.createdBy else { return nil }
@@ -22,20 +26,31 @@ struct EventDetailView: View {
     }
 
     var body: some View {
-        List {
+        // Nach dem Löschen ist das Objekt ohne Kontext; dann nichts mehr anzeigen.
+        if event.managedObjectContext == nil || event.isDeleted {
+            Color.clear
+        } else {
+            content
+        }
+    }
+
+    private var content: some View {
+        let occurrence = occurrence
+        return List {
             Section {
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(event.title ?? "")
+                    Text(occurrence.title)
                         .font(.title2.weight(.semibold))
-                    if let start = event.start {
-                        Text(start.formatted(.dateTime.weekday(.wide).day().month(.wide).year()))
-                    }
-                    Text(event.timeText)
+                    Text(occurrence.start.formatted(.dateTime.weekday(.wide).day().month(.wide).year()))
+                    Text(occurrence.timeText)
                         .foregroundStyle(.secondary)
                 }
                 .padding(.vertical, 4)
-                if let location = event.location {
+                if let location = occurrence.location {
                     Label(location, systemImage: "mappin.and.ellipse")
+                }
+                if let repeatText = repeatDescription(event.recurrenceRule, start: event.start ?? occurrence.start) {
+                    Label(repeatText, systemImage: "repeat")
                 }
             }
             Section("Calendar") {
@@ -58,7 +73,7 @@ struct EventDetailView: View {
                     }
                 }
             }
-            if let notes = event.notes {
+            if let notes = occurrence.notes {
                 Section("Notes") {
                     Text(notes)
                 }
@@ -79,18 +94,27 @@ struct EventDetailView: View {
             Button("Edit") { editing = true }
         }
         .sheet(isPresented: $editing) {
-            EventEditorView(event: event)
+            EventEditorView(event: event, occurrence: occurrence)
         }
-        .confirmationDialog("Delete this event?", isPresented: $confirmingDelete, titleVisibility: .visible) {
-            Button("Delete Event", role: .destructive) {
-                model.repository.delete(event)
-                model.save()
-                dismiss()
+        .confirmationDialog(occurrence.isRecurring ? "This is a repeating event." : "Delete this event?",
+                            isPresented: $confirmingDelete, titleVisibility: .visible) {
+            if occurrence.isRecurring {
+                Button("Delete This Event Only", role: .destructive) { delete(.thisOccurrence) }
+                Button("Delete All Future Events", role: .destructive) { delete(.thisAndFollowing) }
+                Button("Delete All Events", role: .destructive) { delete(.allOccurrences) }
+            } else {
+                Button("Delete Event", role: .destructive) { delete(.allOccurrences) }
             }
         } message: {
             if isForeign, let creator {
                 Text("\(creator.displayLabel) created this event. It will be deleted for everyone.")
             }
         }
+    }
+
+    private func delete(_ scope: SeriesScope) {
+        model.repository.delete(event, occurrence: originalStart, scope: scope)
+        model.save()
+        dismiss()
     }
 }

@@ -48,17 +48,13 @@ extension Event {
             ($0.kind == .adult ? 0 : 1, $0.displayName ?? "") < ($1.kind == .adult ? 0 : 1, $1.displayName ?? "")
         }
     }
+}
 
+extension Occurrence {
     var timeText: String {
-        guard let start, let end else { return "" }
         if isAllDay {
             return String(localized: "All day")
         }
         return "\(start.formatted(date: .omitted, time: .shortened)) – \(end.formatted(date: .omitted, time: .shortened))"
     }
-}
-
-/// Termine, die ein Intervall berühren (Ende exklusiv).
-func overlapPredicate(_ start: Date, _ end: Date) -> NSPredicate {
-    NSPredicate(format: "start < %@ AND end > %@", end as NSDate, start as NSDate)
 }

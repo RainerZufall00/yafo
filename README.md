@@ -23,17 +23,19 @@ Architektur und Feature-Umfang: [docs/yafo – Architektur & Features.pdf](docs/
 ## Loslegen
 
 1. `yafo.xcodeproj` in Xcode 27 öffnen.
-2. Unter *Signing & Capabilities* das eigene Team wählen. Bundle-ID `de.yafo.app`,
-   iCloud-Container `iCloud.de.yafo.app` und App Group `group.de.yafo.app` müssen im Developer-Portal registriert sein.
+2. `Config/Local.xcconfig.example` nach `Config/Local.xcconfig` kopieren und die eigene Team-ID eintragen
+   (die Datei wird nicht eingecheckt). Bundle-ID `de.yafo.app`, iCloud-Container `iCloud.de.yafo.app`
+   und App Group `group.de.yafo.app` registriert Xcode beim ersten Start mit automatischer Signierung.
 3. Ohne Team oder iCloud-Account läuft die App rein lokal.
 
-Startargumente fürs Entwickeln (im Scheme unter *Run › Arguments*):
+Startargumente fürs Entwickeln (im Scheme unter *Run › Arguments*, dort schon angelegt und abgeschaltet):
 
 | Argument | Wirkung |
 | --- | --- |
 | `-yafoLocalOnly` | Kein CloudKit, nur lokale Stores |
 | `-yafoInMemory` | Leere Stores in einem temporären Ordner |
-| `-yafoDemoData` | Beispielfamilie mit Terminen (nur Debug) |
+| `-yafoDemoData` | Beispielfamilie mit Terminen und Serien (nur Debug) |
+| `-com.apple.CoreData.CloudKitDebug 1` | Ausführliches CloudKit-Sync-Log |
 
 Tests des Packages:
 
@@ -48,8 +50,8 @@ Roadmap aus dem Architektur-Dokument:
 - [x] **1. Fundament:** Datenmodell, Core Data mit CloudKit (privat + geteilt), Familien anlegen und einladen,
       Beitreten mit eigenem Profil oder verknüpftem Kinderprofil, Kinderprofile, mehrere Familien
 - [ ] Prototyp Owner-Übertragung (V1.1)
-- [ ] **2. Kalender:** ~~Monatsansicht~~, ~~Termine mit Teilnehmern~~, ~~Farbsystem~~, ~~Personenfilter~~ – offen:
-      Jahresansicht, Serien (RRULE, Ausnahmen), Kommentare
+- [ ] **2. Kalender:** ~~Monatsansicht~~, ~~Termine mit Teilnehmern~~, ~~Farbsystem~~, ~~Personenfilter~~,
+      ~~Serien (RRULE, Ausnahmen, nur dieser / folgende / alle)~~ – offen: Jahresansicht, Kommentare
 - [ ] 3. Einkaufsliste und Todos
 - [ ] 4. Erinnerungen und Widgets
 - [ ] 5. Abos und Import (Feiertage, Ferien, ICS, EventKit)
