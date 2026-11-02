@@ -56,3 +56,7 @@ Roadmap aus dem Architektur-Dokument:
 - [ ] 6. Export und Backup
 - [ ] 7. Screenshot zu Termin
 - [ ] 8. TestFlight, App Store
+
+## Lizenz
+
+[MIT](LICENSE)
