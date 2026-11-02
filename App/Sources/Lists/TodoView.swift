@@ -268,6 +268,9 @@ struct TodoEditorView: View {
                     Toggle("Due Date", isOn: $hasDueDate.animation())
                     if hasDueDate {
                         DatePicker("Date", selection: $dueDate, displayedComponents: .date)
+                        if let todo {
+                            AlertPicker(itemID: todo.id, isDayBased: true, defaultOffset: todo.defaultAlertOffset)
+                        }
                         Picker("Repeat", selection: $rule) {
                             Text("Never").tag(String?.none)
                             ForEach(Self.rules, id: \.1) { label, value in

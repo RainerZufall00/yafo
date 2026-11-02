@@ -57,6 +57,10 @@ struct EventDetailView: View {
                     Label(repeatText, systemImage: "repeat")
                 }
             }
+            Section {
+                AlertPicker(itemID: event.id, isDayBased: occurrence.isAllDay,
+                            defaultOffset: event.defaultAlertOffset)
+            }
             Section("Calendar") {
                 Label {
                     Text(event.calendar?.displayName ?? "")

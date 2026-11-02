@@ -24,6 +24,7 @@ final class AppModel {
     }
 
     private var started = false
+    private var reminderTask: Task<Void, Never>?
 
     private init() {
         let arguments = ProcessInfo.processInfo.arguments
@@ -49,6 +50,7 @@ final class AppModel {
         guard !started else { return }
         started = true
         userID = await sharing.currentUserID()
+        await ReminderScheduler.requestAuthorization()
         refreshAfterSync()
 
         // Änderungen aus iCloud (auch per Silent Push) kommen als Remote-Change-Notification.
@@ -78,6 +80,19 @@ final class AppModel {
             try repository.save()
         } catch {
             errorMessage = error.localizedDescription
+        }
+        scheduleReminders()
+    }
+
+    /// Plant Erinnerungen neu, gebündelt: mehrere Änderungen kurz hintereinander lösen
+    /// nur ein Neuplanen aus.
+    func scheduleReminders() {
+        reminderTask?.cancel()
+        reminderTask = Task {
+            try? await Task.sleep(for: .seconds(1))
+            guard !Task.isCancelled else { return }
+            let reminders = repository.plannedReminders(me: { self.me(in: $0) })
+            await ReminderScheduler.replace(with: reminders)
         }
     }
 
