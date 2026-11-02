@@ -8,6 +8,8 @@ nonisolated public enum AlertDefaults {
     public static let allDayEventOffset: Double = 6 * 60 * 60
     /// Todos: am Fälligkeitstag um 9 Uhr, also 9 Stunden *nach* 0 Uhr (negativer Offset).
     public static let todoOffset: Double = -9 * 60 * 60
+    /// Geburtstage: am Tag selbst um 9 Uhr.
+    public static let birthdayOffset: Double = -9 * 60 * 60
 }
 
 /// Standardfarben je Kalendertyp (siehe Farbsystem in docs/).

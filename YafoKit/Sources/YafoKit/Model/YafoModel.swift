@@ -33,7 +33,8 @@ nonisolated public enum YafoModel {
             bool("isAllDay"), string("timeZone"), string("location"), string("notes"),
             string("recurrenceRule"), string("createdBy"), string("importUID"),
             double("defaultAlertOffset", default: AlertDefaults.timedEventOffset),
-            date("createdAt"), date("updatedAt")
+            date("createdAt"), date("updatedAt"),
+            string("kindRaw", default: EventKind.event.rawValue), int64("birthYear")
         ])
         let exception = entity(EventException.self, [
             uuid("id"), date("originalDate"), bool("isCancelled"),
@@ -139,6 +140,10 @@ nonisolated public enum YafoModel {
 
     private static func bool(_ name: String, default value: Bool = false) -> NSAttributeDescription {
         attribute(name, .boolean, default: value)
+    }
+
+    private static func int64(_ name: String, default value: Int64 = 0) -> NSAttributeDescription {
+        attribute(name, .integer64, default: value)
     }
 
     private static func double(_ name: String, default value: Double = 0) -> NSAttributeDescription {

@@ -2,7 +2,8 @@ import CoreData
 import SwiftUI
 import YafoKit
 
-/// Startbildschirm: Monatsraster, darunter (iPad: daneben) die Tagesliste.
+/// Startbildschirm: Monatsraster über die ganze Höhe. iPhone: Tippen öffnet den Tag,
+/// iPad: Tagesliste daneben.
 struct MonthView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.horizontalSizeClass) private var sizeClass
@@ -14,6 +15,7 @@ struct MonthView: View {
     @State private var person: Member?
     @State private var showingEditor = false
     @State private var showingYear = false
+    @State private var openedDay: Date?
 
     @FetchRequest(sortDescriptors: [SortDescriptor(\.createdAt)])
     private var calendars: FetchedResults<EventCalendar>
@@ -45,18 +47,16 @@ struct MonthView: View {
                         DayListView(day: selectedDay, style: style).frame(width: 320)
                     }
                 } else {
-                    VStack(spacing: 0) {
-                        monthGrid
-                        Divider()
-                        DayListView(day: selectedDay, style: style)
-                            .frame(height: 200)
-                    }
+                    monthGrid
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { toolbar }
             .sheet(isPresented: $showingEditor) {
                 EventEditorView(initialDay: selectedDay)
+            }
+            .navigationDestination(item: $openedDay) { day in
+                DayPage(day: day, style: style)
             }
         }
     }
@@ -74,7 +74,8 @@ struct MonthView: View {
         ScrollView(.horizontal) {
             LazyHStack(spacing: 0) {
                 ForEach(Self.pagedMonths, id: \.self) { page in
-                    MonthGridView(grid: MonthGrid(containing: page), selectedDay: $selectedDay, style: style)
+                    MonthGridView(grid: MonthGrid(containing: page), selectedDay: $selectedDay, style: style,
+                                  onOpenDay: sizeClass == .regular ? nil : { openedDay = $0 })
                         .containerRelativeFrame([.horizontal, .vertical])
                 }
             }

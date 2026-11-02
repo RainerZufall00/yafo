@@ -32,6 +32,9 @@ enum DemoData {
                                in: sports, participants: [mia], recurrenceRule: "FREQ=WEEKLY", createdBy: by)
         repository.createEvent(title: "Parents' evening", start: at(3, 19), end: at(3, 21), isAllDay: false,
                                in: shared, participants: [anna], createdBy: ben.id?.uuidString)
+        repository.createBirthday(name: "Mia", day: at(6, 0), birthYear: cal.component(.year, from: .now) - 8,
+                                  in: shared, createdBy: by)
+        repository.createBirthday(name: "Grandma", day: at(18, 0), birthYear: 1952, in: shared, createdBy: by)
         repository.createEvent(title: "Grandma visiting", start: at(5, 0), end: at(8, 0), isAllDay: true,
                                in: shared, createdBy: by)
         repository.createEvent(title: "Dentist", start: at(0, 8, 30), end: at(0, 9), isAllDay: false,

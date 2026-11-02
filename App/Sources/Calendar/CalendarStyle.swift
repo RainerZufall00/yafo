@@ -51,7 +51,18 @@ extension Event {
 }
 
 extension Occurrence {
+    /// Titel für Chips und Listen; Geburtstage mit Torte und Alter.
+    var displayTitle: String {
+        guard event.isBirthday else { return title }
+        if let age { return "🎂 \(title) (\(age))" }
+        return "🎂 \(title)"
+    }
+
     var timeText: String {
+        if event.isBirthday {
+            if let age { return String(localized: "Turns \(age)") }
+            return String(localized: "Birthday")
+        }
         if isAllDay {
             return String(localized: "All day")
         }

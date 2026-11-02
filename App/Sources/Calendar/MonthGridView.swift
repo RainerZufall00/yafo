@@ -8,12 +8,15 @@ struct MonthGridView: View {
     let grid: MonthGrid
     @Binding var selectedDay: Date
     let style: CalendarStyle
+    /// Antippen eines Tages, zusätzlich zur Auswahl (iPhone: Tagesansicht öffnen).
+    var onOpenDay: ((Date) -> Void)?
 
     private let interval: DateInterval
     @FetchRequest private var events: FetchedResults<Event>
 
-    init(grid: MonthGrid, selectedDay: Binding<Date>, style: CalendarStyle) {
+    init(grid: MonthGrid, selectedDay: Binding<Date>, style: CalendarStyle, onOpenDay: ((Date) -> Void)? = nil) {
         self.grid = grid
+        self.onOpenDay = onOpenDay
         _selectedDay = selectedDay
         self.style = style
         let start = grid.days.first?.date ?? grid.month
@@ -36,7 +39,7 @@ struct MonthGridView: View {
             }
             .padding(.bottom, 4)
             ForEach(grid.weeks, id: \.first?.date) { week in
-                WeekRow(week: week, occurrences: visible, style: style, selectedDay: $selectedDay)
+                WeekRow(week: week, occurrences: visible, style: style, selectedDay: $selectedDay, onOpenDay: onOpenDay)
                     .frame(maxHeight: .infinity)
             }
         }
@@ -49,6 +52,7 @@ private struct WeekRow: View {
     let occurrences: [Occurrence]
     let style: CalendarStyle
     @Binding var selectedDay: Date
+    let onOpenDay: ((Date) -> Void)?
 
     /// iPhone: kompakt, damit drei Chips pro Tag passen. iPad: größer und besser lesbar.
     private var isRegular: Bool { sizeClass == .regular }
@@ -69,13 +73,16 @@ private struct WeekRow: View {
                         DayBackground(day: day, isSelected: day.date == selectedDay,
                                       titles: titles(on: day.date), fontSize: isRegular ? 15 : 12.5)
                             .frame(width: columnWidth)
-                            .onTapGesture { selectedDay = day.date }
+                            .onTapGesture {
+                                selectedDay = day.date
+                                onOpenDay?(day.date)
+                            }
                     }
                 }
 
                 ForEach(layout.items) { item in
                     if let occurrence = byID[item.id] {
-                        EventChip(title: occurrence.title, color: style.color(for: occurrence.event),
+                        EventChip(title: occurrence.displayTitle, color: style.color(for: occurrence.event),
                                   isSpanning: item.isSpanning,
                                   continuesBefore: item.continuesBefore, continuesAfter: item.continuesAfter,
                                   fontSize: isRegular ? 12.5 : 10)
@@ -116,7 +123,7 @@ private struct WeekRow: View {
 
     private func titles(on day: Date) -> [String] {
         let calendar = Calendar.current
-        return occurrences.filter { calendar.days(from: $0.start, to: $0.end).contains(day) }.map(\.title)
+        return occurrences.filter { calendar.days(from: $0.start, to: $0.end).contains(day) }.map(\.displayTitle)
     }
 }
 

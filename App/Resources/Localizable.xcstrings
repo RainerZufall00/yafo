@@ -111,6 +111,26 @@
         }
       }
     },
+    "Birthday": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geburtstag"
+          }
+        }
+      }
+    },
+    "Born %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geboren am %@"
+          }
+        }
+      }
+    },
     "Calendar": {
       "localizations": {
         "de": {
@@ -251,6 +271,16 @@
         }
       }
     },
+    "Date of Birth": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geburtsdatum"
+          }
+        }
+      }
+    },
     "Delete": {
       "localizations": {
         "de": {
@@ -317,6 +347,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bearbeiten"
+          }
+        }
+      }
+    },
+    "Edit Birthday": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geburtstag bearbeiten"
           }
         }
       }
@@ -671,6 +711,16 @@
         }
       }
     },
+    "New Birthday": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neuer Geburtstag"
+          }
+        }
+      }
+    },
     "New Event": {
       "localizations": {
         "de": {
@@ -777,6 +827,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Am Datum"
+          }
+        }
+      }
+    },
+    "Only day and month are used.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Es zählen nur Tag und Monat."
           }
         }
       }
@@ -941,6 +1001,16 @@
         }
       }
     },
+    "The age is shown and counts up every year.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Alter wird angezeigt und zählt jedes Jahr hoch."
+          }
+        }
+      }
+    },
     "The family's data is stored in your iCloud. You can invite other adults afterwards.": {
       "localizations": {
         "de": {
@@ -987,6 +1057,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Heute"
+          }
+        }
+      }
+    },
+    "Turns %lld": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wird %lld"
+          }
+        }
+      }
+    },
+    "Type": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Art"
           }
         }
       }
@@ -1047,6 +1137,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Jahr"
+          }
+        }
+      }
+    },
+    "Year of Birth Known": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geburtsjahr bekannt"
           }
         }
       }

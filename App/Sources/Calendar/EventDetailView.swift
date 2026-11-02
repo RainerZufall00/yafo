@@ -49,7 +49,11 @@ struct EventDetailView: View {
                 if let location = occurrence.location {
                     Label(location, systemImage: "mappin.and.ellipse")
                 }
-                if let repeatText = repeatDescription(event.recurrenceRule, start: event.start ?? occurrence.start) {
+                if event.isBirthday {
+                    if event.birthYear > 0, let born = event.start {
+                        Label("Born \(born.formatted(.dateTime.day().month(.wide).year()))", systemImage: "birthday.cake")
+                    }
+                } else if let repeatText = repeatDescription(event.recurrenceRule, start: event.start ?? occurrence.start) {
                     Label(repeatText, systemImage: "repeat")
                 }
             }
@@ -60,7 +64,7 @@ struct EventDetailView: View {
                     Image(systemName: "circle.fill").foregroundStyle(color)
                 }
             }
-            if event.calendar?.family != nil {
+            if event.calendar?.family != nil && !event.isBirthday {
                 Section("Who's coming?") {
                     if event.sortedParticipants.isEmpty {
                         Text("Whole family")
@@ -91,7 +95,7 @@ struct EventDetailView: View {
                 }
             }
         }
-        .navigationTitle("Event")
+        .navigationTitle(event.isBirthday ? "Birthday" : "Event")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             Button("Edit") { editing = true }
@@ -99,9 +103,9 @@ struct EventDetailView: View {
         .sheet(isPresented: $editing) {
             EventEditorView(event: event, occurrence: occurrence)
         }
-        .confirmationDialog(occurrence.isRecurring ? "This is a repeating event." : "Delete this event?",
+        .confirmationDialog(occurrence.isRecurring && !event.isBirthday ? "This is a repeating event." : "Delete this event?",
                             isPresented: $confirmingDelete, titleVisibility: .visible) {
-            if occurrence.isRecurring {
+            if occurrence.isRecurring && !event.isBirthday {
                 Button("Delete This Event Only", role: .destructive) { delete(.thisOccurrence) }
                 Button("Delete All Future Events", role: .destructive) { delete(.thisAndFollowing) }
                 Button("Delete All Events", role: .destructive) { delete(.allOccurrences) }

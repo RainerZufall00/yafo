@@ -118,6 +118,9 @@ extension Repository {
             // Beziehungen über Stores hinweg sind nicht erlaubt: im Ziel-Store neu anlegen.
             target = createEvent(title: draft.title, start: draft.start, end: draft.end, isAllDay: draft.isAllDay,
                                  in: draft.calendar, createdBy: event.createdBy)
+            target.kindRaw = event.kindRaw
+            target.birthYear = event.birthYear
+            target.defaultAlertOffset = event.defaultAlertOffset
             for exception in event.exceptions ?? [] {
                 let copy = insert(EventException.self, near: target)
                 copy.originalDate = exception.originalDate

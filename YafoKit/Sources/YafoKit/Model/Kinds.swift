@@ -13,6 +13,12 @@ public enum CalendarKind: String, CaseIterable, Sendable {
     case personal
 }
 
+/// Normaler Termin oder Geburtstag (ganztägig, jährlich, mit Alter).
+public enum EventKind: String, CaseIterable, Sendable {
+    case event
+    case birthday
+}
+
 public enum SubscriptionKind: String, CaseIterable, Sendable {
     case publicHolidays
     case schoolHolidays

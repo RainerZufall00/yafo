@@ -62,6 +62,10 @@ nonisolated public final class Event: NSManagedObject, Identifiable {
     @NSManaged public var defaultAlertOffset: Double
     @NSManaged public var createdAt: Date?
     @NSManaged public var updatedAt: Date?
+    /// `EventKind`, z. B. Geburtstag.
+    @NSManaged public var kindRaw: String?
+    /// Geburtsjahr bei Geburtstagen, 0 = unbekannt.
+    @NSManaged public var birthYear: Int64
     @NSManaged public var calendar: EventCalendar?
     /// Leer bedeutet: ganze Familie.
     @NSManaged public var participants: Set<Member>?

@@ -26,11 +26,14 @@ struct EventEditorView: View {
     @State private var participants: Set<Member>
     @State private var repeatSettings: RepeatSettings
     @State private var askingScope = false
+    @State private var kind: EventKind
+    /// Bei Geburtstagen: Jahr im Datum ist das Geburtsjahr.
+    @State private var birthYearKnown: Bool
 
     @FetchRequest(sortDescriptors: [SortDescriptor(\.createdAt)])
     private var calendars: FetchedResults<EventCalendar>
 
-    init(event: Event? = nil, occurrence: Occurrence? = nil, initialDay: Date = .now) {
+    init(event: Event? = nil, occurrence: Occurrence? = nil, initialDay: Date = .now, kind: EventKind = .event) {
         self.event = event
         originalStart = occurrence?.originalStart
         let cal = Calendar.current
@@ -39,7 +42,11 @@ struct EventEditorView: View {
             let hour = cal.component(.hour, from: .now) + 1
             return cal.date(bySettingHour: min(hour, 23), minute: 0, second: 0, of: initialDay) ?? initialDay
         }()
-        let start = occurrence?.start ?? event?.start ?? defaultStart
+        var start = occurrence?.start ?? event?.start ?? defaultStart
+        if let event, event.isBirthday, event.birthYear > 0, let born = event.start {
+            // Geburtstag mit Jahr: das Geburtsdatum bearbeiten.
+            start = born
+        }
         var end = occurrence?.end ?? event?.end ?? start.addingTimeInterval(3600)
         if event?.isAllDay == true {
             // Gespeichert ist das exklusive Ende, angezeigt wird der letzte Tag.
@@ -58,6 +65,8 @@ struct EventEditorView: View {
         _notes = State(initialValue: occurrence?.notes ?? event?.notes ?? "")
         _calendar = State(initialValue: initialCalendar)
         _participants = State(initialValue: initialParticipants)
+        _kind = State(initialValue: event?.kind ?? kind)
+        _birthYearKnown = State(initialValue: event.map { $0.birthYear > 0 } ?? true)
         _repeatSettings = State(initialValue: RepeatSettings(rule: event?.recurrenceRule, start: event?.start ?? start))
     }
 
@@ -74,7 +83,7 @@ struct EventEditorView: View {
 
     private var ruleString: String? { repeatSettings.ruleString(start: ruleStart) }
 
-    private var isEditingSeries: Bool { event?.isRecurring == true && originalStart != nil }
+    private var isEditingSeries: Bool { kind == .event && event?.isRecurring == true && originalStart != nil }
 
     /// Kalender, Teilnehmer, Ganztägig und Wiederholung gelten für die ganze Serie,
     /// nicht für ein einzelnes Vorkommen.
@@ -86,18 +95,31 @@ struct EventEditorView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    TextField("Title", text: $title)
-                    TextField("Location", text: $location)
+                if event == nil {
+                    Picker("Type", selection: $kind) {
+                        Label("Event", systemImage: "calendar").tag(EventKind.event)
+                        Label("Birthday", systemImage: "birthday.cake").tag(EventKind.birthday)
+                    }
+                    .pickerStyle(.segmented)
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets())
                 }
-                Section {
-                    Toggle("All day", isOn: $isAllDay)
-                    DatePicker("Starts", selection: $start,
-                               displayedComponents: isAllDay ? .date : [.date, .hourAndMinute])
-                    DatePicker("Ends", selection: $end, in: start...,
-                               displayedComponents: isAllDay ? .date : [.date, .hourAndMinute])
+                if kind == .birthday {
+                    birthdaySection
+                } else {
+                    Section {
+                        TextField("Title", text: $title)
+                        TextField("Location", text: $location)
+                    }
+                    Section {
+                        Toggle("All day", isOn: $isAllDay)
+                        DatePicker("Starts", selection: $start,
+                                   displayedComponents: isAllDay ? .date : [.date, .hourAndMinute])
+                        DatePicker("Ends", selection: $end, in: start...,
+                                   displayedComponents: isAllDay ? .date : [.date, .hourAndMinute])
+                    }
+                    repeatSection
                 }
-                repeatSection
                 Section("Calendar") {
                     Picker("Calendar", selection: $calendar) {
                         ForEach(calendars) { calendar in
@@ -112,7 +134,7 @@ struct EventEditorView: View {
                     }
                     .pickerStyle(.navigationLink)
                 }
-                if !familyMembers.isEmpty {
+                if !familyMembers.isEmpty && kind == .event {
                     Section {
                         ParticipantChips(members: familyMembers, selection: $participants)
                     } header: {
@@ -126,7 +148,7 @@ struct EventEditorView: View {
                         .lineLimit(3...8)
                 }
             }
-            .navigationTitle(event == nil ? "New Event" : "Edit Event")
+            .navigationTitle(navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -162,6 +184,29 @@ struct EventEditorView: View {
                     repeatSettings.weekdays = [cal.component(.weekday, from: newValue)]
                 }
             }
+        }
+    }
+
+    private var navigationTitle: LocalizedStringKey {
+        switch (kind, event == nil) {
+        case (.birthday, true): "New Birthday"
+        case (.birthday, false): "Edit Birthday"
+        case (.event, true): "New Event"
+        case (.event, false): "Edit Event"
+        }
+    }
+
+    private var birthdaySection: some View {
+        Section {
+            TextField("Name", text: $title)
+                .textContentType(.name)
+            DatePicker(birthYearKnown ? "Date of Birth" : "Birthday", selection: $start,
+                       in: ...(birthYearKnown ? Date.now : Date.distantFuture), displayedComponents: .date)
+            Toggle("Year of Birth Known", isOn: $birthYearKnown)
+        } footer: {
+            Text(birthYearKnown
+                 ? "The age is shown and counts up every year."
+                 : "Only day and month are used.")
         }
     }
 
@@ -209,6 +254,10 @@ struct EventEditorView: View {
 
     private func save(scope: SeriesScope) {
         guard let calendar else { return }
+        if kind == .birthday {
+            saveBirthday(in: calendar)
+            return
+        }
         let cal = Calendar.current
         var start = start
         var end = max(end, start)
@@ -229,6 +278,23 @@ struct EventEditorView: View {
                                                        createdBy: model.creatorID(for: calendar))
             created.location = draft.location
             created.notes = draft.notes
+        }
+        model.save()
+        dismiss()
+    }
+}
+
+extension EventEditorView {
+    private func saveBirthday(in calendar: EventCalendar) {
+        let name = title.trimmingCharacters(in: .whitespaces)
+        let year = birthYearKnown ? Calendar.current.component(.year, from: start) : nil
+        let notes = notes.isEmpty ? nil : notes
+        if let event {
+            model.repository.updateBirthday(event, name: name, day: start, birthYear: year,
+                                            calendar: calendar, notes: notes)
+        } else {
+            model.repository.createBirthday(name: name, day: start, birthYear: year, in: calendar,
+                                            notes: notes, createdBy: model.creatorID(for: calendar))
         }
         model.save()
         dismiss()
