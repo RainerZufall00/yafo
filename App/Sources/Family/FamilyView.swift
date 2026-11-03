@@ -59,9 +59,14 @@ struct FamilyView: View {
                 }
 
                 Section {
+                    NavigationLink {
+                        ExternalCalendarsView()
+                    } label: {
+                        Label("Device Calendars", systemImage: "iphone")
+                    }
                     Button("Import Events", systemImage: "square.and.arrow.down") { importing = true }
                 } footer: {
-                    Text("From your device calendars, Google Calendar or an .ics file.")
+                    Text("Show work or Google calendars in gray, or copy events into yafo once.")
                 }
 
                 if families.isEmpty {

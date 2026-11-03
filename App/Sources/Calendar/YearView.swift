@@ -12,6 +12,7 @@ struct YearView: View {
 
     private let interval: DateInterval
     @FetchRequest private var events: FetchedResults<Event>
+    @FetchRequest private var subscribed: FetchedResults<SubscribedEvent>
 
     init(year: Date, style: CalendarStyle, onSelectMonth: @escaping (Date) -> Void) {
         self.year = year
@@ -20,6 +21,9 @@ struct YearView: View {
         interval = Calendar.current.dateInterval(of: .year, for: year)!
         _events = FetchRequest(sortDescriptors: [SortDescriptor(\.start)],
                                predicate: Repository.overlapPredicate(interval))
+        _subscribed = FetchRequest(sortDescriptors: [SortDescriptor(\.start)],
+                                   predicate: Repository.cachePredicate(sourceKeys: style.subscriptionKeys,
+                                                                        interval: interval))
     }
 
     private var months: [Date] {
@@ -32,6 +36,7 @@ struct YearView: View {
             .flatMap { $0.occurrences(overlapping: interval) }
             .flatMap { calendar.days(from: $0.start, to: $0.end) })
         let holidayDays = Set(style.holidays(in: interval).keys)
+        let schoolHolidayDays = Set(style.schoolHolidays(in: subscribed).keys)
         let columns = sizeClass == .regular ? 4 : 3
 
         ScrollView {
@@ -40,7 +45,8 @@ struct YearView: View {
                     Button {
                         onSelectMonth(month)
                     } label: {
-                        MiniMonth(month: month, busyDays: busyDays, holidayDays: holidayDays)
+                        MiniMonth(month: month, busyDays: busyDays, holidayDays: holidayDays,
+                                  schoolHolidayDays: schoolHolidayDays)
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(month.formatted(.dateTime.month(.wide).year()))
@@ -56,6 +62,7 @@ private struct MiniMonth: View {
     let month: Date
     let busyDays: Set<Date>
     let holidayDays: Set<Date>
+    let schoolHolidayDays: Set<Date>
 
     var body: some View {
         let calendar = Calendar.current
@@ -94,6 +101,11 @@ private struct MiniMonth: View {
                         Circle().fill(Color.accentColor)
                     } else if busyDays.contains(day.date) {
                         Circle().fill(Color.accentColor.opacity(0.18))
+                    }
+                }
+                .background {
+                    if schoolHolidayDays.contains(day.date) {
+                        Color(hex: CalendarColors.schoolHoliday).opacity(0.6)
                     }
                 }
         } else {

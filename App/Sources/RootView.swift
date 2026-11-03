@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RootView: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.scenePhase) private var scenePhase
     @State private var openedFile: OpenedFile?
 
     /// Eine .ics-Datei, mit der yafo geöffnet wurde (Teilen, Dateien-App, Mail).
@@ -26,6 +27,10 @@ struct RootView: View {
                 FamilyView()
             }
             .badge(model.familiesNeedingProfile.count)
+        }
+        .onChange(of: scenePhase) { _, phase in
+            // Abos beim Öffnen der App aktualisieren (ICS höchstens alle 15 Minuten).
+            if phase == .active { Task { await model.refreshSubscriptions() } }
         }
         .onOpenURL { url in
             if url.isFileURL { openedFile = OpenedFile(url: url) }

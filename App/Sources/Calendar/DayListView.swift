@@ -4,12 +4,14 @@ import YafoKit
 
 /// Termine des gewählten Tages; Teilnehmer als Initialen-Avatare.
 struct DayListView: View {
+    @Environment(AppModel.self) private var model
     let day: Date
     let style: CalendarStyle
     var showsHeader = true
 
     private let interval: DateInterval
     @FetchRequest private var events: FetchedResults<Event>
+    @FetchRequest private var subscribed: FetchedResults<SubscribedEvent>
 
     init(day: Date, style: CalendarStyle, showsHeader: Bool = true) {
         self.day = day
@@ -18,12 +20,16 @@ struct DayListView: View {
         interval = DateInterval(start: day, end: Calendar.current.date(byAdding: .day, value: 1, to: day)!)
         _events = FetchRequest(sortDescriptors: [SortDescriptor(\.start)],
                                predicate: Repository.overlapPredicate(interval))
+        _subscribed = FetchRequest(sortDescriptors: [SortDescriptor(\.start)],
+                                   predicate: Repository.cachePredicate(sourceKeys: style.subscriptionKeys,
+                                                                        interval: interval))
     }
 
     var body: some View {
-        let visible = events.filter(style.includes)
-            .flatMap { $0.occurrences(overlapping: interval) }
-            .sorted { ($0.isAllDay ? 0 : 1, $0.start) < ($1.isAllDay ? 0 : 1, $1.start) }
+        let occurrences = events.filter(style.includes).flatMap { $0.occurrences(overlapping: interval) }
+        let visible = style.entries(occurrences: occurrences, subscribed: subscribed,
+                                    external: model.external.items(overlapping: interval))
+            .sorted(by: CalendarEntry.listOrder)
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 6) {
                 if showsHeader {
@@ -35,19 +41,26 @@ struct DayListView: View {
                 ForEach(style.holidays(in: interval)[day] ?? [], id: \.germanName) { holiday in
                     HolidayRow(name: holiday.name())
                 }
+                ForEach(style.schoolHolidays(in: subscribed)[day] ?? [], id: \.self) { name in
+                    SchoolHolidayRow(name: name)
+                }
                 if visible.isEmpty {
                     Text("No events")
                         .foregroundStyle(.secondary)
                         .padding(.vertical, 8)
                 }
-                ForEach(visible) { occurrence in
-                    NavigationLink {
-                        EventDetailView(event: occurrence.event, originalStart: occurrence.originalStart,
-                                        color: style.color(for: occurrence.event))
-                    } label: {
-                        EventRow(occurrence: occurrence, color: style.color(for: occurrence.event))
+                ForEach(visible) { entry in
+                    if let occurrence = entry.occurrence {
+                        NavigationLink {
+                            EventDetailView(event: occurrence.event, originalStart: occurrence.originalStart,
+                                            color: entry.color)
+                        } label: {
+                            EventRow(occurrence: occurrence, color: entry.color)
+                        }
+                        .buttonStyle(.plain)
+                    } else {
+                        ExternalEntryRow(entry: entry)
                     }
-                    .buttonStyle(.plain)
                 }
             }
             .padding(.horizontal, 16)
@@ -131,6 +144,59 @@ struct EventRow: View {
     }
 }
 
+/// Abo-Termin oder Termin aus einem Gerätekalender: nur lesen, ohne Teilnehmer.
+struct ExternalEntryRow: View {
+    @Environment(\.colorScheme) private var colorScheme
+    let entry: CalendarEntry
+
+    var body: some View {
+        HStack(spacing: 10) {
+            VStack(alignment: .trailing, spacing: 1) {
+                if entry.isAllDay {
+                    Text("All day")
+                        .font(.caption.weight(.semibold))
+                } else {
+                    Text(entry.start.formatted(date: .omitted, time: .shortened))
+                        .font(.caption.weight(.semibold))
+                    Text(entry.end.formatted(date: .omitted, time: .shortened))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .frame(width: 52, alignment: .trailing)
+
+            RoundedRectangle(cornerRadius: 2)
+                .fill(entry.color)
+                .frame(width: 4)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(entry.title)
+                    .font(.body.weight(entry.isDevice ? .regular : .semibold))
+                    .foregroundStyle(entry.isDevice ? .secondary : .primary)
+                    .lineLimit(2)
+                if let location = entry.location {
+                    Text(location)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+            }
+            Spacer(minLength: 4)
+            Image(systemName: entry.isDevice ? "iphone" : "link")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .accessibilityLabel(entry.isDevice ? Text("Device calendar") : Text("Subscription"))
+        }
+        .padding(.vertical, 8)
+        .padding(.trailing, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 10)
+                .fill(entry.color.opacity(colorScheme == .dark ? 0.18 : 0.08))
+        )
+        .accessibilityElement(children: .combine)
+    }
+}
+
 /// iPhone: ein Tag als eigene Seite mit den Termin-Karten.
 struct DayPage: View {
     let day: Date
@@ -169,5 +235,26 @@ struct HolidayRow: View {
         .background(RoundedRectangle(cornerRadius: 10).fill(red.opacity(0.1)))
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text("Public holiday: \(name)"))
+    }
+}
+
+/// Schulferien in der Tagesliste: orange Fläche mit Namen.
+struct SchoolHolidayRow: View {
+    let name: String
+
+    var body: some View {
+        let orange = Color(hex: CalendarColors.schoolHoliday)
+        HStack(spacing: 10) {
+            Image(systemName: "backpack.fill")
+                .foregroundStyle(.orange)
+                .frame(width: 52, alignment: .trailing)
+            Text(name)
+                .font(.body.weight(.semibold))
+            Spacer()
+        }
+        .padding(.vertical, 8)
+        .background(RoundedRectangle(cornerRadius: 10).fill(orange.opacity(0.5)))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text("School holidays: \(name)"))
     }
 }

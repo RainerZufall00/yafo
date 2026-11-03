@@ -5,6 +5,7 @@ import YafoKit
 /// Monatsraster mit farbigen Termin-Chips: Titel direkt im Tag, mehrtägige und
 /// ganztägige Termine als durchgehendes Band. Was nicht passt, zeigt „+n“.
 struct MonthGridView: View {
+    @Environment(AppModel.self) private var model
     let grid: MonthGrid
     @Binding var selectedDay: Date
     let style: CalendarStyle
@@ -13,6 +14,7 @@ struct MonthGridView: View {
 
     private let interval: DateInterval
     @FetchRequest private var events: FetchedResults<Event>
+    @FetchRequest private var subscribed: FetchedResults<SubscribedEvent>
 
     init(grid: MonthGrid, selectedDay: Binding<Date>, style: CalendarStyle, onOpenDay: ((Date) -> Void)? = nil) {
         self.grid = grid
@@ -24,11 +26,17 @@ struct MonthGridView: View {
         interval = DateInterval(start: start, end: end)
         _events = FetchRequest(sortDescriptors: [SortDescriptor(\.start)],
                                predicate: Repository.overlapPredicate(interval))
+        _subscribed = FetchRequest(sortDescriptors: [SortDescriptor(\.start)],
+                                   predicate: Repository.cachePredicate(sourceKeys: style.subscriptionKeys,
+                                                                        interval: interval))
     }
 
     var body: some View {
-        let visible = events.filter(style.includes).flatMap { $0.occurrences(overlapping: interval) }
+        let occurrences = events.filter(style.includes).flatMap { $0.occurrences(overlapping: interval) }
+        let visible = style.entries(occurrences: occurrences, subscribed: subscribed,
+                                    external: model.external.items(overlapping: interval))
         let holidays = style.holidays(in: interval)
+        let schoolHolidays = style.schoolHolidays(in: subscribed)
         VStack(spacing: 0) {
             HStack(spacing: 0) {
                 ForEach(Array(MonthGrid.weekdaySymbols().enumerated()), id: \.offset) { _, symbol in
@@ -40,8 +48,8 @@ struct MonthGridView: View {
             }
             .padding(.bottom, 4)
             ForEach(grid.weeks, id: \.first?.date) { week in
-                WeekRow(week: week, occurrences: visible, holidays: holidays, style: style, selectedDay: $selectedDay,
-                        onOpenDay: onOpenDay)
+                WeekRow(week: week, entries: visible, holidays: holidays, schoolHolidays: schoolHolidays,
+                        selectedDay: $selectedDay, onOpenDay: onOpenDay)
                     .frame(maxHeight: .infinity)
             }
         }
@@ -51,9 +59,9 @@ struct MonthGridView: View {
 private struct WeekRow: View {
     @Environment(\.horizontalSizeClass) private var sizeClass
     let week: [MonthGrid.Day]
-    let occurrences: [Occurrence]
+    let entries: [CalendarEntry]
     let holidays: [Date: [Holiday]]
-    let style: CalendarStyle
+    let schoolHolidays: [Date: [String]]
     @Binding var selectedDay: Date
     let onOpenDay: ((Date) -> Void)?
 
@@ -68,14 +76,16 @@ private struct WeekRow: View {
             let columnWidth = geometry.size.width / 7
             let lanes = Int((geometry.size.height - headerHeight - 2) / (chipHeight + chipSpacing))
             let layout = layout(maxLanes: max(lanes, 0))
-            let byID = Dictionary(occurrences.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+            let byID = Dictionary(entries.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
 
             ZStack(alignment: .topLeading) {
                 HStack(spacing: 0) {
                     ForEach(week) { day in
                         DayBackground(day: day, isSelected: day.date == selectedDay,
                                       isHoliday: holidays[day.date] != nil,
-                                      titles: (holidays[day.date] ?? []).map { $0.name() } + titles(on: day.date),
+                                      isSchoolHoliday: schoolHolidays[day.date] != nil,
+                                      titles: (holidays[day.date] ?? []).map { $0.name() }
+                                          + (schoolHolidays[day.date] ?? []) + titles(on: day.date),
                                       fontSize: isRegular ? 15 : 12.5)
                             .frame(width: columnWidth)
                             .onTapGesture {
@@ -86,9 +96,9 @@ private struct WeekRow: View {
                 }
 
                 ForEach(layout.items) { item in
-                    if let occurrence = byID[item.id] {
-                        EventChip(title: occurrence.displayTitle, color: style.color(for: occurrence.event),
-                                  isSpanning: item.isSpanning,
+                    if let entry = byID[item.id] {
+                        EventChip(title: entry.title, color: entry.color,
+                                  isSpanning: item.isSpanning && !entry.isDevice,
                                   continuesBefore: item.continuesBefore, continuesAfter: item.continuesAfter,
                                   fontSize: isRegular ? 12.5 : 10)
                             .frame(width: CGFloat(item.lastColumn - item.firstColumn + 1) * columnWidth - 3,
@@ -119,16 +129,16 @@ private struct WeekRow: View {
         .clipped()
     }
 
-    private func layout(maxLanes: Int) -> WeekLayout<Occurrence.ID> {
-        let entries = occurrences.map {
-            WeekLayout<Occurrence.ID>.Entry(id: $0.id, start: $0.start, end: $0.end, isAllDay: $0.isAllDay)
+    private func layout(maxLanes: Int) -> WeekLayout<String> {
+        let layoutEntries = entries.map {
+            WeekLayout<String>.Entry(id: $0.id, start: $0.start, end: $0.end, isAllDay: $0.isAllDay)
         }
-        return WeekLayout(weekStart: week[0].date, entries: entries, maxLanes: maxLanes)
+        return WeekLayout(weekStart: week[0].date, entries: layoutEntries, maxLanes: maxLanes)
     }
 
     private func titles(on day: Date) -> [String] {
         let calendar = Calendar.current
-        return occurrences.filter { calendar.days(from: $0.start, to: $0.end).contains(day) }.map(\.displayTitle)
+        return entries.filter { calendar.days(from: $0.start, to: $0.end).contains(day) }.map(\.title)
     }
 }
 
@@ -136,6 +146,7 @@ private struct DayBackground: View {
     let day: MonthGrid.Day
     let isSelected: Bool
     let isHoliday: Bool
+    let isSchoolHoliday: Bool
     let titles: [String]
     let fontSize: CGFloat
 
@@ -160,6 +171,9 @@ private struct DayBackground: View {
         .background {
             if isSelected {
                 Color.accentColor.opacity(0.12)
+            } else if isSchoolHoliday {
+                // Ferien als Fläche, damit sie keine Termine aus der Zelle verdrängen.
+                Color(hex: CalendarColors.schoolHoliday).opacity(0.45)
             } else if isWeekend || !day.isInMonth {
                 Color.secondary.opacity(0.06)
             }

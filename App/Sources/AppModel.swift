@@ -13,6 +13,7 @@ final class AppModel {
     let persistence: PersistenceController
     let repository: Repository
     let sharing: FamilySharing
+    let external = ExternalCalendars()
 
     /// Record-Name des eigenen Apple Accounts, `nil` ohne iCloud.
     private(set) var userID: String?
@@ -53,6 +54,7 @@ final class AppModel {
         userID = await sharing.currentUserID()
         await ReminderScheduler.requestAuthorization()
         refreshAfterSync()
+        Task { await refreshSubscriptions() }
 
         // Änderungen aus iCloud (auch per Silent Push) kommen als Remote-Change-Notification.
         for await _ in NotificationCenter.default.notifications(named: .NSPersistentStoreRemoteChange) {

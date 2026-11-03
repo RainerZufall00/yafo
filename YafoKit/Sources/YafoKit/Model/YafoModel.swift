@@ -56,11 +56,11 @@ nonisolated public enum YafoModel {
         ])
         let subscription = entity(CalendarSubscription.self, [
             uuid("id"), string("sourceKey"), string("url"), string("kindRaw"),
-            string("region"), date("createdAt")
+            string("region"), string("name"), date("createdAt")
         ])
         let subscribedEvent = entity(SubscribedEvent.self, [
             uuid("id"), string("sourceKey"), string("uid"), string("title"),
-            date("start"), date("end"), bool("isAllDay"), date("fetchedAt")
+            date("start"), date("end"), bool("isAllDay"), string("location"), date("fetchedAt")
         ])
         let appearance = entity(CalendarAppearance.self, [
             uuid("id"), string("calendarID"), string("color"), bool("isVisible", default: true)

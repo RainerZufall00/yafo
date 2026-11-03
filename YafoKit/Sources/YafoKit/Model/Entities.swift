@@ -130,6 +130,8 @@ nonisolated public final class CalendarSubscription: NSManagedObject, Identifiab
     @NSManaged public var url: String?
     @NSManaged public var kindRaw: String?
     @NSManaged public var region: String?
+    /// Anzeigename eigener ICS-Abos.
+    @NSManaged public var name: String?
     @NSManaged public var createdAt: Date?
     @NSManaged public var calendar: EventCalendar?
 }
@@ -143,6 +145,7 @@ nonisolated public final class SubscribedEvent: NSManagedObject, Identifiable {
     @NSManaged public var start: Date?
     @NSManaged public var end: Date?
     @NSManaged public var isAllDay: Bool
+    @NSManaged public var location: String?
     @NSManaged public var fetchedAt: Date?
 }
 

@@ -61,10 +61,13 @@ Roadmap aus dem Architektur-Dokument:
 - [x] **4. Erinnerungen und Widgets:** lokale Benachrichtigungen (die nächsten 64, an Teilnehmer bzw.
       Zuständige, Zeit pro Person änderbar oder stumm), Widget „Nächste Termine“ (klein, mittel, groß)
       und „Nächster Termin“ für den Sperrbildschirm
-- [ ] 5. Abos und Import (Feiertage, Ferien, ICS, EventKit)
-  - [x] Gesetzliche Feiertage je Kalender (16 Bundesländer, AT, CH), offline berechnet
-  - [x] Einmal-Import aus Gerätekalendern, ICS-Adresse (Google) und .ics-Datei, mit Vorschau
-  - [ ] ICS-Abos mit Cache, Schulferien, externe Kalender grau anzeigen
+- [x] 5. Abos und Import (Feiertage, Ferien, ICS, EventKit)
+  - Gesetzliche Feiertage je Kalender (16 Bundesländer, AT, CH), offline berechnet
+  - Schulferien (DE, AT, CH) aus der OpenHolidays API (ODbL), als Fläche im Kalender, wöchentlich neu geladen
+  - Eigene ICS-/webcal-Adressen je Kalender, lokal zwischengespeichert, beim Öffnen aktualisiert
+  - Gerätekalender grau einblenden (nur auf dem Gerät)
+  - Einmal-Import aus Gerätekalendern, ICS-Adresse (Google) und .ics-Datei, mit Vorschau
+  - Offen: eigener Spiegel der Ferien-Daten per GitHub Action, Background-Refresh, Vorauswahl im Onboarding
 - [ ] 6. Export und Backup
 - [ ] 7. Screenshot zu Termin
 - [ ] 8. TestFlight, App Store

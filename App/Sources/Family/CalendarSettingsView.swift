@@ -3,12 +3,16 @@ import SwiftUI
 import YafoKit
 
 /// Einstellungen eines Kalenders: eigene Farbe und Sichtbarkeit (nur für mich),
-/// Feiertags-Abo (für alle; bei geteilten Kalendern ändert das nur der Owner).
+/// Abos für Feiertage, Schulferien und eigene ICS-Adressen (für alle; bei geteilten
+/// Kalendern ändert das nur der Owner).
 struct CalendarSettingsView: View {
     @Environment(AppModel.self) private var model
     @ObservedObject var calendar: EventCalendar
     @FetchRequest(sortDescriptors: []) private var appearances: FetchedResults<CalendarAppearance>
     @FetchRequest(sortDescriptors: []) private var subscriptions: FetchedResults<CalendarSubscription>
+    @State private var addingSubscription = false
+    @State private var newAddress = ""
+    @State private var newName = ""
 
     /// Abos ändert beim eigenen Kalender man selbst, beim geteilten der Owner.
     private var canEditSubscriptions: Bool {
@@ -43,7 +47,7 @@ struct CalendarSettingsView: View {
                     get: { region },
                     set: { region in
                         model.repository.setHolidayRegion(region, for: calendar)
-                        model.save()
+                        saveSubscriptions()
                     }
                 )) {
                     Text("None").tag(HolidayRegion?.none)
@@ -59,6 +63,21 @@ struct CalendarSettingsView: View {
                 }
                 .pickerStyle(.navigationLink)
                 .disabled(!canEditSubscriptions)
+
+                Picker("School Holidays", selection: Binding(
+                    get: { model.repository.schoolHolidayRegion(of: calendar) },
+                    set: { region in
+                        model.repository.setSchoolHolidayRegion(region, for: calendar)
+                        saveSubscriptions()
+                    }
+                )) {
+                    Text("None").tag(SchoolHolidayRegion?.none)
+                    Section("Germany") { schoolRegions(.de) }
+                    Section("Austria") { schoolRegions(.at) }
+                    Section("Switzerland") { schoolRegions(.ch) }
+                }
+                .pickerStyle(.navigationLink)
+                .disabled(!canEditSubscriptions)
             } header: {
                 Text("Subscriptions")
             } footer: {
@@ -67,11 +86,69 @@ struct CalendarSettingsView: View {
                 } else if let region, let other = model.repository.calendarsSubscribed(to: region, except: calendar).first {
                     Text("Already subscribed via “\(other.displayName)”. It still shows only once.")
                 } else {
-                    Text("Holidays appear for everyone who sees this calendar.")
+                    Text("Holidays appear for everyone who sees this calendar. School holiday data: OpenHolidays API, ODbL.")
                 }
             }
+
+            Section {
+                ForEach(model.repository.icsSubscriptions(of: calendar)) { subscription in
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(subscription.name ?? "")
+                        Text(subscription.url ?? "")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                            .truncationMode(.middle)
+                    }
+                    .deleteDisabled(!canEditSubscriptions)
+                }
+                .onDelete { offsets in
+                    let list = model.repository.icsSubscriptions(of: calendar)
+                    offsets.map { list[$0] }.forEach(model.repository.delete)
+                    saveSubscriptions()
+                }
+                if canEditSubscriptions {
+                    Button("Add Calendar Address", systemImage: "plus") {
+                        newAddress = ""
+                        newName = ""
+                        addingSubscription = true
+                    }
+                }
+            } header: {
+                Text("Calendar Addresses")
+            } footer: {
+                Text("e.g. waste collection, school or club calendars. Updated when you open yafo; each device loads them itself.")
+            }
+        }
+        .alert("Add Calendar Address", isPresented: $addingSubscription) {
+            TextField("https://… or webcal://…", text: $newAddress)
+                .keyboardType(.URL)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+            TextField("Name (optional)", text: $newName)
+            Button("Add") {
+                if model.repository.addICSSubscription(address: newAddress, name: newName, to: calendar) != nil {
+                    saveSubscriptions()
+                } else {
+                    model.errorMessage = String(localized: "This address is not valid or already subscribed.")
+                }
+            }
+            .disabled(SubscriptionFeed.normalizedURL(newAddress) == nil)
+            Button("Cancel", role: .cancel) {}
         }
         .navigationTitle(calendar.displayName)
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func schoolRegions(_ country: SchoolHolidayRegion.Country) -> some View {
+        ForEach(SchoolHolidayRegion.regions(in: country)) { region in
+            Text(region.name).tag(SchoolHolidayRegion?.some(region))
+        }
+    }
+
+    /// Speichern und neue Quellen gleich laden.
+    private func saveSubscriptions() {
+        model.save()
+        Task { await model.refreshSubscriptions() }
     }
 }

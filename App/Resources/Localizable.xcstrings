@@ -201,6 +201,16 @@
         }
       }
     },
+    "Add Calendar Address": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalenderadresse hinzufügen"
+          }
+        }
+      }
+    },
     "Add Child Profile": {
       "localizations": {
         "de": {
@@ -267,6 +277,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ganztägig"
+          }
+        }
+      }
+    },
+    "Allow Access to Calendars": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zugriff auf Kalender erlauben"
           }
         }
       }
@@ -447,6 +467,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kalender"
+          }
+        }
+      }
+    },
+    "Calendar Addresses": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalenderadressen"
           }
         }
       }
@@ -771,6 +801,26 @@
         }
       }
     },
+    "Device Calendars": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalender auf dem Gerät"
+          }
+        }
+      }
+    },
+    "Device calendar": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalender auf dem Gerät"
+          }
+        }
+      }
+    },
     "Done": {
       "localizations": {
         "de": {
@@ -917,6 +967,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Termine"
+          }
+        }
+      }
+    },
+    "Events from these calendars appear in gray, only on this device and only for you. yafo does not change or share them.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termine aus diesen Kalendern erscheinen grau, nur auf diesem Gerät und nur für dich. yafo ändert und teilt sie nicht."
           }
         }
       }
@@ -1121,16 +1181,6 @@
         }
       }
     },
-    "From your device calendars, Google Calendar or an .ics file.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aus den Kalendern auf dem Gerät, aus Google Kalender oder einer .ics-Datei."
-          }
-        }
-      }
-    },
     "Frozen": {
       "localizations": {
         "de": {
@@ -1211,12 +1261,12 @@
         }
       }
     },
-    "Holidays appear for everyone who sees this calendar.": {
+    "Holidays appear for everyone who sees this calendar. School holiday data: OpenHolidays API, ODbL.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Die Feiertage sieht jeder, der diesen Kalender sieht."
+            "value": "Feiertage und Ferien sehen alle, die diesen Kalender sehen. Daten der Schulferien: OpenHolidays API, ODbL."
           }
         }
       }
@@ -1477,6 +1527,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Name"
+          }
+        }
+      }
+    },
+    "Name (optional)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name (optional)"
           }
         }
       }
@@ -1921,6 +1981,26 @@
         }
       }
     },
+    "School Holidays": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schulferien"
+          }
+        }
+      }
+    },
+    "School holidays: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schulferien: %@"
+          }
+        }
+      }
+    },
     "Send": {
       "localizations": {
         "de": {
@@ -1971,6 +2051,16 @@
         }
       }
     },
+    "Show work or Google calendars in gray, or copy events into yafo once.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arbeits- oder Google-Kalender grau einblenden oder Termine einmalig in yafo übernehmen."
+          }
+        }
+      }
+    },
     "Sign in to iCloud to invite family members.": {
       "localizations": {
         "de": {
@@ -2011,6 +2101,16 @@
         }
       }
     },
+    "Subscription": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abo"
+          }
+        }
+      }
+    },
     "Subscriptions": {
       "localizations": {
         "de": {
@@ -2037,6 +2137,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Süßes & Snacks"
+          }
+        }
+      }
+    },
+    "Switzerland": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schweiz"
           }
         }
       }
@@ -2087,6 +2197,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Die Liste ist so sortiert, wie man durch den Supermarkt läuft."
+          }
+        }
+      }
+    },
+    "This address is not valid or already subscribed.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Adresse ist ungültig oder schon abonniert."
           }
         }
       }
@@ -2317,6 +2437,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dein Name"
+          }
+        }
+      }
+    },
+    "e.g. waste collection, school or club calendars. Updated when you open yafo; each device loads them itself.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "z. B. Müllabfuhr, Schul- oder Vereinskalender. Wird beim Öffnen von yafo aktualisiert; jedes Gerät lädt selbst."
           }
         }
       }
