@@ -21,6 +21,27 @@ nonisolated public struct ICSEvent: Equatable, Sendable {
     public var hasAttendees: Bool
     public var hasAttachments: Bool
     public var hasConferenceLink: Bool
+
+    public init(uid: String, summary: String, location: String?, notes: String?, start: Date, end: Date,
+                isAllDay: Bool, timeZone: String?, recurrenceRule: String?, excludedDates: [Date],
+                recurrenceID: Date?, isCancelled: Bool, hasAttendees: Bool, hasAttachments: Bool,
+                hasConferenceLink: Bool) {
+        self.uid = uid
+        self.summary = summary
+        self.location = location
+        self.notes = notes
+        self.start = start
+        self.end = end
+        self.isAllDay = isAllDay
+        self.timeZone = timeZone
+        self.recurrenceRule = recurrenceRule
+        self.excludedDates = excludedDates
+        self.recurrenceID = recurrenceID
+        self.isCancelled = isCancelled
+        self.hasAttendees = hasAttendees
+        self.hasAttachments = hasAttachments
+        self.hasConferenceLink = hasConferenceLink
+    }
 }
 
 /// Liest VEVENTs aus iCalendar-Text (RFC 5545). Gemeinsam für Abos und Importe.

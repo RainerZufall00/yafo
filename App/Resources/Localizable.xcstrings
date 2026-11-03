@@ -41,6 +41,16 @@
         }
       }
     },
+    "%lld already there, skipped": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld schon vorhanden, übersprungen"
+          }
+        }
+      }
+    },
     "%lld days before": {
       "localizations": {
         "de": {
@@ -57,6 +67,46 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld Tage vorher um %@"
+          }
+        }
+      }
+    },
+    "%lld events imported": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld event imported"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld events imported"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Termin übernommen"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Termine übernommen"
+                }
+              }
+            }
           }
         }
       }
@@ -181,6 +231,16 @@
         }
       }
     },
+    "Address": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adresse"
+          }
+        }
+      }
+    },
     "After": {
       "localizations": {
         "de": {
@@ -251,6 +311,46 @@
         }
       }
     },
+    "Attachments of %lld events": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Attachments of %lld event"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Attachments of %lld events"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Anhänge von %lld Termin"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Anhänge von %lld Terminen"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Austria": {
       "localizations": {
         "de": {
@@ -287,6 +387,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Baby"
+          }
+        }
+      }
+    },
+    "Back": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zurück"
           }
         }
       }
@@ -391,6 +501,16 @@
         }
       }
     },
+    "Choose .ics File": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ".ics-Datei auswählen"
+          }
+        }
+      }
+    },
     "Clear": {
       "localizations": {
         "de": {
@@ -457,6 +577,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Erledigt (%lld)"
+          }
+        }
+      }
+    },
+    "Continue": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weiter"
           }
         }
       }
@@ -631,6 +761,26 @@
         }
       }
     },
+    "Device": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gerät"
+          }
+        }
+      }
+    },
+    "Done": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fertig"
+          }
+        }
+      }
+    },
     "Drinks": {
       "localizations": {
         "de": {
@@ -757,6 +907,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Termin"
+          }
+        }
+      }
+    },
+    "Events": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termine"
+          }
+        }
+      }
+    },
+    "Events that were already imported are skipped.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bereits übernommene Termine werden übersprungen."
           }
         }
       }
@@ -911,6 +1081,16 @@
         }
       }
     },
+    "File": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datei"
+          }
+        }
+      }
+    },
     "Filter": {
       "localizations": {
         "de": {
@@ -927,6 +1107,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Erster geteilter Kalender"
+          }
+        }
+      }
+    },
+    "For Google Calendar use the secret address in iCal format from the calendar settings. Reset it at Google after the import.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Für Google Kalender die „Privatadresse im iCal-Format“ aus den Kalendereinstellungen nehmen. Nach dem Import bei Google zurücksetzen."
+          }
+        }
+      }
+    },
+    "From your device calendars, Google Calendar or an .ics file.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aus den Kalendern auf dem Gerät, aus Google Kalender oder einer .ics-Datei."
           }
         }
       }
@@ -961,6 +1161,56 @@
         }
       }
     },
+    "Google exports a ZIP file. Unzip it in the Files app first.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Google exportiert eine ZIP-Datei. Entpacke sie zuerst in der Dateien-App."
+          }
+        }
+      }
+    },
+    "Guests of %lld events": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Guests of %lld event"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Guests of %lld events"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Gäste von %lld Termin"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Gäste von %lld Terminen"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Holidays appear for everyone who sees this calendar.": {
       "localizations": {
         "de": {
@@ -977,6 +1227,76 @@
           "stringUnit": {
             "state": "translated",
             "value": "Haushalt"
+          }
+        }
+      }
+    },
+    "Import %lld Events": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Import %lld Event"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Import %lld Events"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Termin übernehmen"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Termine übernehmen"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Import Events": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termine importieren"
+          }
+        }
+      }
+    },
+    "Import Into": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Übernehmen in"
+          }
+        }
+      }
+    },
+    "Imports from one year ago to two years ahead. For older events, set iOS to sync “All Events” for that account.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Übernimmt Termine von vor einem Jahr bis zwei Jahre voraus. Für ältere Termine in iOS für das Konto „Alle Ereignisse“ synchronisieren."
           }
         }
       }
@@ -1057,6 +1377,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Liste: %@"
+          }
+        }
+      }
+    },
+    "Load": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laden"
           }
         }
       }
@@ -1231,6 +1561,16 @@
         }
       }
     },
+    "No events found.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Termine gefunden."
+          }
+        }
+      }
+    },
     "No family yet": {
       "localizations": {
         "de": {
@@ -1281,6 +1621,16 @@
         }
       }
     },
+    "Not Imported": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wird nicht übernommen"
+          }
+        }
+      }
+    },
     "Notes": {
       "localizations": {
         "de": {
@@ -1317,6 +1667,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "OK"
+          }
+        }
+      }
+    },
+    "Of which repeating": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Davon Serien"
           }
         }
       }
@@ -1591,6 +1951,16 @@
         }
       }
     },
+    "Show Device Calendars": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalender auf dem Gerät anzeigen"
+          }
+        }
+      }
+    },
     "Show in Calendar": {
       "localizations": {
         "de": {
@@ -1617,6 +1987,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Etwas ist schiefgelaufen"
+          }
+        }
+      }
+    },
+    "Source": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quelle"
           }
         }
       }
@@ -1791,6 +2171,46 @@
         }
       }
     },
+    "Video call links of %lld events": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Video call link of %lld event"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Video call links of %lld events"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Videokonferenz-Link von %lld Termin"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Videokonferenz-Links von %lld Terminen"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "Welcome to %@": {
       "localizations": {
         "de": {
@@ -1901,12 +2321,32 @@
         }
       }
     },
+    "https://… or webcal://…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "https://… oder webcal://…"
+          }
+        }
+      }
+    },
     "until %@": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "bis %@"
+          }
+        }
+      }
+    },
+    "yafo has no access to your calendars. You can allow it in Settings.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "yafo hat keinen Zugriff auf deine Kalender. Du kannst ihn in den Einstellungen erlauben."
           }
         }
       }

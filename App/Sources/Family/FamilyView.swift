@@ -26,6 +26,7 @@ struct FamilyView: View {
     private var personalCalendars: FetchedResults<EventCalendar>
 
     @State private var creatingFamily = false
+    @State private var importing = false
     @State private var joining: Family?
     @State private var prompt: Prompt?
     @State private var promptText = ""
@@ -57,6 +58,12 @@ struct FamilyView: View {
                                   addCalendar: { ask(.calendar(family)) })
                 }
 
+                Section {
+                    Button("Import Events", systemImage: "square.and.arrow.down") { importing = true }
+                } footer: {
+                    Text("From your device calendars, Google Calendar or an .ics file.")
+                }
+
                 if families.isEmpty {
                     Section {
                         ContentUnavailableView {
@@ -79,6 +86,9 @@ struct FamilyView: View {
             }
             .sheet(item: $joining) { family in
                 JoinFamilyView(family: family)
+            }
+            .sheet(isPresented: $importing) {
+                ImportView()
             }
             .alert(promptTitle, isPresented: Binding(get: { prompt != nil }, set: { if !$0 { prompt = nil } })) {
                 TextField("Name", text: $promptText)

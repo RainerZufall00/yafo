@@ -62,6 +62,9 @@ Roadmap aus dem Architektur-Dokument:
       Zuständige, Zeit pro Person änderbar oder stumm), Widget „Nächste Termine“ (klein, mittel, groß)
       und „Nächster Termin“ für den Sperrbildschirm
 - [ ] 5. Abos und Import (Feiertage, Ferien, ICS, EventKit)
+  - [x] Gesetzliche Feiertage je Kalender (16 Bundesländer, AT, CH), offline berechnet
+  - [x] Einmal-Import aus Gerätekalendern, ICS-Adresse (Google) und .ics-Datei, mit Vorschau
+  - [ ] ICS-Abos mit Cache, Schulferien, externe Kalender grau anzeigen
 - [ ] 6. Export und Backup
 - [ ] 7. Screenshot zu Termin
 - [ ] 8. TestFlight, App Store
