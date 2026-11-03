@@ -22,7 +22,19 @@
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<false/>
 	<key>NSCalendarsFullAccessUsageDescription</key>
-	<string>yafo reads your calendars once to import events you choose.</string>
+	<string>yafo shows or imports events from your calendars and can copy yafo events into them.</string>
+	<key>NSUbiquitousContainers</key>
+	<dict>
+		<key>iCloud.de.yafo.app</key>
+		<dict>
+			<key>NSUbiquitousContainerIsDocumentScopePublic</key>
+			<true/>
+			<key>NSUbiquitousContainerName</key>
+			<string>yafo</string>
+			<key>NSUbiquitousContainerSupportedFolderLevels</key>
+			<string>Any</string>
+		</dict>
+	</dict>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

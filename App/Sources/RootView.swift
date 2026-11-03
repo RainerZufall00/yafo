@@ -30,7 +30,10 @@ struct RootView: View {
         }
         .onChange(of: scenePhase) { _, phase in
             // Abos beim Öffnen der App aktualisieren (ICS höchstens alle 15 Minuten).
-            if phase == .active { Task { await model.refreshSubscriptions() } }
+            if phase == .active {
+                Task { await model.refreshSubscriptions() }
+                Task { await model.autoBackupIfDue() }
+            }
         }
         .onOpenURL { url in
             if url.isFileURL { openedFile = OpenedFile(url: url) }

@@ -55,6 +55,7 @@ final class AppModel {
         await ReminderScheduler.requestAuthorization()
         refreshAfterSync()
         Task { await refreshSubscriptions() }
+        Task { await autoBackupIfDue() }
 
         // Änderungen aus iCloud (auch per Silent Push) kommen als Remote-Change-Notification.
         for await _ in NotificationCenter.default.notifications(named: .NSPersistentStoreRemoteChange) {

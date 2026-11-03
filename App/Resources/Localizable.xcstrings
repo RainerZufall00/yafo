@@ -71,6 +71,66 @@
         }
       }
     },
+    "%lld entries added, %lld already existed.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld Einträge angelegt, %2$lld waren schon vorhanden."
+          }
+        }
+      }
+    },
+    "%lld events copied, %lld of them replaced.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld Termine kopiert, davon %2$lld ersetzt."
+          }
+        }
+      }
+    },
+    "%lld events copied.": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld event copied."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld events copied."
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Termin kopiert."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Termine kopiert."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld events imported": {
       "localizations": {
         "en": {
@@ -321,6 +381,18 @@
         }
       }
     },
+    "Assigned to": {
+      "comment": "Used in YafoKit (export).",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zuständig"
+          }
+        }
+      }
+    },
     "At time of event": {
       "localizations": {
         "de": {
@@ -421,6 +493,36 @@
         }
       }
     },
+    "Backup": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup"
+          }
+        }
+      }
+    },
+    "Backup Restored": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup wiederhergestellt"
+          }
+        }
+      }
+    },
+    "Backup from %@. Entries that still exist are kept; only missing ones are added again.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup vom %@. Vorhandene Einträge bleiben, nur fehlende werden wieder angelegt."
+          }
+        }
+      }
+    },
     "Birthday": {
       "localizations": {
         "de": {
@@ -431,12 +533,36 @@
         }
       }
     },
+    "Birthday (born %@)": {
+      "comment": "Used in YafoKit (export).",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geburtstag (geboren %@)"
+          }
+        }
+      }
+    },
     "Born %@": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Geboren am %@"
+          }
+        }
+      }
+    },
+    "Bought": {
+      "comment": "Used in YafoKit (export).",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gekauft"
           }
         }
       }
@@ -501,6 +627,26 @@
         }
       }
     },
+    "Calendars (ICS)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalender (ICS)"
+          }
+        }
+      }
+    },
+    "Calendars and lists as files, a copy in a device calendar, and the weekly backup.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalender und Listen als Dateien, eine Kopie im Gerätekalender und das wöchentliche Backup."
+          }
+        }
+      }
+    },
     "Cancel": {
       "localizations": {
         "de": {
@@ -537,6 +683,16 @@
           "stringUnit": {
             "state": "translated",
             "value": ".ics-Datei auswählen"
+          }
+        }
+      }
+    },
+    "Choose Device Calendar": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gerätekalender wählen"
           }
         }
       }
@@ -601,6 +757,18 @@
         }
       }
     },
+    "Comments:": {
+      "comment": "Used in YafoKit (export).",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kommentare:"
+          }
+        }
+      }
+    },
     "Completed (%lld)": {
       "localizations": {
         "de": {
@@ -617,6 +785,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Weiter"
+          }
+        }
+      }
+    },
+    "Copies the events into a calendar on this iPhone, e.g. your work calendar. Copying again replaces the earlier copies. Later changes in yafo are not copied automatically.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kopiert die Termine in einen Kalender auf diesem iPhone, z. B. deinen Arbeitskalender. Erneutes Kopieren ersetzt die früheren Kopien. Spätere Änderungen in yafo werden nicht automatisch übernommen."
+          }
+        }
+      }
+    },
+    "Copy Events": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termine kopieren"
+          }
+        }
+      }
+    },
+    "Copy to Device Calendar": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In Gerätekalender kopieren"
           }
         }
       }
@@ -647,6 +845,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Lege eine Familie an, um Kalender und Listen zu teilen, oder öffne einen Einladungslink. Bis dahin funktioniert yafo mit deinem eigenen Kalender."
+          }
+        }
+      }
+    },
+    "Created again with you as owner: %@.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neu angelegt mit dir als Besitzer: %@."
           }
         }
       }
@@ -841,6 +1049,18 @@
         }
       }
     },
+    "Due": {
+      "comment": "Used in YafoKit (export).",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fällig"
+          }
+        }
+      }
+    },
     "Due %@": {
       "localizations": {
         "de": {
@@ -921,6 +1141,18 @@
         }
       }
     },
+    "End": {
+      "comment": "Used in YafoKit (export).",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ende"
+          }
+        }
+      }
+    },
     "End Date": {
       "localizations": {
         "de": {
@@ -967,6 +1199,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Termine"
+          }
+        }
+      }
+    },
+    "Events (CSV)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termine (CSV)"
           }
         }
       }
@@ -1121,6 +1363,36 @@
         }
       }
     },
+    "Everything": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alles"
+          }
+        }
+      }
+    },
+    "Export": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exportieren"
+          }
+        }
+      }
+    },
+    "Export & Backup": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export & Backup"
+          }
+        }
+      }
+    },
     "Family": {
       "localizations": {
         "de": {
@@ -1147,6 +1419,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Datei"
+          }
+        }
+      }
+    },
+    "Files": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dateien"
           }
         }
       }
@@ -1281,6 +1563,16 @@
         }
       }
     },
+    "ICS opens in every calendar app; series and exceptions are kept, participants and comments are in the notes. CSV opens in Numbers or Excel.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ICS öffnet sich in jeder Kalender-App; Serien und Ausnahmen bleiben erhalten, Teilnehmer und Kommentare stehen in den Notizen. CSV öffnet sich in Numbers oder Excel."
+          }
+        }
+      }
+    },
     "Import %lld Events": {
       "localizations": {
         "en": {
@@ -1357,6 +1649,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mitglieder einladen"
+          }
+        }
+      }
+    },
+    "Item": {
+      "comment": "Used in YafoKit (export).",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Artikel"
           }
         }
       }
@@ -1811,6 +2115,30 @@
         }
       }
     },
+    "Participants": {
+      "comment": "Used in YafoKit (export).",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teilnehmer"
+          }
+        }
+      }
+    },
+    "Participants: %@": {
+      "comment": "Used in YafoKit (export).",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teilnehmer: %@"
+          }
+        }
+      }
+    },
     "Person": {
       "localizations": {
         "de": {
@@ -1891,6 +2219,18 @@
         }
       }
     },
+    "Quantity": {
+      "comment": "Used in YafoKit (export).",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menge"
+          }
+        }
+      }
+    },
     "Quantity, e.g. 2 or 500 g": {
       "localizations": {
         "de": {
@@ -1941,12 +2281,64 @@
         }
       }
     },
+    "Repeats": {
+      "comment": "Used in YafoKit (export).",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wiederholung"
+          }
+        }
+      }
+    },
+    "Restore": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wiederherstellen"
+          }
+        }
+      }
+    },
+    "Restore Backup?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup wiederherstellen?"
+          }
+        }
+      }
+    },
+    "Restore from Backup…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aus Backup wiederherstellen …"
+          }
+        }
+      }
+    },
     "Save": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Sichern"
+          }
+        }
+      }
+    },
+    "Save Backup": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup sichern"
           }
         }
       }
@@ -1977,6 +2369,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nur diesen Termin sichern"
+          }
+        }
+      }
+    },
+    "Saved weekly to the yafo folder in iCloud Drive, the last five are kept.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wird wöchentlich im yafo-Ordner in iCloud Drive gesichert, die letzten fünf bleiben erhalten."
+          }
+        }
+      }
+    },
+    "Saved weekly to the yafo folder in iCloud Drive, the last five are kept. Last backup: %@.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wird wöchentlich im yafo-Ordner in iCloud Drive gesichert, die letzten fünf bleiben erhalten. Letztes Backup: %@."
           }
         }
       }
@@ -2027,6 +2439,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Einkauf"
+          }
+        }
+      }
+    },
+    "Shopping List (CSV)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einkaufsliste (CSV)"
           }
         }
       }
@@ -2087,6 +2509,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Quelle"
+          }
+        }
+      }
+    },
+    "Start": {
+      "comment": "Used in YafoKit (export).",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beginn"
           }
         }
       }
@@ -2161,6 +2595,16 @@
         }
       }
     },
+    "Target Calendar": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zielkalender"
+          }
+        }
+      }
+    },
     "The age is shown and counts up every year.": {
       "localizations": {
         "de": {
@@ -2211,6 +2655,30 @@
         }
       }
     },
+    "This backup is from a newer version of yafo. Please update the app.": {
+      "comment": "Used in YafoKit (export).",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dieses Backup stammt aus einer neueren yafo-Version. Bitte aktualisiere die App."
+          }
+        }
+      }
+    },
+    "This file is not a yafo backup.": {
+      "comment": "Used in YafoKit (export).",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Datei ist kein yafo-Backup."
+          }
+        }
+      }
+    },
     "This is a repeating event.": {
       "localizations": {
         "de": {
@@ -2231,12 +2699,34 @@
         }
       }
     },
+    "To-do": {
+      "comment": "Used in YafoKit (export).",
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Todo"
+          }
+        }
+      }
+    },
     "To-dos": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Todos"
+          }
+        }
+      }
+    },
+    "To-dos (CSV)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Todos (CSV)"
           }
         }
       }
@@ -2327,6 +2817,16 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "Weekly Backup": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wöchentliches Backup"
           }
         }
       }

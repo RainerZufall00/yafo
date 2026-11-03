@@ -27,6 +27,7 @@ struct FamilyView: View {
 
     @State private var creatingFamily = false
     @State private var importing = false
+    @State private var exporting = false
     @State private var joining: Family?
     @State private var prompt: Prompt?
     @State private var promptText = ""
@@ -69,6 +70,12 @@ struct FamilyView: View {
                     Text("Show work or Google calendars in gray, or copy events into yafo once.")
                 }
 
+                Section {
+                    Button("Export & Backup", systemImage: "square.and.arrow.up") { exporting = true }
+                } footer: {
+                    Text("Calendars and lists as files, a copy in a device calendar, and the weekly backup.")
+                }
+
                 if families.isEmpty {
                     Section {
                         ContentUnavailableView {
@@ -94,6 +101,9 @@ struct FamilyView: View {
             }
             .sheet(isPresented: $importing) {
                 ImportView()
+            }
+            .sheet(isPresented: $exporting) {
+                ExportView()
             }
             .alert(promptTitle, isPresented: Binding(get: { prompt != nil }, set: { if !$0 { prompt = nil } })) {
                 TextField("Name", text: $promptText)

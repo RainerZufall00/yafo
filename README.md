@@ -68,7 +68,13 @@ Roadmap aus dem Architektur-Dokument:
   - Gerätekalender grau einblenden (nur auf dem Gerät)
   - Einmal-Import aus Gerätekalendern, ICS-Adresse (Google) und .ics-Datei, mit Vorschau
   - Offen: eigener Spiegel der Ferien-Daten per GitHub Action, Background-Refresh, Vorauswahl im Onboarding
-- [ ] 6. Export und Backup
+- [x] 6. Export und Backup
+  - Je Familie, „Nur ich“ oder alles: Kalender als ICS (Serien mit Ausnahmen, Teilnehmer und Kommentare
+    in der Beschreibung), Termine, Einkauf und Todos als CSV (UTF-8 mit BOM für Excel)
+  - Kopie in einen Gerätekalender per EventKit; erneutes Kopieren ersetzt die früheren Kopien
+  - JSON-Backup zum Teilen und Wiederherstellen (nur fehlende Einträge, verlorene Familien neu mit
+    einem selbst als Owner), wöchentlich automatisch in den yafo-Ordner in iCloud Drive, die letzten fünf
+  - Offen: Gerätekalender-Kopie automatisch aktuell halten
 - [ ] 7. Screenshot zu Termin
 - [ ] 8. TestFlight, App Store
 

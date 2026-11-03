@@ -7,7 +7,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "yafo liest deine Kalender einmalig, um ausgewählte Termine zu übernehmen."
+            "value" : "yafo zeigt oder übernimmt Termine aus deinen Kalendern und kann yafo-Termine dorthin kopieren."
           }
         },
         "en" : {
