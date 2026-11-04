@@ -68,4 +68,21 @@ import Testing
                                 maxLanes: 3, calendar: calendar)
         #expect(layout.items.isEmpty)
     }
+
+    @Test func monthRowUsesOneColumnPerDay() {
+        // November 2026 hat 30 Tage; der Termin läuft in den Dezember hinein.
+        let november = calendar.date(from: DateComponents(year: 2026, month: 11, day: 1))!
+        let day = { (d: Int) in self.calendar.date(byAdding: .day, value: d - 1, to: november)! }
+        let layout = WeekLayout(start: november, columns: 30, entries: [
+            .init(id: "trip", start: day(20), end: day(35), isAllDay: true),
+            .init(id: "fair", start: day(25), end: day(27), isAllDay: true)
+        ], maxLanes: 3, calendar: calendar)
+
+        let trip = layout.items.first { $0.id == "trip" }!
+        #expect(trip.firstColumn == 19 && trip.lastColumn == 29)
+        #expect(!trip.continuesBefore && trip.continuesAfter)
+        #expect(layout.items.first { $0.id == "fair" }?.lane == 1)
+        #expect(layout.hiddenCounts.count == 30)
+        #expect(layout.laneCount == 2)
+    }
 }
