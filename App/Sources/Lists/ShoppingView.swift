@@ -71,19 +71,17 @@ private struct ShoppingListContent: View {
                         AisleHeader(category: category)
                         LazyVGrid(columns: columns, spacing: 10) {
                             ForEach(inAisle) { item in
-                                Button {
-                                    withAnimation(.snappy) {
-                                        model.repository.setChecked(item, true)
-                                        model.save()
+                                ShoppingTile(emoji: item.emoji, name: item.name ?? "", quantity: item.quantity,
+                                             color: category.color, isChecked: false)
+                                    .itemGestures(hint: "Marks the item as bought") {
+                                        withAnimation(.snappy) {
+                                            model.repository.setChecked(item, true)
+                                            model.save()
+                                        }
+                                        checkedCount += 1
+                                    } onDetails: {
+                                        editing = item
                                     }
-                                    checkedCount += 1
-                                } label: {
-                                    ShoppingTile(emoji: item.emoji, name: item.name ?? "", quantity: item.quantity,
-                                                 color: category.color, isChecked: false)
-                                }
-                                .buttonStyle(.plain)
-                                .contextMenu { menu(for: item) }
-                                .accessibilityHint("Marks the item as bought")
                             }
                         }
                     }
@@ -100,18 +98,16 @@ private struct ShoppingListContent: View {
                         }
                         LazyVGrid(columns: columns, spacing: 10) {
                             ForEach(recent) { item in
-                                Button {
-                                    withAnimation(.snappy) {
-                                        model.repository.setChecked(item, false)
-                                        model.save()
+                                ShoppingTile(emoji: item.emoji, name: item.name ?? "", quantity: nil,
+                                             color: item.category.color, isChecked: true)
+                                    .itemGestures(hint: "Puts the item back on the list") {
+                                        withAnimation(.snappy) {
+                                            model.repository.setChecked(item, false)
+                                            model.save()
+                                        }
+                                    } onDetails: {
+                                        editing = item
                                     }
-                                } label: {
-                                    ShoppingTile(emoji: item.emoji, name: item.name ?? "", quantity: nil,
-                                                 color: item.category.color, isChecked: true)
-                                }
-                                .buttonStyle(.plain)
-                                .contextMenu { menu(for: item) }
-                                .accessibilityHint("Puts the item back on the list")
                             }
                         }
                     }
@@ -123,8 +119,9 @@ private struct ShoppingListContent: View {
         .scrollDismissesKeyboard(.interactively)
         .safeAreaInset(edge: .top, spacing: 0) { inputField }
         .sensoryFeedback(.success, trigger: checkedCount)
+        .sensoryFeedback(.impact(weight: .medium), trigger: editing) { _, new in new != nil }
         .sheet(item: $editing) { item in
-            ShoppingItemEditor(item: item)
+            ShoppingItemSheet(item: item)
         }
         .confirmationDialog("Clear recently bought items?", isPresented: $confirmingClear, titleVisibility: .visible) {
             Button("Clear", role: .destructive) {
@@ -178,27 +175,6 @@ private struct ShoppingListContent: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(Text("Add \(name)"))
-            }
-        }
-    }
-
-    @ViewBuilder
-    private func menu(for item: ShoppingItem) -> some View {
-        Button("Edit", systemImage: "pencil") { editing = item }
-        Menu("Aisle", systemImage: "square.grid.2x2") {
-            ForEach(ShoppingCategory.allCases, id: \.self) { category in
-                Button {
-                    model.repository.setCategory(category, of: item)
-                    model.save()
-                } label: {
-                    Text("\(category.emoji) \(category.title)")
-                }
-            }
-        }
-        Button("Delete", systemImage: "trash", role: .destructive) {
-            withAnimation {
-                model.repository.delete(item)
-                model.save()
             }
         }
     }
@@ -280,64 +256,6 @@ struct ShoppingTile: View {
         if isChecked { return Color.secondary.opacity(0.12) }
         if isSuggestion { return color.opacity(colorScheme == .dark ? 0.25 : 0.14) }
         return color
-    }
-}
-
-/// Name, Menge und Abteilung eines Artikels ändern.
-private struct ShoppingItemEditor: View {
-    @Environment(AppModel.self) private var model
-    @Environment(\.dismiss) private var dismiss
-    @ObservedObject var item: ShoppingItem
-
-    @State private var name: String
-    @State private var quantity: String
-    @State private var category: ShoppingCategory?
-
-    init(item: ShoppingItem) {
-        self.item = item
-        _name = State(initialValue: item.name ?? "")
-        _quantity = State(initialValue: item.quantity ?? "")
-        _category = State(initialValue: item.categoryRaw.flatMap(ShoppingCategory.init(rawValue:)))
-    }
-
-    var body: some View {
-        NavigationStack {
-            Form {
-                Section {
-                    TextField("Name", text: $name)
-                    TextField("Quantity, e.g. 2 or 500 g", text: $quantity)
-                }
-                Section {
-                    Picker("Aisle", selection: $category) {
-                        let automatic = ShoppingCatalog.category(for: name)
-                        Text("Automatic (\(automatic.emoji) \(automatic.title))").tag(ShoppingCategory?.none)
-                        ForEach(ShoppingCategory.allCases, id: \.self) { category in
-                            Text("\(category.emoji) \(category.title)").tag(ShoppingCategory?.some(category))
-                        }
-                    }
-                } footer: {
-                    Text("The list is sorted in the order you walk through the supermarket.")
-                }
-            }
-            .navigationTitle("Edit Item")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel", role: .cancel) { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save", role: .confirm) {
-                        item.name = name.trimmingCharacters(in: .whitespaces)
-                        item.quantity = quantity.trimmingCharacters(in: .whitespaces).isEmpty ? nil : quantity
-                        model.repository.setCategory(category, of: item)
-                        model.save()
-                        dismiss()
-                    }
-                    .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
-                }
-            }
-        }
-        .presentationDetents([.medium, .large])
     }
 }
 

@@ -473,6 +473,16 @@
         }
       }
     },
+    "Automatic (%@)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatisch (%@)"
+          }
+        }
+      }
+    },
     "Baby": {
       "localizations": {
         "de": {
@@ -929,6 +939,16 @@
         }
       }
     },
+    "Delete %@?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„%@“ löschen?"
+          }
+        }
+      }
+    },
     "Delete All Events": {
       "localizations": {
         "de": {
@@ -995,6 +1015,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Diesen Termin löschen?"
+          }
+        }
+      }
+    },
+    "Details": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Details"
+          }
+        }
+      }
+    },
+    "Details for %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Details zu %@"
           }
         }
       }
@@ -2241,6 +2281,16 @@
         }
       }
     },
+    "Quantity or details, e.g. 500 g": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menge oder Details, z. B. 500 g"
+          }
+        }
+      }
+    },
     "Quantity, e.g. 2 or 500 g": {
       "localizations": {
         "de": {
@@ -2267,6 +2317,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Erinnerung"
+          }
+        }
+      }
+    },
+    "Rename": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Umbenennen"
           }
         }
       }
