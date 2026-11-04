@@ -1,6 +1,7 @@
 import Foundation
 
-/// Verteilt die Termine einer Woche auf Spuren (Zeilen) im Monatsraster.
+/// Verteilt die Termine einer Woche auf Spuren (Zeilen) im Monatsraster, oder mit `columns`
+/// die Tage eines ganzen Monats auf eine Zeile der Jahresansicht.
 /// Mehrtägige und ganztägige Termine kommen zuerst und laufen als Band über ihre Tage;
 /// passt nicht alles in `maxLanes`, zeigt die letzte Spur „+n“ für die betroffenen Tage.
 nonisolated public struct WeekLayout<ID: Hashable> {
@@ -40,18 +41,27 @@ nonisolated public struct WeekLayout<ID: Hashable> {
     public let items: [Item]
     /// Pro Spalte: wie viele Termine nicht angezeigt werden.
     public let hiddenCounts: [Int]
+    /// Spuren, die alle Termine ohne Begrenzung bräuchten.
+    public let laneCount: Int
 
     public init(weekStart: Date, entries: [Entry], maxLanes: Int, calendar: Calendar = .current) {
-        let weekStart = calendar.startOfDay(for: weekStart)
+        self.init(start: weekStart, columns: 7, entries: entries, maxLanes: maxLanes, calendar: calendar)
+    }
+
+    /// `columns` Tage ab `start`, je Tag eine Spalte.
+    public init(start: Date, columns: Int, entries: [Entry], maxLanes: Int, calendar: Calendar = .current) {
+        let weekStart = calendar.startOfDay(for: start)
+        let columnCount = columns
+        let lastColumn = columnCount - 1
 
         let placed: [Placed] = entries.compactMap { entry in
             let columns = calendar.days(from: entry.start, to: entry.end).map {
                 calendar.dateComponents([.day], from: weekStart, to: $0).day ?? 0
             }
             guard let minColumn = columns.min(), let maxColumn = columns.max(),
-                  maxColumn >= 0, minColumn <= 6 else { return nil }
-            return Placed(entry: entry, first: max(minColumn, 0), last: min(maxColumn, 6),
-                          before: minColumn < 0, after: maxColumn > 6,
+                  maxColumn >= 0, minColumn <= lastColumn else { return nil }
+            return Placed(entry: entry, first: max(minColumn, 0), last: min(maxColumn, lastColumn),
+                          before: minColumn < 0, after: maxColumn > lastColumn,
                           spanning: entry.isAllDay || columns.count > 1)
         }
         .sorted { a, b in
@@ -70,20 +80,20 @@ nonisolated public struct WeekLayout<ID: Hashable> {
                 lane += 1
             }
             if lane == occupied.count {
-                occupied.append(Array(repeating: false, count: 7))
+                occupied.append(Array(repeating: false, count: columnCount))
             }
             for column in columns { occupied[lane][column] = true }
             lanes.append(lane)
         }
 
-        var counts = Array(repeating: 0, count: 7)
+        var counts = Array(repeating: 0, count: columnCount)
         for item in placed {
             for column in item.first...item.last { counts[column] += 1 }
         }
-        let overflowing = Set((0..<7).filter { counts[$0] > maxLanes })
+        let overflowing = Set((0..<columnCount).filter { counts[$0] > maxLanes })
 
         var items: [Item] = []
-        var hidden = Array(repeating: 0, count: 7)
+        var hidden = Array(repeating: 0, count: columnCount)
         for (item, lane) in zip(placed, lanes) {
             let columns = item.first...item.last
             let isVisible = lane < maxLanes - 1
@@ -98,5 +108,6 @@ nonisolated public struct WeekLayout<ID: Hashable> {
         }
         self.items = items
         hiddenCounts = hidden
+        laneCount = occupied.count
     }
 }
