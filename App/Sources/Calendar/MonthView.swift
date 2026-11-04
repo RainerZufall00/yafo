@@ -2,7 +2,7 @@ import CoreData
 import SwiftUI
 import YafoKit
 
-/// Startbildschirm: Monatsraster über die ganze Höhe. iPhone: Tippen öffnet den Tag,
+/// Startbildschirm: Woche, Monat oder Jahr über die ganze Höhe. iPhone: Tippen öffnet den Tag,
 /// iPad: Tagesliste daneben.
 struct MonthView: View {
     @Environment(AppModel.self) private var model
@@ -13,8 +13,11 @@ struct MonthView: View {
     @State private var scrolledMonth: Date? = MonthView.startOfMonth(.now)
     @State private var selectedDay = Calendar.current.startOfDay(for: .now)
     @State private var person: Member?
+    /// Erster Tag der angezeigten Woche; folgt dem Blättern im Wochen-Pager.
+    @State private var week = MonthView.startOfWeek(.now)
+    @State private var scrolledWeek: Date? = MonthView.startOfWeek(.now)
     @State private var showingEditor = false
-    @State private var showingYear = false
+    @AppStorage("calendarMode") private var mode: CalendarMode = .month
     @State private var openedDay: Date?
 
     @FetchRequest(sortDescriptors: [SortDescriptor(\.createdAt)])
@@ -35,24 +38,22 @@ struct MonthView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if showingYear {
+                if mode == .year {
                     VStack(spacing: 0) {
                         yearHeader
                         YearView(year: month, style: style) { day in
-                            month = Self.startOfMonth(day)
-                            scrolledMonth = month
-                            selectedDay = day
-                            withAnimation(.snappy) { showingYear = false }
+                            show(day)
+                            withAnimation(.snappy) { mode = .month }
                         }
                     }
                 } else if sizeClass == .regular {
                     HStack(alignment: .top, spacing: 0) {
-                        monthGrid.frame(maxWidth: .infinity)
+                        periodGrid.frame(maxWidth: .infinity)
                         Divider()
                         DayListView(day: selectedDay, style: style).frame(width: 320)
                     }
                 } else {
-                    monthGrid
+                    periodGrid
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -66,20 +67,90 @@ struct MonthView: View {
                 showToday()
             }
             .navigationDestination(item: $openedDay) { day in
-                DayPage(day: day, style: style) { shown in
-                    selectedDay = shown
-                    month = Self.startOfMonth(shown)
-                    scrolledMonth = month
-                }
+                DayPage(day: day, style: style) { shown in show(shown) }
             }
         }
     }
 
-    private var monthGrid: some View {
-        VStack(spacing: 0) {
-            monthHeader
-            monthPager
+    @ViewBuilder
+    private var periodGrid: some View {
+        if mode == .week {
+            VStack(spacing: 0) {
+                weekHeader
+                weekPager
+            }
+        } else {
+            VStack(spacing: 0) {
+                monthHeader
+                monthPager
+            }
         }
+    }
+
+    /// Wochen als Seiten, wie die Monate: fünf Jahre in jede Richtung.
+    private var weekPager: some View {
+        ScrollView(.horizontal) {
+            LazyHStack(spacing: 0) {
+                ForEach(Self.pagedWeeks, id: \.self) { page in
+                    WeekPageView(weekStart: page, selectedDay: $selectedDay, style: style,
+                                 onOpenDay: sizeClass == .regular ? nil : { openedDay = $0 })
+                        .containerRelativeFrame([.horizontal, .vertical])
+                }
+            }
+            .scrollTargetLayout()
+        }
+        .scrollTargetBehavior(.viewAligned(limitBehavior: .alwaysByOne))
+        .scrollIndicators(.hidden)
+        .scrollPosition(id: $scrolledWeek)
+        .onChange(of: scrolledWeek) {
+            if let scrolledWeek, scrolledWeek != week { week = scrolledWeek }
+        }
+    }
+
+    private static let pagedWeeks: [Date] = {
+        let current = startOfWeek(.now)
+        return (-260...260).compactMap { Calendar.current.date(byAdding: .weekOfYear, value: $0, to: current) }
+    }()
+
+    static func startOfWeek(_ date: Date) -> Date {
+        Calendar.current.dateInterval(of: .weekOfYear, for: date)?.start ?? date
+    }
+
+    /// Springt in allen Ansichten auf den Tag (Monat, Woche, Auswahl).
+    private func show(_ day: Date) {
+        selectedDay = Calendar.current.startOfDay(for: day)
+        month = Self.startOfMonth(day)
+        scrolledMonth = month
+        week = Self.startOfWeek(day)
+        scrolledWeek = week
+    }
+
+    /// Kalenderwoche und Zeitraum, mit Pfeilen für VoiceOver.
+    private var weekHeader: some View {
+        let end = Calendar.current.date(byAdding: .day, value: 6, to: week) ?? week
+        return HStack(alignment: .firstTextBaseline) {
+            Text("Week \(Calendar.current.component(.weekOfYear, from: week))")
+                .font(.title2.weight(.bold))
+                .accessibilityAddTraits(.isHeader)
+            Text((week..<end).formatted(.interval.day().month(.abbreviated).year()))
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+            Spacer()
+            Button("Previous Week", systemImage: "chevron.left") { showWeek(offset: -1) }
+            Button("Next Week", systemImage: "chevron.right") { showWeek(offset: 1) }
+        }
+        .labelStyle(.iconOnly)
+        .imageScale(.large)
+        .buttonStyle(.borderless)
+        .padding(.horizontal, 16)
+        .padding(.top, 4)
+        .padding(.bottom, 6)
+    }
+
+    private func showWeek(offset: Int) {
+        guard let target = Calendar.current.date(byAdding: .weekOfYear, value: offset, to: week) else { return }
+        withAnimation(.snappy) { scrolledWeek = target }
     }
 
     /// Monate als Seiten: Beim Wischen laufen alter und neuer Monat mit dem Finger mit.
@@ -150,9 +221,10 @@ struct MonthView: View {
     private func showToday() {
         withAnimation(.snappy) {
             scrolledMonth = Self.startOfMonth(.now)
+            scrolledWeek = Self.startOfWeek(.now)
             selectedDay = Calendar.current.startOfDay(for: .now)
         }
-        if showingYear { month = Self.startOfMonth(.now) }
+        if mode == .year { month = Self.startOfMonth(.now) }
     }
 
     private func showYear(offset: Int) {
@@ -173,9 +245,21 @@ struct MonthView: View {
             Button("Today", action: showToday)
         }
         ToolbarItemGroup(placement: .topBarTrailing) {
-            Button(showingYear ? "Month" : "Year",
-                   systemImage: showingYear ? "calendar" : "square.grid.3x3") {
-                withAnimation(.snappy) { showingYear.toggle() }
+            Menu {
+                Picker("View", selection: Binding(
+                    get: { mode },
+                    set: { newMode in
+                        // Woche und Monat zeigen den gewählten Tag.
+                        show(selectedDay)
+                        withAnimation(.snappy) { mode = newMode }
+                    }
+                )) {
+                    ForEach(CalendarMode.allCases) { option in
+                        Label(option.title, systemImage: option.systemImage).tag(option)
+                    }
+                }
+            } label: {
+                Label("View", systemImage: mode.systemImage)
             }
             filterMenu
             Button("New Event", systemImage: "plus") { showingEditor = true }

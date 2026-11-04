@@ -231,6 +231,16 @@
         }
       }
     },
+    "+%lld more": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%lld weitere"
+          }
+        }
+      }
+    },
     "1 day before": {
       "localizations": {
         "de": {
@@ -2055,6 +2065,16 @@
         }
       }
     },
+    "Next Week": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nächste Woche"
+          }
+        }
+      }
+    },
     "Next Year": {
       "localizations": {
         "de": {
@@ -2395,6 +2415,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Voriger Monat"
+          }
+        }
+      }
+    },
+    "Previous Week": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vorige Woche"
           }
         }
       }
@@ -3107,6 +3137,36 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "View": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ansicht"
+          }
+        }
+      }
+    },
+    "Week": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Woche"
+          }
+        }
+      }
+    },
+    "Week %lld": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "KW %lld"
           }
         }
       }
