@@ -48,6 +48,8 @@ struct UpcomingWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: "de.yafo.upcoming", provider: SnapshotProvider()) { entry in
             UpcomingView(entry: entry)
+                // Ein Tipp öffnet immer den Kalender, nicht den zuletzt offenen Tab.
+                .widgetURL(URL(string: "yafo://calendar"))
                 .containerBackground(for: .widget) { Color(.systemBackground) }
         }
         .configurationDisplayName("Upcoming")
@@ -240,6 +242,8 @@ struct NextEventWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: "de.yafo.next", provider: SnapshotProvider()) { entry in
             NextEventView(entry: entry)
+                // Ein Tipp öffnet immer den Kalender, nicht den zuletzt offenen Tab.
+                .widgetURL(URL(string: "yafo://calendar"))
                 .containerBackground(for: .widget) { Color.clear }
         }
         .configurationDisplayName("Next Event")

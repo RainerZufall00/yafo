@@ -25,6 +25,21 @@ final class AppModel {
         didSet { UserDefaults.standard.set(listScopeKey, forKey: "listScope") }
     }
 
+    /// Gewählter Tab; wird gemerkt, damit „Zuletzt geöffnet“ auch nach einem Neustart greift.
+    var selectedTab: AppTab = AppModel.initialTab {
+        didSet { UserDefaults.standard.set(selectedTab.rawValue, forKey: "selectedTab") }
+    }
+    /// Zählt hoch, wenn der Kalender auf „heute“ zurückspringen soll (Tipp aufs Widget).
+    private(set) var calendarResetRequest = 0
+    private var backgroundSince: Date?
+    private var lastDeepLink: Date?
+
+    private static var initialTab: AppTab {
+        LaunchTab.current.tab
+            ?? UserDefaults.standard.string(forKey: "selectedTab").flatMap(AppTab.init(rawValue:))
+            ?? .calendar
+    }
+
     private var started = false
     private var reminderTask: Task<Void, Never>?
 
@@ -61,6 +76,29 @@ final class AppModel {
         for await _ in NotificationCenter.default.notifications(named: .NSPersistentStoreRemoteChange) {
             refreshAfterSync()
         }
+    }
+
+    // MARK: - Navigation
+
+    func open(_ url: URL) {
+        guard let tab = DeepLink.tab(for: url) else { return }
+        lastDeepLink = .now
+        selectedTab = tab
+        if tab == .calendar { calendarResetRequest += 1 }
+    }
+
+    func didEnterBackground() {
+        backgroundSince = .now
+    }
+
+    /// Nach längerer Pause mit dem eingestellten Tab weitermachen, außer ein Link
+    /// (z. B. vom Widget) hat gerade selbst einen Tab gewählt.
+    func didBecomeActive() {
+        defer { backgroundSince = nil }
+        guard let backgroundSince, let tab = LaunchTab.current.tab,
+              Date.now.timeIntervalSince(backgroundSince) >= LaunchTab.backgroundThreshold else { return }
+        if let lastDeepLink, Date.now.timeIntervalSince(lastDeepLink) < 2 { return }
+        selectedTab = tab
     }
 
     func refreshAfterSync() {

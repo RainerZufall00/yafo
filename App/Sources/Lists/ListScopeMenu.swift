@@ -15,7 +15,8 @@ struct ListScopeMenu: View {
                 set: { model.listScopeKey = $0 }
             )) {
                 ForEach(families) { family in
-                    Label(family.name ?? "", systemImage: "person.3").tag(family.id?.uuidString ?? "")
+                    Label(family.listLabel(familyCount: families.count), systemImage: "person.3")
+                        .tag(family.id?.uuidString ?? "")
                 }
                 Label("Just me", systemImage: "person").tag("personal")
             }
@@ -26,14 +27,14 @@ struct ListScopeMenu: View {
                         .font(.caption.weight(.bold))
                         .foregroundStyle(.orange)
                 }
-                Text(scope.title)
+                Text(scope.title(familyCount: families.count))
                     .font(.headline)
                 Image(systemName: "chevron.down")
                     .font(.caption.weight(.bold))
             }
             .foregroundStyle(.primary)
         }
-        .accessibilityLabel(Text("List: \(scope.title)"))
+        .accessibilityLabel(Text("List: \(scope.title(familyCount: families.count))"))
     }
 }
 
@@ -60,8 +61,14 @@ struct PersonalListBanner: View {
                 Button {
                     withAnimation(.snappy) { model.listScopeKey = family.id?.uuidString ?? "" }
                 } label: {
-                    Text("Switch to \(family.name ?? "")")
-                        .lineLimit(1)
+                    Group {
+                        if families.count > 1 {
+                            Text("Switch to \(family.name ?? "")")
+                        } else {
+                            Text("Show Shared List")
+                        }
+                    }
+                    .lineLimit(1)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.orange)
@@ -80,8 +87,15 @@ struct PersonalListBanner: View {
 }
 
 extension ListScope {
-    var title: String {
-        family?.name ?? String(localized: "Just me")
+    func title(familyCount: Int) -> String {
+        family?.listLabel(familyCount: familyCount) ?? String(localized: "Just me")
     }
+}
 
+extension Family {
+    /// Der Familienname steht nur da, wenn man in mehreren Familien ist; sonst sagt er nichts
+    /// Neues und klingt eher förmlich („Familie Müller“). Dann heißt die Liste „Gemeinsam“.
+    func listLabel(familyCount: Int) -> String {
+        familyCount > 1 ? (name ?? "") : String(localized: "Shared")
+    }
 }

@@ -25,6 +25,7 @@ struct FamilyView: View {
                   predicate: NSPredicate(format: "family == nil"))
     private var personalCalendars: FetchedResults<EventCalendar>
 
+    @AppStorage(LaunchTab.key) private var launchTab = LaunchTab.last.rawValue
     @State private var creatingFamily = false
     @State private var importing = false
     @State private var exporting = false
@@ -57,6 +58,16 @@ struct FamilyView: View {
                     FamilySection(family: family,
                                   addChild: { ask(.child(family)) },
                                   addCalendar: { ask(.calendar(family)) })
+                }
+
+                Section {
+                    Picker("On Launch", systemImage: "app.badge", selection: $launchTab) {
+                        ForEach(LaunchTab.allCases) { option in
+                            Text(option.title).tag(option.rawValue)
+                        }
+                    }
+                } footer: {
+                    Text("Tapping the widget always opens the calendar.")
                 }
 
                 Section {

@@ -13,30 +13,32 @@ struct RootView: View {
 
     var body: some View {
         @Bindable var model = model
-        TabView {
-            Tab("Calendar", systemImage: "calendar") {
+        TabView(selection: $model.selectedTab) {
+            Tab("Calendar", systemImage: "calendar", value: AppTab.calendar) {
                 MonthView()
             }
-            Tab("Shopping", systemImage: "cart") {
+            Tab("Shopping", systemImage: "cart", value: AppTab.shopping) {
                 ShoppingView()
             }
-            Tab("To-dos", systemImage: "checklist") {
+            Tab("To-dos", systemImage: "checklist", value: AppTab.todos) {
                 TodoView()
             }
-            Tab("Family", systemImage: "person.3") {
+            Tab("Family", systemImage: "person.3", value: AppTab.family) {
                 FamilyView()
             }
             .badge(model.familiesNeedingProfile.count)
         }
         .onChange(of: scenePhase) { _, phase in
             // Abos beim Öffnen der App aktualisieren (ICS höchstens alle 15 Minuten).
+            if phase == .background { model.didEnterBackground() }
             if phase == .active {
+                model.didBecomeActive()
                 Task { await model.refreshSubscriptions() }
                 Task { await model.autoBackupIfDue() }
             }
         }
         .onOpenURL { url in
-            if url.isFileURL { openedFile = OpenedFile(url: url) }
+            if url.isFileURL { openedFile = OpenedFile(url: url) } else { model.open(url) }
         }
         .sheet(item: $openedFile) { file in
             ImportView(initialFile: file.url)

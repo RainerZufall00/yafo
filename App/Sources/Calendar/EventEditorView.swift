@@ -245,8 +245,10 @@ struct EventEditorView: View {
         }
     }
 
+    /// Den Familiennamen nur anhängen, wenn man in mehreren Familien ist.
     private func calendarLabel(_ calendar: EventCalendar) -> String {
-        if let family = calendar.family?.name {
+        let familyCount = Set(calendars.compactMap(\.family)).count
+        if familyCount > 1, let family = calendar.family?.name {
             return "\(calendar.displayName) · \(family)"
         }
         return calendar.displayName

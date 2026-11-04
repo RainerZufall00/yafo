@@ -1735,6 +1735,16 @@
         }
       }
     },
+    "Last Opened": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zuletzt geöffnet"
+          }
+        }
+      }
+    },
     "Later": {
       "localizations": {
         "de": {
@@ -2091,6 +2101,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Am Datum"
+          }
+        }
+      }
+    },
+    "On Launch": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beim Start"
           }
         }
       }
@@ -2503,6 +2523,16 @@
         }
       }
     },
+    "Shared": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gemeinsam"
+          }
+        }
+      }
+    },
     "Shopping": {
       "localizations": {
         "de": {
@@ -2529,6 +2559,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kalender auf dem Gerät anzeigen"
+          }
+        }
+      }
+    },
+    "Show Shared List": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gemeinsame Liste"
           }
         }
       }
@@ -2671,6 +2711,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Schweiz (allgemein)"
+          }
+        }
+      }
+    },
+    "Tapping the widget always opens the calendar.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ein Tipp aufs Widget öffnet immer den Kalender."
           }
         }
       }

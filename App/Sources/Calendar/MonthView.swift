@@ -60,6 +60,11 @@ struct MonthView: View {
             .sheet(isPresented: $showingEditor) {
                 EventEditorView(initialDay: selectedDay)
             }
+            .onChange(of: model.calendarResetRequest) {
+                // Tipp aufs Widget: offene Tagesseite schließen und heute zeigen.
+                openedDay = nil
+                showToday()
+            }
             .navigationDestination(item: $openedDay) { day in
                 DayPage(day: day, style: style) { shown in
                     selectedDay = shown
@@ -142,6 +147,14 @@ struct MonthView: View {
         .padding(.bottom, 6)
     }
 
+    private func showToday() {
+        withAnimation(.snappy) {
+            scrolledMonth = Self.startOfMonth(.now)
+            selectedDay = Calendar.current.startOfDay(for: .now)
+        }
+        if showingYear { month = Self.startOfMonth(.now) }
+    }
+
     private func showYear(offset: Int) {
         withAnimation(.snappy) {
             month = Calendar.current.date(byAdding: .year, value: offset, to: month) ?? month
@@ -157,13 +170,7 @@ struct MonthView: View {
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {
-            Button("Today") {
-                withAnimation(.snappy) {
-                    scrolledMonth = Self.startOfMonth(.now)
-                    selectedDay = Calendar.current.startOfDay(for: .now)
-                }
-                if showingYear { month = Self.startOfMonth(.now) }
-            }
+            Button("Today", action: showToday)
         }
         ToolbarItemGroup(placement: .topBarTrailing) {
             Button(showingYear ? "Month" : "Year",
@@ -182,7 +189,14 @@ struct MonthView: View {
                     Text("Everyone").tag(Member?.none)
                     ForEach(families) { family in
                         ForEach(model.repository.activeMembers(of: family)) { member in
-                            Text("\(member.displayLabel) · \(family.name ?? "")").tag(Member?.some(member))
+                            Group {
+                                if families.count > 1 {
+                                    Text("\(member.displayLabel) · \(family.name ?? "")")
+                                } else {
+                                    Text(member.displayLabel)
+                                }
+                            }
+                            .tag(Member?.some(member))
                         }
                     }
                 }
