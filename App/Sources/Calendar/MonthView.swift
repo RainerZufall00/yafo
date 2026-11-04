@@ -38,9 +38,10 @@ struct MonthView: View {
                 if showingYear {
                     VStack(spacing: 0) {
                         yearHeader
-                        YearView(year: month, style: style) { selected in
-                            month = Self.startOfMonth(selected)
+                        YearView(year: month, style: style) { day in
+                            month = Self.startOfMonth(day)
                             scrolledMonth = month
+                            selectedDay = day
                             withAnimation(.snappy) { showingYear = false }
                         }
                     }
