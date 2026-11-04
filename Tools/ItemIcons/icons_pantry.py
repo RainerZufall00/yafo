@@ -208,12 +208,29 @@ def pickles():
 
 
 @icon
-def pasta():
-    wing = rpoly(2.5, (24, 24), (6, 9), (6, 39))
-    bow = U(wing, mirror(wing))
-    ridges = U(*[line([(x, y0), (x, y1)], 1.3) for x, y0, y1 in [(10, 14, 34), (38, 14, 34)]])
-    knot = ellipse(24, 24, 4.5, 7.5)
-    return over(minus(bow, ridges), knot, 1.6)
+def penne():
+    def tube(cx, cy, a, l=30):
+        h = l / 2
+        body = poly((-h, -6), (h - 3, -6), (h + 3, 6), (-h + 6, 6))
+        cap = ellipse(h, 0, 3.2, 6.6, -26)
+        g = U(body, cap)
+        g = minus(g, ellipse(h, 0, 1.6, 4.3, -26), line([(-h + 3, -1.5), (h - 4, -1.5)], 1.3), line([(-h + 5, 2.5), (h - 3, 2.5)], 1.3))
+        return move(rot(g, a, 0, 0), cx, cy)
+    return over(tube(19, 20, -50), tube(28, 28, -15), 1.8)
+
+
+@icon
+def fusilli():
+    segs = []
+    for i in range(6):
+        y = 9 + i * 6
+        seg = path(bez((15, y + 3), (17, y - 4), (26, y - 2)) + bez((26, y - 2), (33, y - 1), (33, y - 4))[1:] +
+                   bez((33, y - 4), (32, y + 4), (24, y + 3))[1:] + bez((24, y + 3), (17, y + 2), (15, y + 3))[1:])
+        segs.append(seg)
+    g = segs[0]
+    for seg in segs[1:]:
+        g = over(g, seg, 1.5)
+    return rot(g, 30)
 
 
 @icon

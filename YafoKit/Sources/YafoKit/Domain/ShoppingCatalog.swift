@@ -244,7 +244,8 @@ nonisolated public enum ShoppingCatalog {
         a("🥚", "egg", .dairy, "Eiersalat", "Egg salad"),
 
         // Grundnahrungsmittel, Konserven, Gewürze
-        a("🍝", "spaghetti", .pantry, "Nudeln|Spaghetti|Pasta|Penne", "Pasta|Spaghetti|Noodles|Penne"),
+        a("🍝", "penne", .pantry, "Nudeln|Pasta|Penne|Rigatoni|Makkaroni", "Pasta|Noodles|Penne|Rigatoni|Macaroni"),
+        a("🍝", "spaghetti", .pantry, "Spaghetti|Linguine|Spaghettini", "Spaghetti|Linguine|Spaghettini"),
         a("🍚", "rice", .pantry, "Reis", "Rice"),
         a("🌾", "flour", .pantry, "Mehl", "Flour"),
         a("🧂", "salt", .pantry, "Salz|Pfeffer|Gewürze", "Salt|Pepper|Spices"),
@@ -282,7 +283,7 @@ nonisolated public enum ShoppingCatalog {
         a("🫘", "beans", .pantry, "Weiße Bohnen|Schwarze Bohnen|Rote Linsen|Baked Beans|Bohnen in der Dose", "White beans|Black beans|Red lentils|Baked beans|Canned beans"),
         a("🐟", "can", .pantry, "Thunfisch in der Dose|Sardinen in der Dose", "Canned tuna|Canned sardines"),
         a("🍍", "can", .pantry, "Ananas in der Dose|Mandarinen in der Dose|Pfirsiche in der Dose|Apfelmus|Kompott", "Canned pineapple|Canned mandarins|Canned peaches|Applesauce|Compote"),
-        a("🍝", "pasta", .pantry, "Fusilli|Farfalle|Makkaroni|Tagliatelle|Bandnudeln|Lasagneplatten|Lasagne|Linguine|Rigatoni|Spätzle getrocknet", "Fusilli|Farfalle|Macaroni|Tagliatelle|Lasagna sheets|Lasagna|Linguine|Rigatoni"),
+        a("🍝", "fusilli", .pantry, "Fusilli|Farfalle|Tagliatelle|Bandnudeln|Lasagneplatten|Lasagne|Spätzle getrocknet", "Fusilli|Farfalle|Tagliatelle|Lasagna sheets|Lasagna"),
         a("🍜", "noodles", .pantry, "Reisnudeln|Glasnudeln|Mie-Nudeln|Eiernudeln|Ramen|Udon|Soba|Instantnudeln|Fünf-Minuten-Terrine", "Rice noodles|Glass noodles|Egg noodles|Ramen|Udon|Soba|Instant noodles|Cup noodles"),
         a("🍚", "rice", .pantry, "Basmatireis|Jasminreis|Risottoreis|Milchreis|Sushireis|Vollkornreis|Wildreis", "Basmati rice|Jasmine rice|Risotto rice|Rice pudding|Sushi rice|Brown rice|Wild rice"),
         a("🌾", "grain", .pantry, "Couscous|Bulgur|Quinoa|Hirse|Graupen", "Couscous|Bulgur|Quinoa|Millet|Pearl barley"),
