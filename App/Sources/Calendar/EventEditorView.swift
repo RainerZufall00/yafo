@@ -243,38 +243,9 @@ struct EventEditorView: View {
         )
     }
 
-    @ViewBuilder
     private var repeatSection: some View {
         Section("Repeat") {
-            Picker("Repeat", selection: $repeatSettings.frequency) {
-                Text("Never").tag(RepeatSettings.Frequency.never)
-                Text("Every Day").tag(RepeatSettings.Frequency.daily)
-                Text("Every Week").tag(RepeatSettings.Frequency.weekly)
-                Text("Every 2 Weeks").tag(RepeatSettings.Frequency.biweekly)
-                Text("Every Month").tag(RepeatSettings.Frequency.monthly)
-                Text("Every Year").tag(RepeatSettings.Frequency.yearly)
-                if repeatSettings.isCustomAvailable {
-                    Text("Custom").tag(RepeatSettings.Frequency.custom)
-                }
-            }
-            if repeatSettings.frequency == .weekly || repeatSettings.frequency == .biweekly {
-                WeekdayChips(selection: $repeatSettings.weekdays)
-            }
-            if repeatSettings.frequency != .never {
-                Picker("End Repeat", selection: $repeatSettings.end) {
-                    Text("Never").tag(RepeatSettings.End.never)
-                    Text("On Date").tag(RepeatSettings.End.onDate)
-                    Text("After").tag(RepeatSettings.End.afterCount)
-                }
-                switch repeatSettings.end {
-                case .onDate:
-                    DatePicker("End Date", selection: $repeatSettings.endDate, in: start..., displayedComponents: .date)
-                case .afterCount:
-                    Stepper("\(repeatSettings.count) times", value: $repeatSettings.count, in: 1...999)
-                case .never:
-                    EmptyView()
-                }
-            }
+            RepeatRows(settings: $repeatSettings, start: start)
         }
     }
 
@@ -365,34 +336,6 @@ struct ParticipantChips: View {
                 }
             }
             .padding(.vertical, 2)
-        }
-    }
-}
-
-/// Wochentage für wöchentliche Serien, in der Reihenfolge des Kalenders.
-struct WeekdayChips: View {
-    @Binding var selection: Set<Int>
-
-    var body: some View {
-        let calendar = Calendar.current
-        let order = (0..<7).map { (calendar.firstWeekday - 1 + $0) % 7 + 1 }
-        HStack(spacing: 6) {
-            ForEach(order, id: \.self) { weekday in
-                let isOn = selection.contains(weekday)
-                Button {
-                    // Mindestens ein Tag bleibt ausgewählt.
-                    if isOn, selection.count > 1 { selection.remove(weekday) } else { selection.insert(weekday) }
-                } label: {
-                    Text(calendar.veryShortStandaloneWeekdaySymbols[weekday - 1])
-                        .font(.callout.weight(.semibold))
-                        .frame(maxWidth: .infinity, minHeight: 34)
-                        .foregroundStyle(isOn ? Color.white : Color.primary)
-                        .background(Circle().fill(isOn ? Color.accentColor : Color.secondary.opacity(0.12)))
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(calendar.standaloneWeekdaySymbols[weekday - 1])
-                .accessibilityAddTraits(isOn ? .isSelected : [])
-            }
         }
     }
 }

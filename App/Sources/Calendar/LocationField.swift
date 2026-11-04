@@ -6,9 +6,12 @@ import YafoKit
 /// Ortsfeld im Termin-Editor: freier Text, beim Tippen Vorschläge aus Apple Maps.
 /// Wer einen Vorschlag wählt, bekommt Name und Adresse plus Koordinaten (`geo`);
 /// wer den Text danach von Hand ändert, verliert die Koordinaten wieder.
+/// Läuft auch in der Share Extension (darum ohne `UIApplication`).
 struct LocationField: View {
     @Binding var location: String
     @Binding var geo: String?
+    /// Vorschläge gleich zeigen, ohne dass jemand ins Feld tippt, z. B. für einen erkannten Ort.
+    var suggestsInitially = false
 
     @State private var completer = LocationCompleter()
     @State private var resolving = false
@@ -29,13 +32,26 @@ struct LocationField: View {
                     .accessibilityLabel("Location on map")
             }
         }
-        .onAppear { if geo != nil { resolvedText = location } }
+        .onAppear {
+            if geo != nil {
+                resolvedText = location
+            } else if suggestsInitially {
+                completer.query = location
+            }
+        }
         .onChange(of: location) {
             if location != resolvedText { geo = nil }
             completer.query = focused && geo == nil ? location : ""
         }
         .onChange(of: focused) {
             completer.query = focused && geo == nil ? location : ""
+        }
+        .onChange(of: geo) {
+            // Von außen gefunden (Adresse im Screenshot): Vorschläge braucht es dann nicht mehr.
+            if geo != nil, resolvedText != location {
+                resolvedText = location
+                completer.query = ""
+            }
         }
 
         ForEach(completer.results.prefix(5), id: \.self) { result in
@@ -73,6 +89,23 @@ struct LocationField: View {
         if location == text, let coordinate = response?.mapItems.first?.location.coordinate {
             geo = GeoPoint(coordinate).text
         }
+    }
+}
+
+extension LocationField {
+    /// Koordinaten für eine vollständige Adresse („Schillerstraße 12, 10625 Berlin“), sonst `nil`.
+    /// Bloße Namen wie „Aula“ sind zu mehrdeutig, dafür gibt es die Vorschläge zum Antippen.
+    static func resolveAddress(_ text: String) async -> String? {
+        let looksLikeAddress = text.range(of: #"\b\d{4,5}\b|\p{L}(str\.|straße|strasse|weg|platz|allee|gasse|ring|damm)\s*\d"#,
+                                          options: [.regularExpression, .caseInsensitive]) != nil
+            || text.range(of: #"\d+\s+\p{L}+\s+(street|st|road|rd|avenue|ave|lane|drive)\b"#,
+                          options: [.regularExpression, .caseInsensitive]) != nil
+        guard looksLikeAddress else { return nil }
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = text
+        request.resultTypes = [.address, .pointOfInterest]
+        let response = try? await MKLocalSearch(request: request).start()
+        return response?.mapItems.first.map { GeoPoint($0.location.coordinate).text }
     }
 }
 
@@ -129,49 +162,5 @@ struct GeoPoint {
     var text: String {
         String(format: "%.6f,%.6f", locale: Locale(identifier: "en_US_POSIX"),
                coordinate.latitude, coordinate.longitude)
-    }
-}
-
-/// Ort im Termin-Detail: mit Koordinaten als kleine Karte, sonst als Text; beides öffnet Apple Maps.
-struct LocationSection: View {
-    let location: String
-    let geo: GeoPoint?
-
-    var body: some View {
-        if let geo {
-            Map(initialPosition: .region(MKCoordinateRegion(center: geo.coordinate, latitudinalMeters: 600,
-                                                            longitudinalMeters: 600)),
-                interactionModes: []) {
-                Marker(location, coordinate: geo.coordinate)
-                    .tint(.red)
-            }
-            .frame(height: 150)
-            .listRowInsets(EdgeInsets())
-            .onTapGesture(perform: openInMaps)
-            .accessibilityHidden(true)
-        }
-        Button(action: openInMaps) {
-            Label {
-                VStack(alignment: .leading, spacing: 1) {
-                    Text(location)
-                        .foregroundStyle(.primary)
-                    Text("Open in Maps")
-                        .font(.caption)
-                }
-            } icon: {
-                Image(systemName: "mappin.and.ellipse")
-            }
-        }
-    }
-
-    private func openInMaps() {
-        if let geo {
-            let item = MKMapItem(location: CLLocation(latitude: geo.coordinate.latitude,
-                                                      longitude: geo.coordinate.longitude), address: nil)
-            item.name = location.components(separatedBy: ", ").first ?? location
-            item.openInMaps()
-        } else if let url = URL(string: "maps://?q=\(location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")") {
-            UIApplication.shared.open(url)
-        }
     }
 }

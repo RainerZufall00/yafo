@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 import YafoKit
 
 /// Die Wiederholungs-Auswahl im Editor. Regeln, die sich damit nicht abbilden lassen
@@ -107,4 +108,70 @@ func repeatDescription(_ string: String?, start: Date) -> String? {
         text += ", " + String(localized: "until \(until.formatted(date: .abbreviated, time: .omitted))")
     }
     return text
+}
+
+/// Wiederholung wählen: Rhythmus, Wochentage, Ende. Im Termin-Editor und in der Screenshot-Vorschau.
+struct RepeatRows: View {
+    @Binding var settings: RepeatSettings
+    let start: Date
+
+    var body: some View {
+        Picker("Repeat", selection: $settings.frequency) {
+            Text("Never").tag(RepeatSettings.Frequency.never)
+            Text("Every Day").tag(RepeatSettings.Frequency.daily)
+            Text("Every Week").tag(RepeatSettings.Frequency.weekly)
+            Text("Every 2 Weeks").tag(RepeatSettings.Frequency.biweekly)
+            Text("Every Month").tag(RepeatSettings.Frequency.monthly)
+            Text("Every Year").tag(RepeatSettings.Frequency.yearly)
+            if settings.isCustomAvailable {
+                Text("Custom").tag(RepeatSettings.Frequency.custom)
+            }
+        }
+        if settings.frequency == .weekly || settings.frequency == .biweekly {
+            WeekdayChips(selection: $settings.weekdays)
+        }
+        if settings.frequency != .never {
+            Picker("End Repeat", selection: $settings.end) {
+                Text("Never").tag(RepeatSettings.End.never)
+                Text("On Date").tag(RepeatSettings.End.onDate)
+                Text("After").tag(RepeatSettings.End.afterCount)
+            }
+            switch settings.end {
+            case .onDate:
+                DatePicker("End Date", selection: $settings.endDate, in: start..., displayedComponents: .date)
+            case .afterCount:
+                Stepper("\(settings.count) times", value: $settings.count, in: 1...999)
+            case .never:
+                EmptyView()
+            }
+        }
+    }
+}
+
+/// Wochentage für wöchentliche Serien, in der Reihenfolge des Kalenders.
+struct WeekdayChips: View {
+    @Binding var selection: Set<Int>
+
+    var body: some View {
+        let calendar = Calendar.current
+        let order = (0..<7).map { (calendar.firstWeekday - 1 + $0) % 7 + 1 }
+        HStack(spacing: 6) {
+            ForEach(order, id: \.self) { weekday in
+                let isOn = selection.contains(weekday)
+                Button {
+                    // Mindestens ein Tag bleibt ausgewählt.
+                    if isOn, selection.count > 1 { selection.remove(weekday) } else { selection.insert(weekday) }
+                } label: {
+                    Text(calendar.veryShortStandaloneWeekdaySymbols[weekday - 1])
+                        .font(.callout.weight(.semibold))
+                        .frame(maxWidth: .infinity, minHeight: 34)
+                        .foregroundStyle(isOn ? Color.white : Color.primary)
+                        .background(Circle().fill(isOn ? Color.accentColor : Color.secondary.opacity(0.12)))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(calendar.standaloneWeekdaySymbols[weekday - 1])
+                .accessibilityAddTraits(isOn ? .isSelected : [])
+            }
+        }
+    }
 }

@@ -49,7 +49,10 @@ enum ScreenshotReader {
             Resolve relative dates such as "tomorrow", "next Friday", "morgen" or "nächsten Samstag" and dates \
             without a year to the next matching date on or after today. \
             Ignore the clock in the status bar, times a message was sent and dates that are only mentioned in passing. \
-            Keep the title short and in the language of the text, without the date. Never invent events.
+            Keep the title short and in the language of the text, without the date. \
+            If the text says an event repeats ("jeden Dienstag", "montags", "alle zwei Wochen", "every Monday", \
+            "weekly"), return it once as a recurring event: date is the first occurrence on or after today \
+            (or the stated start date), with repeats and weekdays set. Never invent events.
             """)
         let response = try await session.respond(generating: RecognizedEvents.self) {
             switch content {
@@ -63,7 +66,9 @@ enum ScreenshotReader {
         }
         return response.content.events.compactMap { event in
             EventProposal(title: event.title, date: event.date, startTime: event.startTime,
-                          endDate: event.endDate, endTime: event.endTime, location: event.location)
+                          endDate: event.endDate, endTime: event.endTime, location: event.location,
+                          repeats: event.repeats?.rawValue, repeatWeekdays: event.repeatWeekdays ?? [],
+                          repeatUntil: event.repeatUntil)
         }
     }
 
@@ -98,4 +103,15 @@ struct RecognizedEvent {
     var endTime: String?
     @Guide(description: "Place or address if given, otherwise nil")
     var location: String?
+    @Guide(description: "How often the event repeats if the text says so, otherwise nil")
+    var repeats: RecognizedRepeat?
+    @Guide(description: "For weekly repeats: the weekdays as two-letter codes MO, TU, WE, TH, FR, SA, SU")
+    var repeatWeekdays: [String]?
+    @Guide(description: "Last date of a repeating event in the format yyyy-MM-dd if given, otherwise nil")
+    var repeatUntil: String?
+}
+
+@Generable
+enum RecognizedRepeat: String {
+    case daily, weekly, biweekly, monthly, yearly
 }

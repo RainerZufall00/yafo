@@ -75,6 +75,8 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/Localizable.xcstrings,
+				Sources/Calendar/LocationField.swift,
+				Sources/Calendar/RepeatSettings.swift,
 				Sources/Screenshot/ScreenshotImportView.swift,
 				Sources/Screenshot/ScreenshotReader.swift,
 				Sources/Support/Styling.swift,

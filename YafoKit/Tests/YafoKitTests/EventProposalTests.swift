@@ -108,6 +108,83 @@ import Testing
         #expect(proposals.first?.start == date(2027, 6, 27))
     }
 
+    // MARK: - Serien
+
+    @Test func modelFieldsBecomeRule() throws {
+        // Das Modell nennt einen Mittwoch, gemeint ist jeden Dienstag: Termin rückt auf den Dienstag.
+        let training = try #require(EventProposal(title: "Fußball", date: "2026-11-04", startTime: "16:00",
+                                                  endDate: nil, endTime: "17:30", location: nil, repeats: "weekly",
+                                                  repeatWeekdays: ["TU"], repeatUntil: "2027-03-30", calendar: cal))
+        #expect(training.start == date(2026, 11, 10, 16))
+        #expect(training.end == date(2026, 11, 10, 17, 30))
+        let rule = try #require(training.recurrenceRule.flatMap(RecurrenceRule.init(rrule:)))
+        #expect(rule.frequency == .weekly)
+        #expect(rule.byDay.isEmpty)
+        #expect(rule.until.map { cal.startOfDay(for: $0) } == date(2027, 3, 30))
+
+        let choir = try #require(EventProposal(title: "Chor", date: "2026-11-09", startTime: nil, endDate: nil,
+                                               endTime: nil, location: nil, repeats: "Biweekly",
+                                               repeatWeekdays: ["MO", "WE"], calendar: cal))
+        #expect(choir.recurrenceRule == "FREQ=WEEKLY;INTERVAL=2;BYDAY=MO,WE")
+        #expect(EventProposal(title: "X", date: "2026-11-09", startTime: nil, endDate: nil, endTime: nil,
+                              location: nil, repeats: "sometimes", calendar: cal)?.recurrenceRule == nil)
+    }
+
+    @Test func extractorFindsWeeklySeries() throws {
+        let lines = ["Fußballtraining jeden Dienstag um 16 Uhr",
+                     "Chor jeden Donnerstag 19:30-21:00 Uhr im Gemeindehaus",
+                     "Turnen alle zwei Wochen freitags um 16 Uhr",
+                     "Training immer mittwochs von 17 bis 18:30 Uhr"]
+        let proposals = TextEventExtractor.proposals(in: lines, now: now, calendar: cal)
+        #expect(proposals.map(\.title) == ["Fußballtraining", "Chor", "Turnen", "Training"])
+        #expect(proposals.map(\.start) == [date(2026, 11, 10, 16), date(2026, 11, 5, 19, 30),
+                                           date(2026, 11, 6, 16), date(2026, 11, 4, 17)])
+        #expect(proposals.map(\.recurrenceRule) == ["FREQ=WEEKLY", "FREQ=WEEKLY", "FREQ=WEEKLY;INTERVAL=2",
+                                                    "FREQ=WEEKLY"])
+        #expect(proposals[1].end == date(2026, 11, 5, 21))
+        #expect(proposals[1].location == "Gemeindehaus")
+        #expect(proposals[3].end == date(2026, 11, 4, 18, 30))
+    }
+
+    @Test func extractorSeriesWithStartAndEndDate() throws {
+        let lines = ["Schwimmkurs ab 10.11.2026 wöchentlich dienstags 15:30 bis 30.01.2027"]
+        let course = try #require(TextEventExtractor.proposals(in: lines, now: now, calendar: cal).first)
+        #expect(course.title == "Schwimmkurs")
+        #expect(course.start == date(2026, 11, 10, 15, 30))
+        let rule = try #require(course.recurrenceRule.flatMap(RecurrenceRule.init(rrule:)))
+        #expect(rule.frequency == .weekly)
+        #expect(rule.until.map { cal.startOfDay(for: $0) } == date(2027, 1, 30))
+        // Ohne Wochentag, nur „montags“ mit Uhrzeit und mehrere Tage.
+        let more = TextEventExtractor.proposals(in: ["Nachhilfe montags und mittwochs 17:00",
+                                                     "Every Monday at 5pm: swimming"], now: now, calendar: cal)
+        #expect(more.first?.title == "Nachhilfe")
+        #expect(more.first?.start == date(2026, 11, 4, 17))
+        #expect(more.first?.recurrenceRule == "FREQ=WEEKLY;BYDAY=MO,WE")
+        #expect(more.last?.start == date(2026, 11, 9, 17))
+        #expect(more.last?.recurrenceRule == "FREQ=WEEKLY")
+    }
+
+    @Test func extractorTakesSeriesTimeFromNextLine() throws {
+        let lines = ["ab sofort ist das Kinderturnen:", "Kinderturnen jeden Dienstag", "16:00-17:00 Uhr",
+                     "Turnhalle, Leopoldstraße 50, 80802", "München", "Am 12.12.2026 feiern wir Weihnachten."]
+        let proposals = TextEventExtractor.proposals(in: lines, now: now, calendar: cal)
+        #expect(proposals.count == 2)
+        let gym = try #require(proposals.first)
+        #expect(gym.title == "Kinderturnen")
+        #expect(gym.start == date(2026, 11, 10, 16))
+        #expect(gym.end == date(2026, 11, 10, 17))
+        #expect(gym.recurrenceRule == "FREQ=WEEKLY")
+        #expect(gym.location == "Leopoldstraße 50, 80802 München")
+        #expect(proposals.last?.recurrenceRule == nil)
+    }
+
+    @Test func singleDatesStayWithoutRule() {
+        let lines = ["Elternabend vom 12.11.2026 bis 14.11.2026", "Monatliches Treffen", "16:00-17:00 Uhr"]
+        let proposals = TextEventExtractor.proposals(in: lines, now: now, calendar: cal)
+        #expect(proposals.count == 1)
+        #expect(proposals.first?.recurrenceRule == nil)
+    }
+
     // MARK: - Speichern aus der Share Extension
 
     @Test func appPicksUpEventsSavedByTheShareExtension() throws {

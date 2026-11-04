@@ -82,6 +82,9 @@ Roadmap aus dem Architektur-Dokument:
   - Erkennung nur auf dem Gerät: Foundation Models mit Bild, sonst Vision-Texterkennung und Text-Modell,
     ohne Apple Intelligence `NSDataDetector` mit Wortarten für den Titel
   - Vorschau mit allen erkannten Terminen zum Anpassen, Ziel-Kalender, Hinweis auf schon vorhandene
+  - Serien („jeden Dienstag“, „alle zwei Wochen“, „every Monday“) werden erkannt und sind in der Vorschau
+    einstellbar; vollständige Adressen werden gleich in Apple Maps gefunden, für Namen wie „Aula“ gibt es
+    Vorschläge zum Antippen
 - [ ] 8. TestFlight, App Store
 
 ## Lizenz

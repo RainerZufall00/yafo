@@ -21,6 +21,8 @@ struct ScreenshotImportView: View {
     @State private var skipped: Set<UUID> = []
     /// Gibt es schon (gleicher Titel, gleicher Beginn), z. B. weil der Screenshot zweimal geteilt wurde.
     @State private var existing: Set<UUID> = []
+    /// Wiederholung je Vorschlag, wie im Editor einstellbar.
+    @State private var repeats: [UUID: RepeatSettings] = [:]
     @State private var calendar: EventCalendar?
     @State private var errorText: String?
 
@@ -98,10 +100,12 @@ struct ScreenshotImportView: View {
                            displayedComponents: proposal.wrappedValue.isAllDay ? .date : [.date, .hourAndMinute])
                 DatePicker("Ends", selection: proposal.end, in: proposal.wrappedValue.start...,
                            displayedComponents: proposal.wrappedValue.isAllDay ? .date : [.date, .hourAndMinute])
-                TextField("Location", text: Binding(
+                RepeatRows(settings: repeatBinding(id, start: proposal.wrappedValue.start),
+                           start: proposal.wrappedValue.start)
+                LocationField(location: Binding(
                     get: { proposal.wrappedValue.location ?? "" },
                     set: { proposal.wrappedValue.location = $0.isEmpty ? nil : $0 }
-                ))
+                ), geo: proposal.geo, suggestsInitially: true)
             } else {
                 Text(proposal.wrappedValue.title.isEmpty ? String(localized: "New Event") : proposal.wrappedValue.title)
                     .foregroundStyle(.secondary)
@@ -142,11 +146,25 @@ struct ScreenshotImportView: View {
 
     // MARK: Bindungen
 
-    /// Beginn verschieben nimmt das Ende mit, die Dauer bleibt.
+    private func repeatBinding(_ id: UUID, start: Date) -> Binding<RepeatSettings> {
+        Binding(
+            get: { repeats[id] ?? RepeatSettings(rule: nil, start: start) },
+            set: { repeats[id] = $0 }
+        )
+    }
+
+    /// Beginn verschieben nimmt das Ende mit, die Dauer bleibt. Wie im Editor wandert der
+    /// Wochentag einer Serie mit, solange nur der des Beginns gewählt ist.
     private func startBinding(_ proposal: Binding<EventProposal>) -> Binding<Date> {
         Binding(
             get: { proposal.wrappedValue.start },
             set: { newStart in
+                let cal = Calendar.current
+                let id = proposal.wrappedValue.id
+                let oldWeekday = cal.component(.weekday, from: proposal.wrappedValue.start)
+                if repeats[id]?.weekdays == [oldWeekday] {
+                    repeats[id]?.weekdays = [cal.component(.weekday, from: newStart)]
+                }
                 let duration = proposal.wrappedValue.end.timeIntervalSince(proposal.wrappedValue.start)
                 proposal.wrappedValue.start = newStart
                 proposal.wrappedValue.end = newStart.addingTimeInterval(max(duration, 0))
@@ -183,9 +201,23 @@ struct ScreenshotImportView: View {
         }
         let read = await ScreenshotReader.read(cgImage)
         proposals = read.proposals
+        repeats = Dictionary(uniqueKeysWithValues: read.proposals.map {
+            ($0.id, RepeatSettings(rule: $0.recurrenceRule, start: $0.start))
+        })
         existing = Set(read.proposals.filter(alreadyExists).map(\.id))
         skipped = existing
         result = read
+        await resolveAddresses()
+    }
+
+    /// Erkannte Adressen gleich in Apple Maps nachschlagen; Namen wie „Aula“ bekommen nur Vorschläge.
+    private func resolveAddresses() async {
+        for proposal in proposals where proposal.geo == nil {
+            guard let location = proposal.location, let geo = await LocationField.resolveAddress(location),
+                  let index = proposals.firstIndex(where: { $0.id == proposal.id }),
+                  proposals[index].location == location, proposals[index].geo == nil else { continue }
+            proposals[index].geo = geo
+        }
     }
 
     private func alreadyExists(_ proposal: EventProposal) -> Bool {
@@ -201,10 +233,12 @@ struct ScreenshotImportView: View {
         for proposal in proposals where !skipped.contains(proposal.id) {
             let times = proposal.draftTimes()
             let title = proposal.title.trimmingCharacters(in: .whitespaces)
+            let rule = repeats[proposal.id]?.ruleString(start: times.start)
             let event = repository.createEvent(title: title.isEmpty ? String(localized: "New Event") : title,
                                                start: times.start, end: times.end, isAllDay: proposal.isAllDay,
-                                               in: calendar, createdBy: creatorID(calendar))
+                                               in: calendar, recurrenceRule: rule, createdBy: creatorID(calendar))
             event.location = proposal.location
+            event.geo = proposal.location == nil ? nil : proposal.geo
             count += 1
         }
         do {
