@@ -1,4 +1,5 @@
 import CoreData
+import PhotosUI
 import SwiftUI
 import YafoKit
 
@@ -17,6 +18,9 @@ struct MonthView: View {
     @State private var week = MonthView.startOfWeek(.now)
     @State private var scrolledWeek: Date? = MonthView.startOfWeek(.now)
     @State private var showingEditor = false
+    @State private var choosingScreenshot = false
+    @State private var screenshotItem: PhotosPickerItem?
+    @State private var screenshot: PickedImage?
     @AppStorage("calendarMode") private var mode: CalendarMode = .month
     @State private var openedDay: Date?
 
@@ -60,6 +64,15 @@ struct MonthView: View {
             .toolbar { toolbar }
             .sheet(isPresented: $showingEditor) {
                 EventEditorView(initialDay: selectedDay)
+            }
+            .photosPicker(isPresented: $choosingScreenshot, selection: $screenshotItem, matching: .images)
+            .onChange(of: screenshotItem) { Task { await loadScreenshot() } }
+            .sheet(item: $screenshot) { picked in
+                ScreenshotImportView(image: picked.image, repository: model.repository,
+                                     creatorID: model.creatorID(for:)) { count in
+                    screenshot = nil
+                    if count > 0 { model.save() }
+                }
             }
             .onChange(of: model.calendarResetRequest) {
                 // Tipp aufs Widget: offene Tagesseite schließen und heute zeigen.
@@ -262,7 +275,23 @@ struct MonthView: View {
                 Label("View", systemImage: mode.systemImage)
             }
             filterMenu
-            Button("New Event", systemImage: "plus") { showingEditor = true }
+            // Tippen: neuer Termin; lange drücken: auch „Termin aus Screenshot“.
+            Menu {
+                Button("New Event", systemImage: "square.and.pencil") { showingEditor = true }
+                Button("Event from Screenshot", systemImage: "text.viewfinder") { choosingScreenshot = true }
+            } label: {
+                Label("New Event", systemImage: "plus")
+            } primaryAction: {
+                showingEditor = true
+            }
+        }
+    }
+
+    private func loadScreenshot() async {
+        guard let item = screenshotItem else { return }
+        screenshotItem = nil
+        if let data = try? await item.loadTransferable(type: Data.self), let image = UIImage(data: data) {
+            screenshot = PickedImage(image: image)
         }
     }
 
@@ -301,4 +330,10 @@ struct MonthView: View {
                   ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
         }
     }
+}
+
+/// Ausgewähltes Bild für das Blatt „Termin aus Screenshot“.
+struct PickedImage: Identifiable {
+    let id = UUID()
+    let image: UIImage
 }

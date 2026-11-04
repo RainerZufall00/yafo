@@ -11,6 +11,7 @@ Architektur und Feature-Umfang: [docs/yafo – Architektur & Features.pdf](docs/
 | --- | --- |
 | `App/` | SwiftUI-App (iOS/iPadOS 27, Mac als iPad-App), Ressourcen, Entitlements |
 | `Widgets/` | Widget-Extension; liest nur einen Schnappschuss, den die App in die App Group schreibt |
+| `ShareExtension/` | „Termin aus Screenshot“ im Teilen-Menü; nutzt `App/Sources/Screenshot/` mit und schreibt ohne eigene iCloud-Synchronisation in die Stores der App Group, die App übernimmt die Änderungen beim Aktivwerden |
 | `YafoKit/` | Swift Package mit Datenmodell, Persistenz (Core Data + CloudKit), Sharing und Logik, inkl. Tests |
 | `docs/` | Architektur-Dokument |
 | `Tools/ItemIcons/` | Generator für die Artikel-Icons der Einkaufsliste (`python3 Tools/ItemIcons/build.py`, braucht `shapely`) |
@@ -76,7 +77,11 @@ Roadmap aus dem Architektur-Dokument:
   - JSON-Backup zum Teilen und Wiederherstellen (nur fehlende Einträge, verlorene Familien neu mit
     einem selbst als Owner), wöchentlich automatisch in den yafo-Ordner in iCloud Drive, die letzten fünf
   - Offen: Gerätekalender-Kopie automatisch aktuell halten
-- [ ] 7. Screenshot zu Termin
+- [x] 7. Screenshot zu Termin
+  - Bild teilen (Share Extension) oder im Kalender „+“ lange drücken › „Termin aus Screenshot“
+  - Erkennung nur auf dem Gerät: Foundation Models mit Bild, sonst Vision-Texterkennung und Text-Modell,
+    ohne Apple Intelligence `NSDataDetector` mit Wortarten für den Titel
+  - Vorschau mit allen erkannten Terminen zum Anpassen, Ziel-Kalender, Hinweis auf schon vorhandene
 - [ ] 8. TestFlight, App Store
 
 ## Lizenz

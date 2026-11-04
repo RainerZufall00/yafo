@@ -20,8 +20,13 @@ public final class PersistenceController {
     public static let containerIdentifier = "iCloud.de.yafo.app"
     nonisolated public static let appGroupIdentifier = "group.de.yafo.app"
 
+    /// Wer in der Share Extension speichert; die App holt nur diese Änderungen nach.
+    public static let shareExtensionAuthor = "share"
+
     public let container: NSPersistentCloudKitContainer
     public let mode: Mode
+    /// Bis hierhin sind Änderungen anderer Prozesse im `viewContext`.
+    private var historyToken: NSPersistentHistoryToken?
     public private(set) var privateStore: NSPersistentStore!
     public private(set) var sharedStore: NSPersistentStore!
     public private(set) var localStore: NSPersistentStore!
@@ -63,6 +68,25 @@ public final class PersistenceController {
         viewContext.automaticallyMergesChangesFromParent = true
         viewContext.mergePolicy = NSMergePolicy(merge: .mergeByPropertyObjectTrumpMergePolicyType)
         viewContext.transactionAuthor = "app"
+        historyToken = coordinator.currentPersistentHistoryToken(fromStores: nil)
+    }
+
+    /// Holt, was die Share Extension seit dem letzten Aufruf in dieselben Dateien geschrieben hat,
+    /// in den `viewContext`; ein anderer Prozess löst sonst keine Aktualisierung der Ansichten aus.
+    /// Gibt die Zahl der übernommenen Transaktionen zurück.
+    @discardableResult
+    public func mergeExternalChanges() -> Int {
+        let request = NSPersistentHistoryChangeRequest.fetchHistory(after: historyToken)
+        request.resultType = .transactionsAndChanges
+        let result = (try? viewContext.execute(request)) as? NSPersistentHistoryResult
+        let transactions = result?.result as? [NSPersistentHistoryTransaction] ?? []
+        if let last = transactions.last?.token { historyToken = last }
+        // Eigene Änderungen und Importe aus iCloud kennt der viewContext schon.
+        let external = transactions.filter { $0.author == Self.shareExtensionAuthor }
+        for transaction in external {
+            viewContext.mergeChanges(fromContextDidSave: transaction.objectIDNotification())
+        }
+        return external.count
     }
 
     /// Standard für die App: iCloud, sofern ein Account angemeldet ist, Daten in der App Group,

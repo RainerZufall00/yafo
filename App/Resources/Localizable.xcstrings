@@ -21,6 +21,16 @@
         }
       }
     },
+    "%@ Already in your calendar": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ Schon im Kalender"
+          }
+        }
+      }
+    },
     "%@ created this event. It will be deleted for everyone.": {
       "localizations": {
         "de": {
@@ -291,6 +301,16 @@
         }
       }
     },
+    "Add (%lld)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hinzufügen (%lld)"
+          }
+        }
+      }
+    },
     "Add Calendar Address": {
       "localizations": {
         "de": {
@@ -317,6 +337,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Geteilten Kalender anlegen"
+          }
+        }
+      }
+    },
+    "Add This Event": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diesen Termin hinzufügen"
           }
         }
       }
@@ -1343,6 +1373,16 @@
         }
       }
     },
+    "Event from Screenshot": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termin aus Screenshot"
+          }
+        }
+      }
+    },
     "Events": {
       "localizations": {
         "de": {
@@ -2105,6 +2145,16 @@
         }
       }
     },
+    "No Events Found": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Termine gefunden"
+          }
+        }
+      }
+    },
     "No birthdays in your contacts": {
       "localizations": {
         "de": {
@@ -2531,12 +2581,42 @@
         }
       }
     },
+    "Reading screenshot…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Screenshot wird gelesen …"
+          }
+        }
+      }
+    },
     "Recently Bought": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Zuletzt gekauft"
+          }
+        }
+      }
+    },
+    "Recognized on this device from the dates in the text. Please check the details; the picture is not saved.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auf diesem Gerät anhand der Datumsangaben im Text erkannt. Bitte prüfe die Angaben; das Bild wird nicht gespeichert."
+          }
+        }
+      }
+    },
+    "Recognized on this device with Apple Intelligence. Please check the details; the picture is not saved.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auf diesem Gerät mit Apple Intelligence erkannt. Bitte prüfe die Angaben; das Bild wird nicht gespeichert."
           }
         }
       }
@@ -2709,6 +2789,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Schulferien: %@"
+          }
+        }
+      }
+    },
+    "Screenshot": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Screenshot"
           }
         }
       }
@@ -2971,6 +3061,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Die Liste ist so sortiert, wie man durch den Supermarkt läuft."
+          }
+        }
+      }
+    },
+    "There seems to be no date in this picture.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In diesem Bild scheint kein Datum zu stehen."
           }
         }
       }

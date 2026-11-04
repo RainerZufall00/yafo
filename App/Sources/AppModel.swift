@@ -67,6 +67,8 @@ final class AppModel {
         guard !started else { return }
         started = true
         userID = await sharing.currentUserID()
+        // Die Share Extension braucht die ID für „Erstellt von“, kann CloudKit aber nicht fragen.
+        UserDefaults(suiteName: PersistenceController.appGroupIdentifier)?.set(userID, forKey: "userID")
         await ReminderScheduler.requestAuthorization()
         refreshAfterSync()
         Task { await refreshSubscriptions() }
@@ -74,6 +76,7 @@ final class AppModel {
 
         // Änderungen aus iCloud (auch per Silent Push) kommen als Remote-Change-Notification.
         for await _ in NotificationCenter.default.notifications(named: .NSPersistentStoreRemoteChange) {
+            mergeShareExtensionChanges()
             refreshAfterSync()
         }
     }
@@ -94,11 +97,18 @@ final class AppModel {
     /// Nach längerer Pause mit dem eingestellten Tab weitermachen, außer ein Link
     /// (z. B. vom Widget) hat gerade selbst einen Tab gewählt.
     func didBecomeActive() {
+        mergeShareExtensionChanges()
         defer { backgroundSince = nil }
         guard let backgroundSince, let tab = LaunchTab.current.tab,
               Date.now.timeIntervalSince(backgroundSince) >= LaunchTab.backgroundThreshold else { return }
         if let lastDeepLink, Date.now.timeIntervalSince(lastDeepLink) < 2 { return }
         selectedTab = tab
+    }
+
+    /// Termine, die die Share Extension angelegt hat, in die Ansichten holen und Erinnerungen
+    /// sowie Widgets nachziehen.
+    func mergeShareExtensionChanges() {
+        if persistence.mergeExternalChanges() > 0 { refreshDerivedData() }
     }
 
     func refreshAfterSync() {
