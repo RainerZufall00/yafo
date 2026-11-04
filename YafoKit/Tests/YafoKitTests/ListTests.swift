@@ -171,6 +171,19 @@ import Testing
         #expect(german.contains("Milch"))
         #expect(ShoppingCatalog.suggestions(for: "mil", languageCode: "en").contains("Milk"))
         #expect(ShoppingCatalog.suggestions(for: " ", languageCode: "de").isEmpty)
+        // Der passende Name, nicht der erste seiner Gruppe.
+        #expect(ShoppingCatalog.suggestions(for: "majo", languageCode: "de").contains("Majoran"))
+        #expect(ShoppingCatalog.suggestions(for: "cinna", languageCode: "de") == ["Zimt"])
+    }
+
+    @Test func spicesAndBabyItems() {
+        #expect(ShoppingCatalog.category(for: "Zimt") == .pantry)
+        #expect(ShoppingCatalog.category(for: "Oregano") == .pantry)
+        #expect(ShoppingCatalog.category(for: "Paprikapulver") == .pantry)
+        #expect(ShoppingCatalog.category(for: "Paprika") == .produce)
+        #expect(ShoppingCatalog.article(for: "Windeln")?.emoji == "🧷")
+        #expect(ShoppingCatalog.article(for: "Feuchttücher")?.category == .baby)
+        #expect(ShoppingCatalog.article(for: "Feuchttücher")?.emoji != ShoppingCatalog.article(for: "Klopapier")?.emoji)
     }
 
     @Test func listIsSortedByAisle() throws {

@@ -15,6 +15,9 @@ struct ShoppingView: View {
         NavigationStack {
             ShoppingListContent(scope: scope)
                 .id(scope)
+                .safeAreaInset(edge: .top, spacing: 0) {
+                    PersonalListBanner(families: families)
+                }
                 .navigationTitle("Shopping")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {

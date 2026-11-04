@@ -2085,6 +2085,16 @@
         }
       }
     },
+    "Only visible to you": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nur für dich sichtbar"
+          }
+        }
+      }
+    },
     "Other": {
       "localizations": {
         "de": {
@@ -2575,6 +2585,16 @@
         }
       }
     },
+    "Switch to %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zu %@ wechseln"
+          }
+        }
+      }
+    },
     "Switzerland": {
       "localizations": {
         "de": {
@@ -2927,6 +2947,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Du"
+          }
+        }
+      }
+    },
+    "Your family won't see anything you add here.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Was du hier einträgst, sieht deine Familie nicht."
           }
         }
       }
