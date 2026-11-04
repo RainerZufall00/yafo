@@ -206,12 +206,41 @@ struct EventEditorView: View {
                 .textContentType(.name)
             DatePicker(birthYearKnown ? "Date of Birth" : "Birthday", selection: $start,
                        in: ...(birthYearKnown ? Date.now : Date.distantFuture), displayedComponents: .date)
-            Toggle("Year of Birth Known", isOn: $birthYearKnown)
+            Toggle("Year of Birth Known", isOn: Binding(
+                get: { birthYearKnown },
+                set: { known in
+                    // Ohne Jahr liegt der Tag oft in der Zukunft; das Geburtsdatum darf das nicht.
+                    // Tag und Monat bleiben, das Jahr wird das des letzten Geburtstags.
+                    if known, start > .now { start = Birthday.latestPast(sameDayAs: start) }
+                    birthYearKnown = known
+                }
+            ))
+            if birthYearKnown {
+                // Alternativ zum Jahr: Alter eingeben, Tag und Monat bleiben.
+                LabeledContent("Age") {
+                    HStack(spacing: 12) {
+                        TextField("Age", value: age, format: .number)
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.trailing)
+                            .frame(maxWidth: 56)
+                        Stepper("Age", value: age, in: 0...130)
+                            .labelsHidden()
+                    }
+                }
+            }
         } footer: {
             Text(birthYearKnown
-                 ? "The age is shown and counts up every year."
+                 ? "Enter the date of birth or just the age. The age is shown and counts up every year."
                  : "Only day and month are used.")
         }
+    }
+
+    /// Alter heute; ändern setzt das Geburtsjahr passend.
+    private var age: Binding<Int> {
+        Binding(
+            get: { Birthday.age(birthDate: start) },
+            set: { start = Birthday.birthDate(sameDayAs: start, age: min(max($0, 0), 130)) }
+        )
     }
 
     @ViewBuilder

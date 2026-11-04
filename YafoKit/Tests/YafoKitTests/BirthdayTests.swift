@@ -116,4 +116,30 @@ import Testing
         #expect(event.occurrences(overlapping: year(2028)).map(\.start) == [date(2028, 2, 29)])
         #expect(repository.matchingBirthdays(for: lea).count == 1)
     }
+
+    // MARK: - Alter
+
+    @Test func ageCountsFromBirthdayOn() {
+        let born = date(1988, 7, 1)
+        #expect(Birthday.age(birthDate: born, now: date(2026, 6, 30), calendar: cal) == 37)
+        #expect(Birthday.age(birthDate: born, now: date(2026, 7, 1), calendar: cal) == 38)
+    }
+
+    @Test func birthDateFromAgeKeepsDayAndMonth() {
+        let now = date(2026, 11, 4)
+        // Geburtstag schon gewesen: 38 Jahre → 1988.
+        #expect(Birthday.birthDate(sameDayAs: date(2026, 7, 1), age: 38, now: now, calendar: cal) == date(1988, 7, 1))
+        // Geburtstag kommt noch: wer jetzt 73 ist, wird am 22.11. 74 → 1952.
+        #expect(Birthday.birthDate(sameDayAs: date(2026, 11, 22), age: 73, now: now, calendar: cal) == date(1952, 11, 22))
+        // Heute Geburtstag zählt schon.
+        #expect(Birthday.birthDate(sameDayAs: date(2000, 11, 4), age: 10, now: now, calendar: cal) == date(2016, 11, 4))
+    }
+
+    @Test func latestPastKeepsTheDayInsteadOfToday() {
+        let now = date(2026, 11, 4)
+        #expect(Birthday.latestPast(sameDayAs: date(2026, 11, 22), now: now, calendar: cal) == date(2025, 11, 22))
+        #expect(Birthday.latestPast(sameDayAs: date(2026, 3, 14), now: now, calendar: cal) == date(2026, 3, 14))
+        // 29. Februar in einem Nicht-Schaltjahr: der 28.
+        #expect(Birthday.latestPast(sameDayAs: date(2028, 2, 29), now: now, calendar: cal) == date(2026, 2, 28))
+    }
 }

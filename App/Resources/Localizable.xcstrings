@@ -361,6 +361,16 @@
         }
       }
     },
+    "Age": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alter"
+          }
+        }
+      }
+    },
     "Aisle": {
       "localizations": {
         "de": {
@@ -1309,6 +1319,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ende"
+          }
+        }
+      }
+    },
+    "Enter the date of birth or just the age. The age is shown and counts up every year.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gib das Geburtsdatum oder nur das Alter ein. Das Alter wird angezeigt und zählt jedes Jahr hoch."
           }
         }
       }
@@ -2921,16 +2941,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zielkalender"
-          }
-        }
-      }
-    },
-    "The age is shown and counts up every year.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Das Alter wird angezeigt und zählt jedes Jahr hoch."
           }
         }
       }
