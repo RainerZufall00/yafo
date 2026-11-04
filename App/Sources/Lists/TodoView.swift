@@ -14,6 +14,9 @@ struct TodoView: View {
         NavigationStack {
             TodoListContent(scope: scope)
                 .id(scope)
+                .safeAreaInset(edge: .top, spacing: 0) {
+                    PersonalListBanner(families: families)
+                }
                 .navigationTitle("To-dos")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {

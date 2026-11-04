@@ -171,6 +171,19 @@ import Testing
         #expect(german.contains("Milch"))
         #expect(ShoppingCatalog.suggestions(for: "mil", languageCode: "en").contains("Milk"))
         #expect(ShoppingCatalog.suggestions(for: " ", languageCode: "de").isEmpty)
+        // Der passende Name, nicht der erste seiner Gruppe.
+        #expect(ShoppingCatalog.suggestions(for: "majo", languageCode: "de").contains("Majoran"))
+        #expect(ShoppingCatalog.suggestions(for: "cinna", languageCode: "de") == ["Zimt"])
+    }
+
+    @Test func spicesAndBabyItems() {
+        #expect(ShoppingCatalog.category(for: "Zimt") == .pantry)
+        #expect(ShoppingCatalog.category(for: "Oregano") == .pantry)
+        #expect(ShoppingCatalog.category(for: "Paprikapulver") == .pantry)
+        #expect(ShoppingCatalog.category(for: "Paprika") == .produce)
+        #expect(ShoppingCatalog.article(for: "Windeln")?.emoji == "🧷")
+        #expect(ShoppingCatalog.article(for: "Feuchttücher")?.category == .baby)
+        #expect(ShoppingCatalog.article(for: "Feuchttücher")?.emoji != ShoppingCatalog.article(for: "Klopapier")?.emoji)
     }
 
     @Test func listIsSortedByAisle() throws {
@@ -194,5 +207,41 @@ import Testing
         repository.setChecked(repository.addShoppingItem("Mandelmus", to: .personal), true)
         let completions = repository.shoppingCompletions(for: "man", in: .personal)
         #expect(completions.first == "Mandelmus")
+    }
+}
+
+@Suite struct ShoppingDetailsTests {
+    @Test func amountsReplaceEachOtherAndComeFirst() {
+        var text = ShoppingDetails.toggle("AA (Mignon)", in: "")
+        text = ShoppingDetails.toggle("4", in: text)
+        #expect(text == "4, AA (Mignon)")
+        text = ShoppingDetails.toggle("10", in: text)
+        #expect(text == "10, AA (Mignon)")
+        #expect(ShoppingDetails.contains("aa (mignon)", in: text))
+    }
+
+    @Test func togglingTwiceRemovesAndKeepsFreeText() {
+        let text = ShoppingDetails.toggle("Bio", in: "500 g")
+        #expect(text == "500 g, Bio")
+        #expect(ShoppingDetails.toggle("Bio", in: text) == "500 g")
+    }
+
+    @Test func variantsComeFromTheArticleGroup() {
+        #expect(ShoppingDetails.variants(for: "Batterien", languageCode: "de").contains("AA (Mignon)"))
+        #expect(ShoppingDetails.variants(for: "batteries", languageCode: "en").contains("AA"))
+        #expect(ShoppingDetails.variants(for: "Vollmilch", languageCode: "de").contains("laktosefrei"))
+        #expect(ShoppingDetails.variants(for: "Flux capacitor").isEmpty)
+    }
+}
+
+@Suite struct ShoppingIconTests {
+    /// Jede Grafik, die Katalog und Abteilungen nennen, liegt als Imageset in der App.
+    @Test func everyIconHasAnAsset() throws {
+        let items = URL(filePath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+            .appending(path: "App/Resources/Assets.xcassets/Items")
+        let existing = try FileManager.default.contentsOfDirectory(atPath: items.path(percentEncoded: false))
+        let missing = ShoppingCatalog.allIcons.filter { !existing.contains("item-\($0).imageset") }
+        #expect(missing.isEmpty, "Fehlende Icons: \(missing.sorted())")
     }
 }
