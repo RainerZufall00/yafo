@@ -197,22 +197,67 @@ struct ExternalEntryRow: View {
     }
 }
 
-/// iPhone: ein Tag als eigene Seite mit den Termin-Karten.
+/// iPhone: Tage als Seiten mit den Termin-Karten; seitlich wischen blättert zum Vor- bzw. Folgetag.
+/// Ein Jahr in jede Richtung ab dem geöffneten Tag; gebaut werden nur die sichtbaren Seiten.
 struct DayPage: View {
-    let day: Date
     let style: CalendarStyle
+    /// Meldet den angezeigten Tag, damit das Monatsraster beim Zurückgehen dort steht.
+    var onDayChange: ((Date) -> Void)?
+
+    private let days: [Date]
+    @State private var day: Date
+    @State private var scrolledDay: Date?
     @State private var showingEditor = false
 
+    init(day: Date, style: CalendarStyle, onDayChange: ((Date) -> Void)? = nil) {
+        let start = Calendar.current.startOfDay(for: day)
+        self.style = style
+        self.onDayChange = onDayChange
+        days = (-366...366).compactMap { Calendar.current.date(byAdding: .day, value: $0, to: start) }
+        _day = State(initialValue: start)
+        _scrolledDay = State(initialValue: start)
+    }
+
     var body: some View {
-        DayListView(day: day, style: style, showsHeader: false)
-            .navigationTitle(day.formatted(.dateTime.weekday(.wide).day().month(.wide)))
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                Button("New Event", systemImage: "plus") { showingEditor = true }
+        ScrollView(.horizontal) {
+            LazyHStack(spacing: 0) {
+                ForEach(days, id: \.self) { page in
+                    DayListView(day: page, style: style, showsHeader: false)
+                        .containerRelativeFrame([.horizontal, .vertical])
+                }
             }
-            .sheet(isPresented: $showingEditor) {
-                EventEditorView(initialDay: day)
+            .scrollTargetLayout()
+        }
+        .scrollTargetBehavior(.paging)
+        .scrollIndicators(.hidden)
+        .scrollPosition(id: $scrolledDay)
+        .onChange(of: scrolledDay) {
+            guard let scrolledDay, scrolledDay != day else { return }
+            day = scrolledDay
+            onDayChange?(scrolledDay)
+        }
+        // Wischen allein wäre für VoiceOver nicht erreichbar: Drei-Finger-Wischen blättert.
+        .accessibilityScrollAction { edge in
+            switch edge {
+            case .leading: show(offset: -1)
+            case .trailing: show(offset: 1)
+            default: break
             }
+        }
+        .navigationTitle(day.formatted(.dateTime.weekday(.wide).day().month(.wide)))
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            Button("New Event", systemImage: "plus") { showingEditor = true }
+        }
+        .sheet(isPresented: $showingEditor) {
+            EventEditorView(initialDay: day)
+        }
+    }
+
+    private func show(offset: Int) {
+        guard let target = Calendar.current.date(byAdding: .day, value: offset, to: day),
+              days.contains(target) else { return }
+        withAnimation(.snappy) { scrolledDay = target }
     }
 }
 

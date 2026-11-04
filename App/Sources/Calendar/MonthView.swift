@@ -61,7 +61,11 @@ struct MonthView: View {
                 EventEditorView(initialDay: selectedDay)
             }
             .navigationDestination(item: $openedDay) { day in
-                DayPage(day: day, style: style)
+                DayPage(day: day, style: style) { shown in
+                    selectedDay = shown
+                    month = Self.startOfMonth(shown)
+                    scrolledMonth = month
+                }
             }
         }
     }
