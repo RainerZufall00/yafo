@@ -15,6 +15,7 @@ Architektur und Feature-Umfang: [docs/yafo – Architektur & Features.pdf](docs/
 | `YafoKit/` | Swift Package mit Datenmodell, Persistenz (Core Data + CloudKit), Sharing und Logik, inkl. Tests |
 | `docs/` | Architektur-Dokument |
 | `Tools/ItemIcons/` | Generator für die Artikel-Icons der Einkaufsliste (`python3 Tools/ItemIcons/build.py`, braucht `shapely`) |
+| `Tools/AppIcon/` | Generator fürs App-Icon „Familie vor dem Y“ in hell, dunkel und getönt (`swift Tools/AppIcon/build.swift`, `--preview datei.html` für eine Vorschau); `concepts/` enthält die Entwürfe |
 
 - **Datenmodell** im Code (`YafoKit/Sources/YafoKit/Model/YafoModel.swift`) statt `.xcdatamodeld`.
   Regeln fürs CloudKit-Schema: alle Beziehungen optional, keine Unique Constraints,

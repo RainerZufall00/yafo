@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+<defs><linearGradient id="bg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1024"><stop offset="0" stop-color="#38B17A"/><stop offset="1" stop-color="#1D7A4F"/></linearGradient></defs>
+<rect width="1024" height="1024" fill="url(#bg)"/>
+<!-- Großes Y als Bühne -->
+<path d="M512 880 V600 M512 600 L330 330 M512 600 L694 330" fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="150" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- Familie davor: zwei Erwachsene, ein Kind in der Mitte -->
+<g fill="#fff">
+  <circle cx="330" cy="470" r="70"/><rect x="250" y="560" width="160" height="300" rx="80"/>
+  <circle cx="694" cy="470" r="70"/><rect x="614" y="560" width="160" height="300" rx="80"/>
+</g>
+<g fill="#FFD84D" stroke="url(#bg)" stroke-width="22">
+  <circle cx="512" cy="600" r="58"/><rect x="442" y="672" width="140" height="210" rx="70"/>
+</g>
+</svg>

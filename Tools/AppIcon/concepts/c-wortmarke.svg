@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2A7BEA"/><stop offset="1" stop-color="#0B2A66"/></linearGradient></defs>
+<rect width="1024" height="1024" fill="url(#bg)"/>
+<text x="512" y="610" text-anchor="middle" font-family="'Arial Rounded MT Bold', ui-rounded, 'Nunito', sans-serif" font-weight="700" font-size="330" fill="#fff" letter-spacing="-8">yafo</text>
+<g><circle cx="392" cy="760" r="28" fill="#FF6B5A"/><circle cx="472" cy="760" r="28" fill="#FFC23D"/><circle cx="552" cy="760" r="28" fill="#3CCB7F"/><circle cx="632" cy="760" r="28" fill="#8EC2FF"/></g>
+</svg>

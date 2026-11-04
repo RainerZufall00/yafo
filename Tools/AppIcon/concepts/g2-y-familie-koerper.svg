@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+<defs><linearGradient id="bg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1024"><stop offset="0" stop-color="#38B17A"/><stop offset="1" stop-color="#1D7A4F"/></linearGradient></defs>
+<rect width="1024" height="1024" fill="url(#bg)"/>
+<!-- Eltern: die Arme des Y, laufen unten zum Kind zusammen -->
+<g stroke="#fff" stroke-width="112" stroke-linecap="round">
+  <path d="M480 760 L318 440"/><path d="M544 760 L706 440"/>
+</g>
+<circle cx="244" cy="294" r="88" fill="#fff"/>
+<circle cx="780" cy="294" r="88" fill="#fff"/>
+<!-- Kind: Stamm des Y, vorne, mit Lücke -->
+<path d="M512 660 V850" stroke="url(#bg)" stroke-width="176" stroke-linecap="round"/>
+<path d="M512 660 V850" stroke="#FFD84D" stroke-width="120" stroke-linecap="round"/>
+<circle cx="512" cy="506" r="94" fill="url(#bg)"/>
+<circle cx="512" cy="506" r="68" fill="#FFD84D"/>
+</svg>

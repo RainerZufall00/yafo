@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+<defs><linearGradient id="bg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1024"><stop offset="0" stop-color="#3B8BF5"/><stop offset="1" stop-color="#1A5FD0"/></linearGradient>
+<clipPath id="card"><rect x="150" y="250" width="520" height="540" rx="96"/></clipPath></defs>
+<rect width="1024" height="1024" fill="url(#bg)"/>
+<!-- Einkaufszettel hinten rechts, leicht gedreht -->
+<g transform="rotate(8 700 520)">
+  <rect x="470" y="200" width="420" height="620" rx="80" fill="#FFF4D6"/>
+  <g fill="none" stroke="#3CCB7F" stroke-width="30" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M700 328 l30 30 l56 -62"/><path d="M700 468 l30 30 l56 -62"/>
+  </g>
+  <circle cx="742" cy="610" r="34" fill="none" stroke="#E0B54A" stroke-width="22"/>
+  <circle cx="742" cy="740" r="34" fill="none" stroke="#E0B54A" stroke-width="22"/>
+</g>
+<!-- Kalenderblatt vorne links -->
+<g transform="rotate(-4 410 520)">
+  <rect x="150" y="250" width="520" height="540" rx="96" fill="url(#bg)" transform="translate(0 0)" stroke="url(#bg)" stroke-width="44"/>
+  <rect x="150" y="250" width="520" height="540" rx="96" fill="#fff"/>
+  <g clip-path="url(#card)">
+    <rect x="150" y="250" width="520" height="124" fill="#FF6B5A"/>
+    <g fill="#1E6FE0">
+      <circle cx="300" cy="506" r="52"/><rect x="218" y="576" width="164" height="230" rx="82"/>
+      <circle cx="520" cy="506" r="52"/><rect x="438" y="576" width="164" height="230" rx="82"/>
+    </g>
+    <g fill="#FF6B5A" stroke="#fff" stroke-width="16">
+      <circle cx="410" cy="584" r="44"/><rect x="344" y="642" width="132" height="190" rx="66"/>
+    </g>
+  </g>
+  <rect x="268" y="206" width="42" height="108" rx="21" fill="#0F3E8F"/>
+  <rect x="510" y="206" width="42" height="108" rx="21" fill="#0F3E8F"/>
+</g>
+</svg>
