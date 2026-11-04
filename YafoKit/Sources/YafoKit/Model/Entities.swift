@@ -52,6 +52,8 @@ nonisolated public final class Event: NSManagedObject, Identifiable {
     @NSManaged public var isAllDay: Bool
     @NSManaged public var timeZone: String?
     @NSManaged public var location: String?
+    /// Koordinaten des Orts als „Breite,Länge“ (wie GEO in ICS), gesetzt bei Auswahl aus der Kartensuche.
+    @NSManaged public var geo: String?
     @NSManaged public var notes: String?
     /// RRULE nach RFC 5545, z. B. `FREQ=WEEKLY;BYDAY=MO`.
     @NSManaged public var recurrenceRule: String?

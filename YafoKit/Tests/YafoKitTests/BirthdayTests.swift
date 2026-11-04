@@ -77,4 +77,43 @@ import Testing
         #expect(event.kind == .event)
         #expect(event.occurrences(overlapping: year(2026)).first?.age == nil)
     }
+
+    // MARK: - Import aus Kontakten
+
+    @Test func matchesSameDayAndYearButNotOtherYear() {
+        repository.createBirthday(name: "Oma Gisela", day: date(2026, 5, 3), birthYear: 1950,
+                                  in: calendar, createdBy: nil)
+        let same = BirthdayCandidate(id: "c1", name: "Gisela Müller", month: 5, day: 3, year: 1950)
+        let other = BirthdayCandidate(id: "c2", name: "Gisela Müller", month: 5, day: 3, year: 1951)
+        let noYear = BirthdayCandidate(id: "c3", name: "Gisela", month: 5, day: 3, year: nil)
+        let otherDay = BirthdayCandidate(id: "c4", name: "Oma Gisela", month: 5, day: 4, year: 1950)
+        #expect(repository.matchingBirthdays(for: same).map(\.title) == ["Oma Gisela"])
+        #expect(repository.matchingBirthdays(for: other).isEmpty)
+        #expect(repository.matchingBirthdays(for: noYear).count == 1)
+        #expect(repository.matchingBirthdays(for: otherDay).isEmpty)
+    }
+
+    @Test func reimportUpdatesInsteadOfDuplicating() throws {
+        let ben = BirthdayCandidate(id: "c9", name: "Ben", month: 7, day: 1, year: 1988)
+        let first = repository.importBirthday(ben, into: calendar, createdBy: nil)
+        try repository.save()
+        var renamed = ben
+        renamed.name = "Ben Miller"
+        let second = repository.importBirthday(renamed, into: calendar, createdBy: nil)
+        try repository.save()
+        #expect(first == second)
+        #expect(calendar.events?.count == 1)
+        #expect(second.title == "Ben Miller")
+        #expect(second.occurrences(overlapping: year(2026)).first?.age == 38)
+        #expect(repository.matchingBirthdays(for: ben).first == second)
+    }
+
+    @Test func leapDayWithoutYearKeepsTheDay() {
+        let lea = BirthdayCandidate(id: "c5", name: "Lea", month: 2, day: 29, year: nil)
+        let day = lea.day(calendar: cal, now: date(2027, 6, 1))
+        #expect(day == date(2024, 2, 29))
+        let event = repository.importBirthday(lea, into: calendar, createdBy: nil)
+        #expect(event.occurrences(overlapping: year(2028)).map(\.start) == [date(2028, 2, 29)])
+        #expect(repository.matchingBirthdays(for: lea).count == 1)
+    }
 }

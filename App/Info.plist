@@ -34,6 +34,8 @@
 	<false/>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>yafo shows or imports events from your calendars and can copy yafo events into them.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>yafo reads names and birthdays from your contacts so you can add them to a calendar.</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
 		<key>iCloud.de.yafo.app</key>

@@ -17,6 +17,23 @@
           }
         }
       }
+    },
+    "NSContactsUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yafo liest Namen und Geburtstage aus deinen Kontakten, damit du sie in einen Kalender übernehmen kannst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yafo reads names and birthdays from your contacts so you can add them to a calendar."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

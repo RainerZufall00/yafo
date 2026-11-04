@@ -30,7 +30,7 @@ nonisolated public enum YafoModel {
         ])
         let event = entity(Event.self, [
             uuid("id"), string("title"), date("start"), date("end"),
-            bool("isAllDay"), string("timeZone"), string("location"), string("notes"),
+            bool("isAllDay"), string("timeZone"), string("location"), string("geo"), string("notes"),
             string("recurrenceRule"), string("createdBy"), string("importUID"),
             double("defaultAlertOffset", default: AlertDefaults.timedEventOffset),
             date("createdAt"), date("updatedAt"),

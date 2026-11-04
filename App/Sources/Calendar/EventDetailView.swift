@@ -46,15 +46,18 @@ struct EventDetailView: View {
                         .foregroundStyle(.secondary)
                 }
                 .padding(.vertical, 4)
-                if let location = occurrence.location {
-                    Label(location, systemImage: "mappin.and.ellipse")
-                }
                 if event.isBirthday {
                     if event.birthYear > 0, let born = event.start {
                         Label("Born \(born.formatted(.dateTime.day().month(.wide).year()))", systemImage: "birthday.cake")
                     }
                 } else if let repeatText = repeatDescription(event.recurrenceRule, start: event.start ?? occurrence.start) {
                     Label(repeatText, systemImage: "repeat")
+                }
+            }
+            if let location = occurrence.location {
+                Section {
+                    LocationSection(location: location,
+                                    geo: location == event.location ? GeoPoint(event.geo) : nil)
                 }
             }
             Section {

@@ -28,6 +28,7 @@ struct FamilyView: View {
     @AppStorage(LaunchTab.key) private var launchTab = LaunchTab.last.rawValue
     @State private var creatingFamily = false
     @State private var importing = false
+    @State private var importingBirthdays = false
     @State private var exporting = false
     @State private var joining: Family?
     @State private var prompt: Prompt?
@@ -77,6 +78,7 @@ struct FamilyView: View {
                         Label("Device Calendars", systemImage: "iphone")
                     }
                     Button("Import Events", systemImage: "square.and.arrow.down") { importing = true }
+                    Button("Import Birthdays", systemImage: "birthday.cake") { importingBirthdays = true }
                 } footer: {
                     Text("Show work or Google calendars in gray, or copy events into yafo once.")
                 }
@@ -112,6 +114,9 @@ struct FamilyView: View {
             }
             .sheet(isPresented: $importing) {
                 ImportView()
+            }
+            .sheet(isPresented: $importingBirthdays) {
+                BirthdayImportView()
             }
             .sheet(isPresented: $exporting) {
                 ExportView()

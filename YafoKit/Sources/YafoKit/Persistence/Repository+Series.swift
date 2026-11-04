@@ -8,6 +8,8 @@ public struct EventDraft {
     public var end: Date
     public var isAllDay: Bool
     public var location: String?
+    /// Koordinaten zu `location`, siehe `Event.geo`.
+    public var geo: String?
     public var notes: String?
     public var calendar: EventCalendar
     public var participants: Set<Member>
@@ -15,8 +17,9 @@ public struct EventDraft {
 
     public init(title: String, start: Date, end: Date, isAllDay: Bool, location: String? = nil,
                 notes: String? = nil, calendar: EventCalendar, participants: Set<Member> = [],
-                recurrenceRule: String? = nil) {
+                recurrenceRule: String? = nil, geo: String? = nil) {
         self.title = title
+        self.geo = geo
         self.start = start
         self.end = end
         self.isAllDay = isAllDay
@@ -104,6 +107,7 @@ extension Repository {
         event.isAllDay = draft.isAllDay
         event.timeZone = draft.isAllDay ? nil : (event.timeZone ?? TimeZone.current.identifier)
         event.location = draft.location
+        event.geo = draft.location == nil ? nil : draft.geo
         event.notes = draft.notes
         event.recurrenceRule = draft.recurrenceRule
         event.calendar = draft.calendar

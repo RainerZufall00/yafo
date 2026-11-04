@@ -79,6 +79,8 @@ nonisolated public struct Backup: Codable, Equatable, Sendable {
         public var updatedAt: Date?
         public var participantIDs: [UUID]
         public var exceptions: [ExceptionData]
+        /// Fehlt in älteren Backups.
+        public var geo: String? = nil
     }
 
     public struct CommentData: Codable, Equatable, Sendable {
@@ -259,7 +261,7 @@ extension Repository {
                                            kind: event.kindRaw, birthYear: event.birthYear, createdAt: event.createdAt,
                                            updatedAt: event.updatedAt,
                                            participantIDs: (event.participants ?? []).compactMap(\.id).sorted { $0.uuidString < $1.uuidString },
-                                           exceptions: exceptions))
+                                           exceptions: exceptions, geo: event.geo))
                 for comment in event.comments ?? [] {
                     guard let commentID = comment.id else { continue }
                     backup.comments.append(.init(id: commentID, eventID: eventID, authorID: comment.author?.id,
@@ -405,6 +407,7 @@ extension Repository {
             event.isAllDay = data.isAllDay
             event.timeZone = data.timeZone
             event.location = data.location
+            event.geo = data.geo
             event.notes = data.notes
             event.recurrenceRule = data.recurrenceRule
             event.createdBy = data.createdBy

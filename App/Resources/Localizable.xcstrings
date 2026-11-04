@@ -51,6 +51,26 @@
         }
       }
     },
+    "%lld birthdays imported": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld Geburtstage übernommen"
+          }
+        }
+      }
+    },
+    "%lld contacts with a birthday": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld Kontakte mit Geburtstag"
+          }
+        }
+      }
+    },
     "%lld days before": {
       "localizations": {
         "de": {
@@ -291,6 +311,16 @@
         }
       }
     },
+    "Add a birthday to a contact and try again.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trag bei einem Kontakt einen Geburtstag ein und versuch es noch einmal."
+          }
+        }
+      }
+    },
     "Add items above. Tap an item once it is in the cart.": {
       "localizations": {
         "de": {
@@ -357,6 +387,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Gibt es schon ein Kinderprofil für dich?"
+          }
+        }
+      }
+    },
+    "Already imported into %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schon übernommen in %@"
           }
         }
       }
@@ -555,6 +595,26 @@
         }
       }
     },
+    "Birthdays": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geburtstage"
+          }
+        }
+      }
+    },
+    "Birthdays that probably exist already stay unselected. Shared calendars are seen by the whole family.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geburtstage, die es vermutlich schon gibt, bleiben abgewählt. Geteilte Kalender sieht die ganze Familie."
+          }
+        }
+      }
+    },
     "Born %@": {
       "localizations": {
         "de": {
@@ -703,6 +763,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Gerätekalender wählen"
+          }
+        }
+      }
+    },
+    "Choose for All New Ones": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Für alle neuen wählen"
           }
         }
       }
@@ -1065,6 +1135,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kalender auf dem Gerät"
+          }
+        }
+      }
+    },
+    "Don't Import": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nicht übernehmen"
           }
         }
       }
@@ -1653,6 +1733,26 @@
         }
       }
     },
+    "Import (%lld)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importieren (%lld)"
+          }
+        }
+      }
+    },
+    "Import Birthdays": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geburtstage importieren"
+          }
+        }
+      }
+    },
     "Import Events": {
       "localizations": {
         "de": {
@@ -1805,6 +1905,16 @@
         }
       }
     },
+    "Location on map": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ort auf der Karte"
+          }
+        }
+      }
+    },
     "Mark as done": {
       "localizations": {
         "de": {
@@ -1951,6 +2061,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nächstes Jahr"
+          }
+        }
+      }
+    },
+    "No birthdays in your contacts": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Geburtstage in deinen Kontakten"
           }
         }
       }
@@ -2135,6 +2255,16 @@
         }
       }
     },
+    "Only names and birthdays are read. Nothing leaves your device unless you put a birthday in a shared calendar.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gelesen werden nur Namen und Geburtstage. Nichts verlässt dein Gerät, außer du legst einen Geburtstag in einen geteilten Kalender."
+          }
+        }
+      }
+    },
     "Only the owner of the family changes subscriptions of shared calendars.": {
       "localizations": {
         "de": {
@@ -2151,6 +2281,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nur für dich sichtbar"
+          }
+        }
+      }
+    },
+    "Open Settings": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einstellungen öffnen"
+          }
+        }
+      }
+    },
+    "Open in Maps": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In Karten öffnen"
           }
         }
       }
@@ -2255,6 +2405,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Voriges Jahr"
+          }
+        }
+      }
+    },
+    "Probably exists already: %@ in %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gibt es wohl schon: %1$@ in %2$@"
           }
         }
       }
@@ -3117,6 +3277,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "yafo hat keinen Zugriff auf deine Kalender. Du kannst ihn in den Einstellungen erlauben."
+          }
+        }
+      }
+    },
+    "yafo has no access to your contacts.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "yafo hat keinen Zugriff auf deine Kontakte."
           }
         }
       }

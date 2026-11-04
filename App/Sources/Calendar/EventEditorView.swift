@@ -21,6 +21,7 @@ struct EventEditorView: View {
     @State private var start: Date
     @State private var end: Date
     @State private var location: String
+    @State private var geo: String?
     @State private var notes: String
     @State private var calendar: EventCalendar?
     @State private var participants: Set<Member>
@@ -61,7 +62,10 @@ struct EventEditorView: View {
         _isAllDay = State(initialValue: initialAllDay)
         _start = State(initialValue: start)
         _end = State(initialValue: end)
-        _location = State(initialValue: occurrence?.location ?? event?.location ?? "")
+        let location = occurrence?.location ?? event?.location ?? ""
+        _location = State(initialValue: location)
+        // Koordinaten gehören zum Ort der Serie; ein abweichender Ort eines Vorkommens hat keine.
+        _geo = State(initialValue: location == event?.location ? event?.geo : nil)
         _notes = State(initialValue: occurrence?.notes ?? event?.notes ?? "")
         _calendar = State(initialValue: initialCalendar)
         _participants = State(initialValue: initialParticipants)
@@ -109,7 +113,7 @@ struct EventEditorView: View {
                 } else {
                     Section {
                         TextField("Title", text: $title)
-                        TextField("Location", text: $location)
+                        LocationField(location: $location, geo: $geo)
                     }
                     Section {
                         Toggle("All day", isOn: $isAllDay)
@@ -270,7 +274,7 @@ struct EventEditorView: View {
         let draft = EventDraft(title: title.trimmingCharacters(in: .whitespaces), start: start, end: end,
                                isAllDay: isAllDay, location: location.isEmpty ? nil : location,
                                notes: notes.isEmpty ? nil : notes, calendar: calendar, participants: participants,
-                               recurrenceRule: ruleString)
+                               recurrenceRule: ruleString, geo: geo)
         if let event {
             model.repository.update(event, occurrence: originalStart, with: draft, scope: scope)
         } else {
@@ -279,6 +283,7 @@ struct EventEditorView: View {
                                                        recurrenceRule: draft.recurrenceRule,
                                                        createdBy: model.creatorID(for: calendar))
             created.location = draft.location
+            created.geo = draft.location == nil ? nil : geo
             created.notes = draft.notes
         }
         model.save()
