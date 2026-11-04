@@ -233,3 +233,15 @@ import Testing
         #expect(ShoppingDetails.variants(for: "Flux capacitor").isEmpty)
     }
 }
+
+@Suite struct ShoppingIconTests {
+    /// Jede Grafik, die Katalog und Abteilungen nennen, liegt als Imageset in der App.
+    @Test func everyIconHasAnAsset() throws {
+        let items = URL(filePath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+            .appending(path: "App/Resources/Assets.xcassets/Items")
+        let existing = try FileManager.default.contentsOfDirectory(atPath: items.path(percentEncoded: false))
+        let missing = ShoppingCatalog.allIcons.filter { !existing.contains("item-\($0).imageset") }
+        #expect(missing.isEmpty, "Fehlende Icons: \(missing.sorted())")
+    }
+}
