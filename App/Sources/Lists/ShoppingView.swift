@@ -71,7 +71,7 @@ private struct ShoppingListContent: View {
                         AisleHeader(category: category)
                         LazyVGrid(columns: columns, spacing: 10) {
                             ForEach(inAisle) { item in
-                                ShoppingTile(emoji: item.emoji, name: item.name ?? "", quantity: item.quantity,
+                                ShoppingTile(emoji: item.emoji, icon: item.icon, name: item.name ?? "", quantity: item.quantity,
                                              color: category.color, isChecked: false)
                                     .itemGestures(hint: "Marks the item as bought") {
                                         withAnimation(.snappy) {
@@ -98,7 +98,7 @@ private struct ShoppingListContent: View {
                         }
                         LazyVGrid(columns: columns, spacing: 10) {
                             ForEach(recent) { item in
-                                ShoppingTile(emoji: item.emoji, name: item.name ?? "", quantity: nil,
+                                ShoppingTile(emoji: item.emoji, icon: item.icon, name: item.name ?? "", quantity: nil,
                                              color: item.category.color, isChecked: true)
                                     .itemGestures(hint: "Puts the item back on the list") {
                                         withAnimation(.snappy) {
@@ -170,7 +170,8 @@ private struct ShoppingListContent: View {
                 Button {
                     add(name)
                 } label: {
-                    ShoppingTile(emoji: ShoppingCatalog.emoji(for: name), name: name, quantity: nil,
+                    ShoppingTile(emoji: ShoppingCatalog.emoji(for: name), icon: ShoppingCatalog.icon(for: name),
+                                 name: name, quantity: nil,
                                  color: category.color, isChecked: false, isSuggestion: true)
                 }
                 .buttonStyle(.plain)
@@ -196,7 +197,9 @@ private struct AisleHeader: View {
 
     var body: some View {
         HStack(spacing: 6) {
-            Text(category.emoji)
+            ItemIcon(icon: category.icon, emoji: category.emoji)
+                .frame(width: 18, height: 18)
+                .foregroundStyle(category.color)
             Text(category.title)
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(.secondary)
@@ -211,6 +214,7 @@ private struct AisleHeader: View {
 struct ShoppingTile: View {
     @Environment(\.colorScheme) private var colorScheme
     let emoji: String
+    let icon: String
     let name: String
     let quantity: String?
     let color: Color
@@ -219,8 +223,9 @@ struct ShoppingTile: View {
 
     var body: some View {
         VStack(spacing: 3) {
-            Text(emoji)
-                .font(.system(size: 34))
+            ItemIcon(icon: icon, emoji: emoji)
+                .frame(width: 40, height: 40)
+                .foregroundStyle(iconColor)
                 .opacity(isChecked ? 0.6 : 1)
             Text(name)
                 .font(.footnote.weight(.semibold))
@@ -245,6 +250,11 @@ struct ShoppingTile: View {
         }
         .contentShape(RoundedRectangle(cornerRadius: 14))
         .accessibilityElement(children: .combine)
+    }
+
+    private var iconColor: Color {
+        if isChecked { return .secondary }
+        return isSuggestion ? color : .white
     }
 
     private var foreground: Color {

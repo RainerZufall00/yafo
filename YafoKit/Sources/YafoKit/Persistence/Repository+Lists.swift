@@ -153,6 +153,12 @@ extension ShoppingItem {
         return category.emoji
     }
 
+    /// Gezeichnete Grafik, nach derselben Regel wie `emoji`.
+    public var icon: String {
+        if let article = ShoppingCatalog.article(for: name ?? ""), article.category == category { return article.icon }
+        return category.icon
+    }
+
     public var listScope: ListScope? {
         guard managedObjectContext != nil else { return nil }
         return family.map(ListScope.family) ?? .personal
