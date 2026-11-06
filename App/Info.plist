@@ -30,6 +30,8 @@
 	</array>
 	<key>CKSharingSupported</key>
 	<true/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<false/>
 	<key>NSCalendarsFullAccessUsageDescription</key>

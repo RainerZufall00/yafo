@@ -48,6 +48,20 @@ Tests des Packages:
 cd YafoKit && swift test
 ```
 
+## TestFlight
+
+Version und Build-Nummer stehen in `Config/Base.xcconfig` und gelten für App und Extensions.
+Export-Compliance (`ITSAppUsesNonExemptEncryption = NO`) und Privacy Manifests sind gesetzt.
+
+1. Einmalig: App in App Store Connect anlegen (Bundle-ID `de.yafo.app`).
+2. Einmalig und nach jeder Modelländerung: CloudKit-Schema nach Production bringen, TestFlight-Builds
+   synchronisieren nur dort. Debug-Build mit Startargument `-yafoInitCloudKitSchema` einmal starten
+   (iCloud angemeldet, legt alle Typen und Felder in Development an), dann im
+   [CloudKit Console](https://icloud.developer.apple.com) unter `iCloud.de.yafo.app` › Schema
+   *Deploy Schema Changes…* wählen.
+3. `CURRENT_PROJECT_VERSION` erhöhen, in Xcode *Any iOS Device* wählen, *Product › Archive*, im Organizer
+   *Distribute App › TestFlight & App Store*.
+
 ## Stand
 
 Roadmap aus dem Architektur-Dokument:

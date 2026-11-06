@@ -60,6 +60,17 @@ final class AppModel {
         if arguments.contains("-yafoDemoData") {
             DemoData.seedIfNeeded(repository)
         }
+        // Legt alle Record-Typen und Felder in der Development-Umgebung von CloudKit an, auch
+        // solche, die noch nie gespeichert wurden. Danach im CloudKit Console das Schema nach
+        // Production übernehmen, sonst scheitert die Synchronisierung in TestFlight.
+        if arguments.contains("-yafoInitCloudKitSchema"), persistence.cloudContainerIdentifier != nil {
+            do {
+                try persistence.container.initializeCloudKitSchema(options: [])
+                print("CloudKit-Schema angelegt")
+            } catch {
+                print("CloudKit-Schema fehlgeschlagen: \(error)")
+            }
+        }
         #endif
     }
 
