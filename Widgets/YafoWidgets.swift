@@ -7,6 +7,8 @@ struct YafoWidgetBundle: WidgetBundle {
     var body: some Widget {
         UpcomingWidget()
         NextEventWidget()
+        ShoppingListWidget()
+        TodoListWidget()
     }
 }
 

@@ -17,6 +17,17 @@
 			</array>
 		</dict>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>de.yafo.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>yafo</string>
+			</array>
+		</dict>
+	</array>
 	<key>CKSharingSupported</key>
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>

@@ -4,6 +4,26 @@ import Foundation
 nonisolated public enum ShoppingCategory: String, CaseIterable, Sendable {
     case produce, bakery, meat, dairy, pantry, breakfast, snacks, drinks, frozen, household, hygiene, baby, pets, other
 
+    /// Kachelfarbe der Abteilung (#RRGGBB), gemeinsam für App und Widget.
+    public var colorHex: String {
+        switch self {
+        case .produce: "#2E9E52"
+        case .bakery: "#C98A1E"
+        case .meat: "#D9483B"
+        case .dairy: "#2F80ED"
+        case .pantry: "#E07A1F"
+        case .breakfast: "#9C6B3E"
+        case .snacks: "#D6457F"
+        case .drinks: "#00A096"
+        case .frozen: "#2D8FCB"
+        case .household: "#8E44C9"
+        case .hygiene: "#5B6CFF"
+        case .baby: "#C95B8C"
+        case .pets: "#7B5E52"
+        case .other: "#6E6E73"
+        }
+    }
+
     public var emoji: String {
         switch self {
         case .produce: "🥦"

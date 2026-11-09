@@ -22,7 +22,11 @@ final class AppModel {
     var errorMessage: String?
     /// Gewählte Liste in Einkauf und Todos: `id` der Familie oder „personal“ für „Nur ich“.
     var listScopeKey: String = UserDefaults.standard.string(forKey: "listScope") ?? "" {
-        didSet { UserDefaults.standard.set(listScopeKey, forKey: "listScope") }
+        didSet {
+            UserDefaults.standard.set(listScopeKey, forKey: "listScope")
+            // Nicht eingerichtete Listen-Widgets folgen der zuletzt gewählten Liste.
+            refreshDerivedData()
+        }
     }
 
     private var started = false
@@ -54,6 +58,7 @@ final class AppModel {
         userID = await sharing.currentUserID()
         await ReminderScheduler.requestAuthorization()
         refreshAfterSync()
+        processInbox()
         Task { await refreshSubscriptions() }
         Task { await autoBackupIfDue() }
 
@@ -68,6 +73,15 @@ final class AppModel {
         if let userID { repository.claimOwnerProfiles(userID: userID) }
         save()
         familiesNeedingProfile = repository.familiesNeedingProfile(userID: userID)
+    }
+
+    /// Erledigt, was Widgets (Abhaken) und Share Extension (Termine aus Screenshots) in der
+    /// App Group abgelegt haben. Läuft beim Start und bei jeder Rückkehr in den Vordergrund.
+    func processInbox() {
+        let inbox = AppGroupInbox()
+        guard !inbox.pending().isEmpty, let entries = try? inbox.drain() else { return }
+        let result = repository.apply(entries) { self.creatorID(for: $0) }
+        if result.changedSomething || result.skipped > 0 { save() }
     }
 
     func accept(_ metadata: CKShare.Metadata) async {
@@ -95,7 +109,7 @@ final class AppModel {
         reminderTask = Task {
             try? await Task.sleep(for: .seconds(1))
             guard !Task.isCancelled else { return }
-            try? repository.widgetSnapshot().write()
+            try? repository.widgetSnapshot(listKey: listScopeKey.isEmpty ? nil : listScopeKey).write()
             WidgetCenter.shared.reloadAllTimelines()
             let reminders = repository.plannedReminders(me: { self.me(in: $0) })
             await ReminderScheduler.replace(with: reminders)

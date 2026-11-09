@@ -261,6 +261,16 @@
         }
       }
     },
+    "Add %lld": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld hinzufügen"
+          }
+        }
+      }
+    },
     "Add Calendar Address": {
       "localizations": {
         "de": {
@@ -277,6 +287,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kinderprofil anlegen"
+          }
+        }
+      }
+    },
+    "Add Event Manually": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termin von Hand anlegen"
           }
         }
       }
@@ -1253,6 +1273,16 @@
         }
       }
     },
+    "Events from Screenshot": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termine aus Screenshot"
+          }
+        }
+      }
+    },
     "Events from these calendars appear in gray, only on this device and only for you. yafo does not change or share them.": {
       "localizations": {
         "de": {
@@ -1499,6 +1529,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Für Google Kalender die „Privatadresse im iCal-Format“ aus den Kalendereinstellungen nehmen. Nach dem Import bei Google zurücksetzen."
+          }
+        }
+      }
+    },
+    "From Screenshot": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aus Screenshot"
           }
         }
       }
@@ -1795,6 +1835,16 @@
         }
       }
     },
+    "Looking for events…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suche nach Terminen …"
+          }
+        }
+      }
+    },
     "Mark as done": {
       "localizations": {
         "de": {
@@ -1945,6 +1995,16 @@
         }
       }
     },
+    "No calendar available. Open yafo once, then try again.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kein Kalender verfügbar. Öffne yafo einmal und versuch es dann noch mal."
+          }
+        }
+      }
+    },
     "No comments yet": {
       "localizations": {
         "de": {
@@ -1961,6 +2021,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Keine Termine"
+          }
+        }
+      }
+    },
+    "No events found in this screenshot.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auf diesem Screenshot wurden keine Termine gefunden."
           }
         }
       }
@@ -2307,6 +2377,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zuletzt gekauft"
+          }
+        }
+      }
+    },
+    "Recognized with Apple Intelligence on this device. The image never leaves it.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mit Apple Intelligence auf diesem Gerät erkannt. Das Bild verlässt es nicht."
           }
         }
       }
@@ -2715,6 +2795,26 @@
         }
       }
     },
+    "The image couldn't be loaded.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Bild konnte nicht geladen werden."
+          }
+        }
+      }
+    },
+    "The image never leaves this device.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das Bild verlässt dieses Gerät nicht."
+          }
+        }
+      }
+    },
     "The list is sorted in the order you walk through the supermarket.": {
       "localizations": {
         "de": {
@@ -2957,6 +3057,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ganze Familie"
+          }
+        }
+      }
+    },
+    "Without Apple Intelligence, yafo only finds dates in the text. Please check titles and times.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ohne Apple Intelligence findet yafo nur Datumsangaben im Text. Bitte Titel und Zeiten prüfen."
           }
         }
       }

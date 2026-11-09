@@ -11,6 +11,16 @@
         }
       }
     },
+    "+ %lld more": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+ %lld weitere"
+          }
+        }
+      }
+    },
     "All day": {
       "localizations": {
         "de": {
@@ -21,12 +31,132 @@
         }
       }
     },
+    "All done": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alles erledigt"
+          }
+        }
+      }
+    },
+    "Apples": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Äpfel"
+          }
+        }
+      }
+    },
+    "Bread": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brot"
+          }
+        }
+      }
+    },
+    "Check Off Item": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Artikel abhaken"
+          }
+        }
+      }
+    },
+    "Check off %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ abhaken"
+          }
+        }
+      }
+    },
+    "Choose List": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liste wählen"
+          }
+        }
+      }
+    },
+    "Complete %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ erledigen"
+          }
+        }
+      }
+    },
+    "Complete To-do": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Todo erledigen"
+          }
+        }
+      }
+    },
     "Dentist": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Zahnarzt"
+          }
+        }
+      }
+    },
+    "Family": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Familie"
+          }
+        }
+      }
+    },
+    "Item": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Artikel"
+          }
+        }
+      }
+    },
+    "List": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liste"
+          }
+        }
+      }
+    },
+    "Milk": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Milch"
           }
         }
       }
@@ -51,12 +181,82 @@
         }
       }
     },
+    "Nothing to buy": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nichts zu kaufen"
+          }
+        }
+      }
+    },
+    "Open to-dos, due ones first. Tap the circle to complete one.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offene Todos, fällige zuerst. Tippe auf den Kreis, um eins zu erledigen."
+          }
+        }
+      }
+    },
+    "Shopping List": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einkaufsliste"
+          }
+        }
+      }
+    },
+    "Sign permission slip": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elternbrief unterschreiben"
+          }
+        }
+      }
+    },
     "Swimming": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Schwimmen"
+          }
+        }
+      }
+    },
+    "Take out the trash": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Müll rausbringen"
+          }
+        }
+      }
+    },
+    "To-do": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Todo"
+          }
+        }
+      }
+    },
+    "To-dos": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Todos"
           }
         }
       }
@@ -107,6 +307,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nächste Termine"
+          }
+        }
+      }
+    },
+    "What's still missing. Tap an item to check it off.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Was noch fehlt. Tippe auf einen Artikel, um ihn abzuhaken."
+          }
+        }
+      }
+    },
+    "Which family's list the widget shows.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Welche Liste das Widget zeigt."
           }
         }
       }

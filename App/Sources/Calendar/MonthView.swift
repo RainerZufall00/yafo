@@ -14,6 +14,7 @@ struct MonthView: View {
     @State private var selectedDay = Calendar.current.startOfDay(for: .now)
     @State private var person: Member?
     @State private var showingEditor = false
+    @State private var showingScreenshotPicker = false
     @State private var showingYear = false
     @State private var openedDay: Date?
 
@@ -57,6 +58,7 @@ struct MonthView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { toolbar }
+            .screenshotImport(isPresented: $showingScreenshotPicker)
             .sheet(isPresented: $showingEditor) {
                 EventEditorView(initialDay: selectedDay)
             }
@@ -167,7 +169,15 @@ struct MonthView: View {
                 withAnimation(.snappy) { showingYear.toggle() }
             }
             filterMenu
-            Button("New Event", systemImage: "plus") { showingEditor = true }
+            // Tippen: neuer Termin; lange drücken: auch „Aus Screenshot“.
+            Menu {
+                Button("New Event", systemImage: "square.and.pencil") { showingEditor = true }
+                Button("From Screenshot", systemImage: "text.viewfinder") { showingScreenshotPicker = true }
+            } label: {
+                Label("New Event", systemImage: "plus")
+            } primaryAction: {
+                showingEditor = true
+            }
         }
     }
 

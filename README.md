@@ -11,6 +11,8 @@ Architektur und Feature-Umfang: [docs/yafo – Architektur & Features.pdf](docs/
 | --- | --- |
 | `App/` | SwiftUI-App (iOS/iPadOS 27, Mac als iPad-App), Ressourcen, Entitlements |
 | `Widgets/` | Widget-Extension; liest nur einen Schnappschuss, den die App in die App Group schreibt |
+| `Share/` | Share Extension „Screenshot zu Termin“ |
+| `Shared/` | Code für App und Share Extension: Bildanalyse (Foundation Models, Vision) und Vorschau |
 | `YafoKit/` | Swift Package mit Datenmodell, Persistenz (Core Data + CloudKit), Sharing und Logik, inkl. Tests |
 | `docs/` | Architektur-Dokument |
 | `Tools/ItemIcons/` | Generator für die Artikel-Icons der Einkaufsliste (`python3 Tools/ItemIcons/build.py`, braucht `shapely`) |
@@ -21,6 +23,9 @@ Architektur und Feature-Umfang: [docs/yafo – Architektur & Features.pdf](docs/
 - **Drei Stores** (`PersistenceController`): privat (eigene Daten und Familien, deren Owner man ist),
   geteilt (Familien, in die man eingeladen wurde) und lokal (Abo-Cache).
 - **Familien** sind je ein `CKShare`; neue Objekte landen per `assign` im Store ihrer Familie (`Repository`).
+- **Erweiterungen schreiben nie in Core Data.** Widgets und Share Extension lesen den Schnappschuss
+  (`WidgetSnapshot`) und legen Aufträge (Abhaken, Termine aus Screenshots) im Postfach der App Group ab
+  (`AppGroupInbox`). Die App arbeitet es beim Start und bei jeder Rückkehr in den Vordergrund ab und synchronisiert.
 
 ## Loslegen
 
@@ -61,7 +66,8 @@ Roadmap aus dem Architektur-Dokument:
       Zuständigen und Serien, die beim Abhaken weiterrollen; je Familie und „Nur ich“
 - [x] **4. Erinnerungen und Widgets:** lokale Benachrichtigungen (die nächsten 64, an Teilnehmer bzw.
       Zuständige, Zeit pro Person änderbar oder stumm), Widget „Nächste Termine“ (klein, mittel, groß)
-      und „Nächster Termin“ für den Sperrbildschirm
+      und „Nächster Termin“ für den Sperrbildschirm; Widgets „Einkaufsliste“ und „Todos“ je Familie oder
+      „Nur ich“, direkt im Widget abhakbar (wirksam in iCloud, sobald die App das nächste Mal geöffnet wird)
 - [x] 5. Abos und Import (Feiertage, Ferien, ICS, EventKit)
   - Gesetzliche Feiertage je Kalender (16 Bundesländer, AT, CH), offline berechnet
   - Schulferien (DE, AT, CH) aus der OpenHolidays API (ODbL), als Fläche im Kalender, wöchentlich neu geladen
@@ -76,7 +82,13 @@ Roadmap aus dem Architektur-Dokument:
   - JSON-Backup zum Teilen und Wiederherstellen (nur fehlende Einträge, verlorene Familien neu mit
     einem selbst als Owner), wöchentlich automatisch in den yafo-Ordner in iCloud Drive, die letzten fünf
   - Offen: Gerätekalender-Kopie automatisch aktuell halten
-- [ ] 7. Screenshot zu Termin
+- [x] 7. Screenshot zu Termin
+  - Share Extension (Bild aus jeder App teilen) und in der App: Plus-Knopf lange drücken › „Aus Screenshot“
+  - On-Device-Modell (Foundation Models) bekommt das Bild direkt, Ausgabe per `@Generable`; kann es das nicht,
+    Texterkennung mit Vision und dann das Modell; ohne Apple Intelligence `NSDataDetector`
+  - Vorschau mit allen erkannten Terminen zum Bearbeiten und Abwählen, Ziel-Kalender (merkt sich den letzten)
+  - Kein Private Cloud Compute, das Bild verlässt das Gerät nicht
+  - Offen: auf echtem Gerät mit Apple Intelligence testen
 - [ ] 8. TestFlight, App Store
 
 ## Lizenz
