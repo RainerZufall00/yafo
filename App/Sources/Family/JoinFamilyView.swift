@@ -42,6 +42,9 @@ struct JoinFamilyView: View {
                     }
                 }
             }
+            .onAppear {
+                if name.isEmpty { name = model.sharing.invitedName(in: family) ?? "" }
+            }
             .navigationTitle("Join Family")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

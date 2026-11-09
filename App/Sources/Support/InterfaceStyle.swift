@@ -3,7 +3,7 @@ import SwiftUI
 /// Bedienung der App, umschaltbar unter „Familie“ und nur auf diesem Gerät gespeichert.
 /// - `tabs`: Tab-Leiste unten, Monate seitlich blättern (Standard).
 /// - `swipe`: ohne Tab-Leiste; der Kalender blättert Monate nach oben und unten wie bei Apple,
-///   links daneben liegen die Todos, rechts die Einkaufsliste. „Familie“ öffnet sich als Blatt.
+///   links daneben liegen die Todos, rechts die Einkaufsliste. „Familie“ öffnet ein Knopf oben rechts.
 enum InterfaceStyle: String, CaseIterable, Identifiable {
     case tabs
     case swipe
@@ -24,6 +24,9 @@ enum InterfaceStyle: String, CaseIterable, Identifiable {
 /// (auch für VoiceOver, das Wischen zwischen Seiten nicht ohne Weiteres kann).
 struct PageSwitcher: View {
     @Binding var tab: AppTab
+
+    /// Platz, den die Seiten unten für die Anzeige freihalten.
+    static let height: CGFloat = 52
 
     var body: some View {
         HStack(spacing: 2) {
@@ -62,5 +65,36 @@ struct PageSwitcher: View {
         .buttonStyle(.plain)
         .accessibilityLabel(Text(title))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
+    }
+}
+
+/// Im Wisch-Modus: Knopf „Familie“ oben rechts auf jeder Seite, öffnet die Einstellungen als Blatt.
+/// Fehlt in einer Familie das eigene Profil, zeigt das Symbol ein Ausrufezeichen.
+private struct FamilyButton: ViewModifier {
+    @Environment(AppModel.self) private var model
+    @AppStorage(InterfaceStyle.storageKey) private var interfaceStyle = InterfaceStyle.tabs
+    @State private var showing = false
+
+    func body(content: Content) -> some View {
+        content
+            .toolbar {
+                if interfaceStyle == .swipe {
+                    ToolbarSpacer(.fixed, placement: .topBarTrailing)
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Family", systemImage: model.familiesNeedingProfile.isEmpty
+                               ? "person.3" : "person.crop.circle.badge.exclamationmark") { showing = true }
+                    }
+                }
+            }
+            .sheet(isPresented: $showing) {
+                FamilyView(onDone: { showing = false })
+            }
+    }
+}
+
+extension View {
+    /// Knopf „Familie“ für die Seiten des Wisch-Modus; im Tab-Modus ohne Wirkung.
+    func familyButton() -> some View {
+        modifier(FamilyButton())
     }
 }

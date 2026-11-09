@@ -61,6 +61,15 @@ public final class FamilySharing {
         return share
     }
 
+    /// Vorname, mit dem man zur Familie eingeladen wurde (aus dem Apple Account), als Vorschlag
+    /// für das eigene Profil.
+    public func invitedName(in family: Family) -> String? {
+        guard let share = try? existingShare(for: family),
+              let name = share.currentUserParticipant?.userIdentity.nameComponents else { return nil }
+        let given = name.givenName ?? name.nickname
+        return given ?? PersonNameComponentsFormatter.localizedString(from: name, style: .short)
+    }
+
     /// Einladungslink angenommen: Familiendaten erscheinen im geteilten Store.
     public func accept(_ metadata: CKShare.Metadata) async throws {
         guard isAvailable else { throw SharingError.cloudUnavailable }

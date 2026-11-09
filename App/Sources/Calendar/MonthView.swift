@@ -21,7 +21,6 @@ struct MonthView: View {
     @State private var choosingScreenshot = false
     @State private var screenshotItem: PhotosPickerItem?
     @State private var screenshot: PickedImage?
-    @State private var showingFamily = false
     @AppStorage("calendarMode") private var mode: CalendarMode = .month
     @State private var openedDay: Date?
     @AppStorage(InterfaceStyle.storageKey) private var interfaceStyle = InterfaceStyle.tabs
@@ -66,6 +65,8 @@ struct MonthView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
+            // Vor der eigenen Leiste angewandt, damit „Familie“ ganz rechts steht.
+            .familyButton()
             .toolbar { toolbar }
             .sheet(isPresented: $showingEditor) {
                 EventEditorView(initialDay: selectedDay)
@@ -84,9 +85,6 @@ struct MonthView: View {
                 openedDay = nil
                 showToday()
 }
-            .sheet(isPresented: $showingFamily) {
-                FamilyView()
-            }
             .navigationDestination(item: $openedDay) { day in
                 DayPage(day: day, style: style) { shown in show(shown) }
             }
@@ -281,13 +279,6 @@ struct MonthView: View {
 
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
-        if isVertical {
-            // Ohne Tab-Leiste: „Familie“ als Blatt; das Abzeichen zeigt Familien ohne eigenes Profil.
-            ToolbarItem(placement: .topBarLeading) {
-                Button("Family", systemImage: model.familiesNeedingProfile.isEmpty
-                       ? "person.3" : "person.crop.circle.badge.exclamationmark") { showingFamily = true }
-            }
-        }
         ToolbarItem(placement: .topBarLeading) {
             Button("Today", action: showToday)
         }

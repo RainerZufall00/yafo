@@ -91,6 +91,8 @@ private struct TodoListContent: View {
             }
         }
         .sensoryFeedback(.success, trigger: completedCount)
+        // Vor der eigenen Leiste angewandt, damit „Familie“ ganz rechts steht.
+        .familyButton()
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 if !members.isEmpty {

@@ -34,6 +34,8 @@ struct FamilyView: View {
     @State private var prompt: Prompt?
     @State private var promptText = ""
     @AppStorage(InterfaceStyle.storageKey) private var interfaceStyle = InterfaceStyle.tabs
+    /// Gesetzt, wenn die Ansicht als Blatt offen ist (Wisch-Modus): zeigt „Fertig“.
+    var onDone: (() -> Void)?
 
     var body: some View {
         NavigationStack {
@@ -97,7 +99,7 @@ struct FamilyView: View {
                         }
                     }
                 } footer: {
-                    Text("Swipe: months scroll up and down like in Apple's Calendar, swipe right for to-dos and left for the shopping list. Family opens at the top left of the calendar. Only on this device.")
+                    Text("Swipe: months scroll up and down like in Apple's Calendar, swipe right for to-dos and left for the shopping list. Family is at the top right. Only on this device.")
                 }
 
                 if families.isEmpty {
@@ -115,7 +117,15 @@ struct FamilyView: View {
             }
             .navigationTitle("Family")
             .toolbar {
-                Button("Create Family", systemImage: "plus") { creatingFamily = true }
+                if let onDone {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Done", role: .confirm, action: onDone)
+                    }
+                }
+                // Als Blatt steht rechts „Fertig“, dann wandert „+“ nach links.
+                ToolbarItem(placement: onDone == nil ? .topBarTrailing : .topBarLeading) {
+                    Button("Create Family", systemImage: "plus") { creatingFamily = true }
+                }
             }
             .sheet(isPresented: $creatingFamily) {
                 CreateFamilyView()

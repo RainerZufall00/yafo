@@ -25,6 +25,7 @@ struct ShoppingView: View {
                         ListScopeMenu(families: families)
                     }
                 }
+                .familyButton()
         }
     }
 }

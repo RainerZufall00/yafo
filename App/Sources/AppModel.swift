@@ -116,6 +116,14 @@ final class AppModel {
     /// (z. B. vom Widget) hat gerade selbst einen Tab gewählt.
     func didBecomeActive() {
         mergeShareExtensionChanges()
+        // Ohne User-ID erkennt die App das eigene Profil nicht und fragt nach dem Beitritt nicht
+        // danach (z. B. iCloud beim Start noch nicht bereit). Dann bei jeder Rückkehr neu fragen.
+        if started, userID == nil, sharing.isAvailable {
+            Task {
+                userID = await sharing.currentUserID()
+                if userID != nil { refreshAfterSync() }
+            }
+        }
         defer { backgroundSince = nil }
         guard let backgroundSince, let tab = LaunchTab.current.tab,
               Date.now.timeIntervalSince(backgroundSince) >= LaunchTab.backgroundThreshold else { return }
