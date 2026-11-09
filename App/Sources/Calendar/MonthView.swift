@@ -15,8 +15,13 @@ struct MonthView: View {
     @State private var person: Member?
     @State private var showingEditor = false
     @State private var showingScreenshotPicker = false
+    @State private var showingFamily = false
     @State private var showingYear = false
     @State private var openedDay: Date?
+    @AppStorage(InterfaceStyle.storageKey) private var interfaceStyle = InterfaceStyle.tabs
+
+    /// Im Wisch-Modus blättern Monate nach oben und unten, seitlich geht es zu Todos und Einkauf.
+    private var isVertical: Bool { interfaceStyle == .swipe }
 
     @FetchRequest(sortDescriptors: [SortDescriptor(\.createdAt)])
     private var calendars: FetchedResults<EventCalendar>
@@ -62,6 +67,9 @@ struct MonthView: View {
             .sheet(isPresented: $showingEditor) {
                 EventEditorView(initialDay: selectedDay)
             }
+            .sheet(isPresented: $showingFamily) {
+                FamilyView()
+            }
             .navigationDestination(item: $openedDay) { day in
                 DayPage(day: day, style: style)
             }
@@ -77,22 +85,32 @@ struct MonthView: View {
 
     /// Monate als Seiten: Beim Wischen laufen alter und neuer Monat mit dem Finger mit.
     /// Zehn Jahre in jede Richtung; gebaut werden nur die sichtbaren Seiten.
+    /// Klassisch seitlich und genau eine Seite pro Wisch; im Wisch-Modus von oben nach unten wie bei
+    /// Apple, mit Schwung auch über mehrere Monate, und immer an einem Monatsanfang einrastend.
+    @ViewBuilder
     private var monthPager: some View {
-        ScrollView(.horizontal) {
-            LazyHStack(spacing: 0) {
-                ForEach(Self.pagedMonths, id: \.self) { page in
-                    MonthGridView(grid: MonthGrid(containing: page), selectedDay: $selectedDay, style: style,
-                                  onOpenDay: sizeClass == .regular ? nil : { openedDay = $0 })
-                        .containerRelativeFrame([.horizontal, .vertical])
-                }
+        if isVertical {
+            ScrollView(.vertical) {
+                LazyVStack(spacing: 0) { monthPages }
+                    .scrollTargetLayout()
             }
-            .scrollTargetLayout()
+            .scrollTargetBehavior(.viewAligned)
+            .modifier(MonthPagerBehavior(scrolledMonth: $scrolledMonth, month: $month))
+        } else {
+            ScrollView(.horizontal) {
+                LazyHStack(spacing: 0) { monthPages }
+                    .scrollTargetLayout()
+            }
+            .scrollTargetBehavior(.viewAligned(limitBehavior: .alwaysByOne))
+            .modifier(MonthPagerBehavior(scrolledMonth: $scrolledMonth, month: $month))
         }
-        .scrollTargetBehavior(.viewAligned(limitBehavior: .alwaysByOne))
-        .scrollIndicators(.hidden)
-        .scrollPosition(id: $scrolledMonth)
-        .onChange(of: scrolledMonth) {
-            if let scrolledMonth, scrolledMonth != month { month = scrolledMonth }
+    }
+
+    private var monthPages: some View {
+        ForEach(Self.pagedMonths, id: \.self) { page in
+            MonthGridView(grid: MonthGrid(containing: page), selectedDay: $selectedDay, style: style,
+                          onOpenDay: sizeClass == .regular ? nil : { openedDay = $0 })
+                .containerRelativeFrame([.horizontal, .vertical])
         }
     }
 
@@ -112,8 +130,8 @@ struct MonthView: View {
                 .font(.title2.weight(.bold))
                 .accessibilityAddTraits(.isHeader)
             Spacer()
-            Button("Previous Month", systemImage: "chevron.left") { showMonth(offset: -1) }
-            Button("Next Month", systemImage: "chevron.right") { showMonth(offset: 1) }
+            Button("Previous Month", systemImage: isVertical ? "chevron.up" : "chevron.left") { showMonth(offset: -1) }
+            Button("Next Month", systemImage: isVertical ? "chevron.down" : "chevron.right") { showMonth(offset: 1) }
         }
         .labelStyle(.iconOnly)
         .imageScale(.large)
@@ -154,6 +172,13 @@ struct MonthView: View {
 
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
+        if isVertical {
+            // Ohne Tab-Leiste: „Familie“ als Blatt; das Abzeichen zeigt Familien ohne eigenes Profil.
+            ToolbarItem(placement: .topBarLeading) {
+                Button("Family", systemImage: model.familiesNeedingProfile.isEmpty
+                       ? "person.3" : "person.crop.circle.badge.exclamationmark") { showingFamily = true }
+            }
+        }
         ToolbarItem(placement: .topBarLeading) {
             Button("Today") {
                 withAnimation(.snappy) {
@@ -208,5 +233,20 @@ struct MonthView: View {
             Label("Filter", systemImage: person == nil && style.hiddenCalendars.isEmpty
                   ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
         }
+    }
+}
+
+/// Gemeinsames Verhalten beider Blätter-Richtungen: angezeigten Monat mitführen.
+private struct MonthPagerBehavior: ViewModifier {
+    @Binding var scrolledMonth: Date?
+    @Binding var month: Date
+
+    func body(content: Content) -> some View {
+        content
+            .scrollIndicators(.hidden)
+            .scrollPosition(id: $scrolledMonth)
+            .onChange(of: scrolledMonth) {
+                if let scrolledMonth, scrolledMonth != month { month = scrolledMonth }
+            }
     }
 }

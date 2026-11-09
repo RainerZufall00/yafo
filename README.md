@@ -61,6 +61,9 @@ Roadmap aus dem Architektur-Dokument:
 - [x] **2. Kalender:** Monatsansicht zum Blättern, Jahresansicht, Termine mit Teilnehmern, Farbsystem,
       Personenfilter, Serien (RRULE, Ausnahmen, nur dieser / folgende / alle), Kommentare,
       Geburtstage mit mitzählendem Alter
+- [x] **Bedienung wählbar** (Familie › Bedienung, nur auf dem Gerät): „Tabs“ wie bisher oder „Wischen“ –
+      ohne Tab-Leiste, Monate blättern nach oben und unten wie im Apple-Kalender, nach rechts wischen für Todos,
+      nach links für die Einkaufsliste, unten eine kleine Seitenanzeige, „Familie“ oben links im Kalender
 - [x] **3. Listen:** Einkaufsliste als Kacheln mit Piktogrammen, sortiert nach Abteilungen in Laufreihenfolge
       (mitgelieferter Artikelkatalog DE/EN), „Zuletzt gekauft“ und Vorschläge; Todos mit Fälligkeit,
       Zuständigen und Serien, die beim Abhaken weiterrollen; je Familie und „Nur ich“

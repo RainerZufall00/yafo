@@ -1935,6 +1935,16 @@
         }
       }
     },
+    "Navigation": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bedienung"
+          }
+        }
+      }
+    },
     "Never": {
       "localizations": {
         "de": {
@@ -2725,6 +2735,26 @@
         }
       }
     },
+    "Swipe": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wischen"
+          }
+        }
+      }
+    },
+    "Swipe: months scroll up and down like in Apple's Calendar, swipe right for to-dos and left for the shopping list. Family opens at the top left of the calendar. Only on this device.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wischen: Monate blättern nach oben und unten wie im Apple-Kalender, nach rechts wischen für Todos, nach links für die Einkaufsliste. „Familie“ öffnet sich im Kalender oben links. Gilt nur auf diesem Gerät."
+          }
+        }
+      }
+    },
     "Switch to %@": {
       "localizations": {
         "de": {
@@ -2751,6 +2781,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Schweiz (allgemein)"
+          }
+        }
+      }
+    },
+    "Tabs": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tabs"
           }
         }
       }
