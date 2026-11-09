@@ -290,22 +290,5 @@ extension ShoppingCategory {
     }
 
     /// Kräftige Kachelfarben; weiße Schrift bleibt überall lesbar.
-    var color: Color {
-        switch self {
-        case .produce: Color(hex: "#2E9E52")
-        case .bakery: Color(hex: "#C98A1E")
-        case .meat: Color(hex: "#D9483B")
-        case .dairy: Color(hex: "#2F80ED")
-        case .pantry: Color(hex: "#E07A1F")
-        case .breakfast: Color(hex: "#9C6B3E")
-        case .snacks: Color(hex: "#D6457F")
-        case .drinks: Color(hex: "#00A096")
-        case .frozen: Color(hex: "#2D8FCB")
-        case .household: Color(hex: "#8E44C9")
-        case .hygiene: Color(hex: "#5B6CFF")
-        case .baby: Color(hex: "#C95B8C")
-        case .pets: Color(hex: "#7B5E52")
-        case .other: Color(hex: "#6E6E73")
-        }
-    }
+    var color: Color { Color(hex: colorHex) }
 }

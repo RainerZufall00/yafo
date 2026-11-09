@@ -61,4 +61,12 @@ enum DeepLink {
         guard url.scheme == scheme, let host = url.host() else { return nil }
         return AppTab(rawValue: host)
     }
+
+    /// Gewählte Liste aus `?list=<key>`; leer oder „sample“ (Widget-Vorschau) zählt nicht.
+    static func list(in url: URL) -> String? {
+        let list = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+            .queryItems?.first { $0.name == "list" }?.value
+        guard let list, !list.isEmpty, list != "sample" else { return nil }
+        return list
+    }
 }

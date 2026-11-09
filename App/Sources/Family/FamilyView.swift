@@ -33,6 +33,7 @@ struct FamilyView: View {
     @State private var joining: Family?
     @State private var prompt: Prompt?
     @State private var promptText = ""
+    @AppStorage(InterfaceStyle.storageKey) private var interfaceStyle = InterfaceStyle.tabs
 
     var body: some View {
         NavigationStack {
@@ -87,6 +88,16 @@ struct FamilyView: View {
                     Button("Export & Backup", systemImage: "square.and.arrow.up") { exporting = true }
                 } footer: {
                     Text("Calendars and lists as files, a copy in a device calendar, and the weekly backup.")
+                }
+
+                Section {
+                    Picker("Navigation", selection: $interfaceStyle) {
+                        ForEach(InterfaceStyle.allCases) { style in
+                            Text(style.title).tag(style)
+                        }
+                    }
+                } footer: {
+                    Text("Swipe: months scroll up and down like in Apple's Calendar, swipe right for to-dos and left for the shopping list. Family opens at the top left of the calendar. Only on this device.")
                 }
 
                 if families.isEmpty {

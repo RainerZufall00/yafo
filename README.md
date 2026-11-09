@@ -23,6 +23,10 @@ Architektur und Feature-Umfang: [docs/yafo – Architektur & Features.pdf](docs/
 - **Drei Stores** (`PersistenceController`): privat (eigene Daten und Familien, deren Owner man ist),
   geteilt (Familien, in die man eingeladen wurde) und lokal (Abo-Cache).
 - **Familien** sind je ein `CKShare`; neue Objekte landen per `assign` im Store ihrer Familie (`Repository`).
+- **Widgets schreiben nie in Core Data.** Sie lesen den Schnappschuss (`WidgetSnapshot`) und legen Aufträge
+  (Abhaken) im Postfach der App Group ab (`AppGroupInbox`). Die App arbeitet es beim Start und bei jeder Rückkehr
+  in den Vordergrund ab und synchronisiert. Die Share Extension schreibt ohne iCloud direkt in die Stores der App
+  Group, die App übernimmt das beim Aktivwerden.
 
 ## Loslegen
 
@@ -72,12 +76,16 @@ Roadmap aus dem Architektur-Dokument:
 - [x] **2. Kalender:** Monatsansicht zum Blättern, Jahresansicht, Termine mit Teilnehmern, Farbsystem,
       Personenfilter, Serien (RRULE, Ausnahmen, nur dieser / folgende / alle), Kommentare,
       Geburtstage mit mitzählendem Alter
+- [x] **Bedienung wählbar** (Familie › Bedienung, nur auf dem Gerät): „Tabs“ wie bisher oder „Wischen“ –
+      ohne Tab-Leiste, Monate blättern nach oben und unten wie im Apple-Kalender, nach rechts wischen für Todos,
+      nach links für die Einkaufsliste, unten eine kleine Seitenanzeige, „Familie“ oben links im Kalender
 - [x] **3. Listen:** Einkaufsliste als Kacheln mit Piktogrammen, sortiert nach Abteilungen in Laufreihenfolge
       (mitgelieferter Artikelkatalog DE/EN), „Zuletzt gekauft“ und Vorschläge; Todos mit Fälligkeit,
       Zuständigen und Serien, die beim Abhaken weiterrollen; je Familie und „Nur ich“
 - [x] **4. Erinnerungen und Widgets:** lokale Benachrichtigungen (die nächsten 64, an Teilnehmer bzw.
       Zuständige, Zeit pro Person änderbar oder stumm), Widget „Nächste Termine“ (klein, mittel, groß)
-      und „Nächster Termin“ für den Sperrbildschirm
+      und „Nächster Termin“ für den Sperrbildschirm; Widgets „Einkaufsliste“ und „Todos“ je Familie oder
+      „Nur ich“, direkt im Widget abhakbar (wirksam in iCloud, sobald die App das nächste Mal geöffnet wird)
 - [x] 5. Abos und Import (Feiertage, Ferien, ICS, EventKit)
   - Gesetzliche Feiertage je Kalender (16 Bundesländer, AT, CH), offline berechnet
   - Schulferien (DE, AT, CH) aus der OpenHolidays API (ODbL), als Fläche im Kalender, wöchentlich neu geladen

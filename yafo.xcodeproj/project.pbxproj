@@ -91,6 +91,13 @@
 			);
 			target = A1000000000000000000A003 /* yafoShare */;
 		};
+		A1000000000000000000E005 /* Exceptions for "App" folder in "yafoWidgets" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/Assets.xcassets,
+			);
+			target = A1000000000000000000A002 /* yafoWidgets */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -99,6 +106,7 @@
 			exceptions = (
 				A1000000000000000000E001 /* Exceptions for "App" folder in "yafo" target */,
 				A1000000000000000000E003 /* Exceptions for "App" folder in "yafoShare" target */,
+				A1000000000000000000E005 /* Exceptions for "App" folder in "yafoWidgets" target */,
 			);
 			path = App;
 			sourceTree = "<group>";

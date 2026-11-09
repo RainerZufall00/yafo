@@ -21,8 +21,13 @@ struct MonthView: View {
     @State private var choosingScreenshot = false
     @State private var screenshotItem: PhotosPickerItem?
     @State private var screenshot: PickedImage?
+    @State private var showingFamily = false
     @AppStorage("calendarMode") private var mode: CalendarMode = .month
     @State private var openedDay: Date?
+    @AppStorage(InterfaceStyle.storageKey) private var interfaceStyle = InterfaceStyle.tabs
+
+    /// Im Wisch-Modus blättern Monate nach oben und unten, seitlich geht es zu Todos und Einkauf.
+    private var isVertical: Bool { interfaceStyle == .swipe }
 
     @FetchRequest(sortDescriptors: [SortDescriptor(\.createdAt)])
     private var calendars: FetchedResults<EventCalendar>
@@ -78,6 +83,9 @@ struct MonthView: View {
                 // Tipp aufs Widget: offene Tagesseite schließen und heute zeigen.
                 openedDay = nil
                 showToday()
+}
+            .sheet(isPresented: $showingFamily) {
+                FamilyView()
             }
             .navigationDestination(item: $openedDay) { day in
                 DayPage(day: day, style: style) { shown in show(shown) }
@@ -100,23 +108,32 @@ struct MonthView: View {
         }
     }
 
-    /// Wochen als Seiten, wie die Monate: fünf Jahre in jede Richtung.
+    /// Wochen als Seiten, wie die Monate: fünf Jahre in jede Richtung. Im Wisch-Modus wie die Monate
+    /// von oben nach unten, damit seitliches Wischen zu Todos und Einkauf führt.
+    @ViewBuilder
     private var weekPager: some View {
-        ScrollView(.horizontal) {
-            LazyHStack(spacing: 0) {
-                ForEach(Self.pagedWeeks, id: \.self) { page in
-                    WeekPageView(weekStart: page, selectedDay: $selectedDay, style: style,
-                                 onOpenDay: sizeClass == .regular ? nil : { openedDay = $0 })
-                        .containerRelativeFrame([.horizontal, .vertical])
-                }
+        if isVertical {
+            ScrollView(.vertical) {
+                LazyVStack(spacing: 0) { weekPages }
+                    .scrollTargetLayout()
             }
-            .scrollTargetLayout()
+            .scrollTargetBehavior(.viewAligned(limitBehavior: .alwaysByOne))
+            .modifier(MonthPagerBehavior(scrolledMonth: $scrolledWeek, month: $week))
+        } else {
+            ScrollView(.horizontal) {
+                LazyHStack(spacing: 0) { weekPages }
+                    .scrollTargetLayout()
+            }
+            .scrollTargetBehavior(.viewAligned(limitBehavior: .alwaysByOne))
+            .modifier(MonthPagerBehavior(scrolledMonth: $scrolledWeek, month: $week))
         }
-        .scrollTargetBehavior(.viewAligned(limitBehavior: .alwaysByOne))
-        .scrollIndicators(.hidden)
-        .scrollPosition(id: $scrolledWeek)
-        .onChange(of: scrolledWeek) {
-            if let scrolledWeek, scrolledWeek != week { week = scrolledWeek }
+    }
+
+    private var weekPages: some View {
+        ForEach(Self.pagedWeeks, id: \.self) { page in
+            WeekPageView(weekStart: page, selectedDay: $selectedDay, style: style,
+                         onOpenDay: sizeClass == .regular ? nil : { openedDay = $0 })
+                .containerRelativeFrame([.horizontal, .vertical])
         }
     }
 
@@ -150,8 +167,8 @@ struct MonthView: View {
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
             Spacer()
-            Button("Previous Week", systemImage: "chevron.left") { showWeek(offset: -1) }
-            Button("Next Week", systemImage: "chevron.right") { showWeek(offset: 1) }
+            Button("Previous Week", systemImage: isVertical ? "chevron.up" : "chevron.left") { showWeek(offset: -1) }
+            Button("Next Week", systemImage: isVertical ? "chevron.down" : "chevron.right") { showWeek(offset: 1) }
         }
         .labelStyle(.iconOnly)
         .imageScale(.large)
@@ -168,22 +185,32 @@ struct MonthView: View {
 
     /// Monate als Seiten: Beim Wischen laufen alter und neuer Monat mit dem Finger mit.
     /// Zehn Jahre in jede Richtung; gebaut werden nur die sichtbaren Seiten.
+    /// Klassisch seitlich und genau eine Seite pro Wisch; im Wisch-Modus von oben nach unten wie bei
+    /// Apple, mit Schwung auch über mehrere Monate, und immer an einem Monatsanfang einrastend.
+    @ViewBuilder
     private var monthPager: some View {
-        ScrollView(.horizontal) {
-            LazyHStack(spacing: 0) {
-                ForEach(Self.pagedMonths, id: \.self) { page in
-                    MonthGridView(grid: MonthGrid(containing: page), selectedDay: $selectedDay, style: style,
-                                  onOpenDay: sizeClass == .regular ? nil : { openedDay = $0 })
-                        .containerRelativeFrame([.horizontal, .vertical])
-                }
+        if isVertical {
+            ScrollView(.vertical) {
+                LazyVStack(spacing: 0) { monthPages }
+                    .scrollTargetLayout()
             }
-            .scrollTargetLayout()
+            .scrollTargetBehavior(.viewAligned)
+            .modifier(MonthPagerBehavior(scrolledMonth: $scrolledMonth, month: $month))
+        } else {
+            ScrollView(.horizontal) {
+                LazyHStack(spacing: 0) { monthPages }
+                    .scrollTargetLayout()
+            }
+            .scrollTargetBehavior(.viewAligned(limitBehavior: .alwaysByOne))
+            .modifier(MonthPagerBehavior(scrolledMonth: $scrolledMonth, month: $month))
         }
-        .scrollTargetBehavior(.viewAligned(limitBehavior: .alwaysByOne))
-        .scrollIndicators(.hidden)
-        .scrollPosition(id: $scrolledMonth)
-        .onChange(of: scrolledMonth) {
-            if let scrolledMonth, scrolledMonth != month { month = scrolledMonth }
+    }
+
+    private var monthPages: some View {
+        ForEach(Self.pagedMonths, id: \.self) { page in
+            MonthGridView(grid: MonthGrid(containing: page), selectedDay: $selectedDay, style: style,
+                          onOpenDay: sizeClass == .regular ? nil : { openedDay = $0 })
+                .containerRelativeFrame([.horizontal, .vertical])
         }
     }
 
@@ -203,8 +230,8 @@ struct MonthView: View {
                 .font(.title2.weight(.bold))
                 .accessibilityAddTraits(.isHeader)
             Spacer()
-            Button("Previous Month", systemImage: "chevron.left") { showMonth(offset: -1) }
-            Button("Next Month", systemImage: "chevron.right") { showMonth(offset: 1) }
+            Button("Previous Month", systemImage: isVertical ? "chevron.up" : "chevron.left") { showMonth(offset: -1) }
+            Button("Next Month", systemImage: isVertical ? "chevron.down" : "chevron.right") { showMonth(offset: 1) }
         }
         .labelStyle(.iconOnly)
         .imageScale(.large)
@@ -254,6 +281,13 @@ struct MonthView: View {
 
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
+        if isVertical {
+            // Ohne Tab-Leiste: „Familie“ als Blatt; das Abzeichen zeigt Familien ohne eigenes Profil.
+            ToolbarItem(placement: .topBarLeading) {
+                Button("Family", systemImage: model.familiesNeedingProfile.isEmpty
+                       ? "person.3" : "person.crop.circle.badge.exclamationmark") { showingFamily = true }
+            }
+        }
         ToolbarItem(placement: .topBarLeading) {
             Button("Today", action: showToday)
         }
@@ -336,4 +370,19 @@ struct MonthView: View {
 struct PickedImage: Identifiable {
     let id = UUID()
     let image: UIImage
+}
+
+/// Gemeinsames Verhalten beider Blätter-Richtungen: angezeigten Monat (bzw. Woche) mitführen.
+private struct MonthPagerBehavior: ViewModifier {
+    @Binding var scrolledMonth: Date?
+    @Binding var month: Date
+
+    func body(content: Content) -> some View {
+        content
+            .scrollIndicators(.hidden)
+            .scrollPosition(id: $scrolledMonth)
+            .onChange(of: scrolledMonth) {
+                if let scrolledMonth, scrolledMonth != month { month = scrolledMonth }
+            }
+    }
 }

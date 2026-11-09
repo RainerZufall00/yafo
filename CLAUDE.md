@@ -63,3 +63,17 @@ Zeichenregeln:
 
 In der App zeigt `ItemIcon` (`App/Sources/Lists/ItemIcon.swift`) das Asset `item-<id>` und fällt auf das Emoji
 zurück, falls es fehlt.
+
+## Widgets, Share Extension und Postfach
+
+- Widgets öffnen nie Core Data. Die App schreibt nach jedem Speichern `WidgetSnapshot`
+  (`Repository.widgetSnapshot`: Termine, Listen je Familie/„Nur ich“, Kalender) in die App Group.
+- Was ein Widget ändern will (Abhaken), kommt als `InboxAction` ins `AppGroupInbox` (`inbox.json`, per
+  `NSFileCoordinator`). `AppModel.processInbox()` führt es über `Repository.apply` aus. Widgets blenden
+  Einträge aus, deren ID noch im Postfach liegt (`pendingItemIDs`).
+- Neue Felder im Schnappschuss mit `decodeIfPresent` lesen, damit ein alter Schnappschuss das Widget nicht leert.
+- Die Share Extension (`ShareExtension/`) nutzt `App/Sources/Screenshot/` mit und schreibt ohne eigene
+  iCloud-Synchronisation in die Stores der App Group; die App übernimmt das beim Aktivwerden
+  (`mergeShareExtensionChanges`).
+- Das Widget-Target bekommt `App/Resources/Assets.xcassets` (Artikel-Icons) über eine Ausnahme im
+  synchronisierten Ordner `App`.

@@ -22,7 +22,11 @@ final class AppModel {
     var errorMessage: String?
     /// Gewählte Liste in Einkauf und Todos: `id` der Familie oder „personal“ für „Nur ich“.
     var listScopeKey: String = UserDefaults.standard.string(forKey: "listScope") ?? "" {
-        didSet { UserDefaults.standard.set(listScopeKey, forKey: "listScope") }
+        didSet {
+            UserDefaults.standard.set(listScopeKey, forKey: "listScope")
+            // Nicht eingerichtete Listen-Widgets folgen der zuletzt gewählten Liste.
+            refreshDerivedData()
+        }
     }
 
     /// Gewählter Tab; wird gemerkt, damit „Zuletzt geöffnet“ auch nach einem Neustart greift.
@@ -82,6 +86,7 @@ final class AppModel {
         UserDefaults(suiteName: PersistenceController.appGroupIdentifier)?.set(userID, forKey: "userID")
         await ReminderScheduler.requestAuthorization()
         refreshAfterSync()
+        processInbox()
         Task { await refreshSubscriptions() }
         Task { await autoBackupIfDue() }
 
@@ -94,11 +99,13 @@ final class AppModel {
 
     // MARK: - Navigation
 
+    /// `yafo://calendar`, `yafo://shopping?list=<key>`, `yafo://todos?list=<key>` (Widgets).
     func open(_ url: URL) {
         guard let tab = DeepLink.tab(for: url) else { return }
         lastDeepLink = .now
         selectedTab = tab
         if tab == .calendar { calendarResetRequest += 1 }
+        if let list = DeepLink.list(in: url) { listScopeKey = list }
     }
 
     func didEnterBackground() {
@@ -129,6 +136,15 @@ final class AppModel {
         familiesNeedingProfile = repository.familiesNeedingProfile(userID: userID)
     }
 
+    /// Erledigt, was Widgets (Abhaken) in der App Group abgelegt haben. Läuft beim Start und bei
+    /// jeder Rückkehr in den Vordergrund.
+    func processInbox() {
+        let inbox = AppGroupInbox()
+        guard !inbox.pending().isEmpty, let entries = try? inbox.drain() else { return }
+        let result = repository.apply(entries)
+        if result.changedSomething || result.skipped > 0 { save() }
+    }
+
     func accept(_ metadata: CKShare.Metadata) async {
         do {
             try await sharing.accept(metadata)
@@ -154,7 +170,7 @@ final class AppModel {
         reminderTask = Task {
             try? await Task.sleep(for: .seconds(1))
             guard !Task.isCancelled else { return }
-            try? repository.widgetSnapshot().write()
+            try? repository.widgetSnapshot(listKey: listScopeKey.isEmpty ? nil : listScopeKey).write()
             WidgetCenter.shared.reloadAllTimelines()
             let reminders = repository.plannedReminders(me: { self.me(in: $0) })
             await ReminderScheduler.replace(with: reminders)
