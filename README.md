@@ -80,7 +80,9 @@ Roadmap aus dem Architektur-Dokument:
 - [x] **Onboarding** beim ersten Start: Begrüßung, Bedienung wählen, dann Familie anlegen, beitreten oder
       allein loslegen. Einladen und Beitreten auch per QR-Code (Familie › „Mit QR-Code einladen“ bzw.
       „+“ › „Mit QR-Code beitreten“): je Code ein Einmal-Link für eine Person
-      (`CKShare.Participant.oneTimeURLParticipant`), der Share bleibt privat. Der Owner wählt, wen er
+      (`CKShare.Participant.oneTimeURLParticipant`), der Share bleibt privat. Dafür braucht die App die
+      Entitlement `com.apple.developer.icloud-extended-share-access` mit `InProcessOneTimeLinks`
+      (`App/yafo.entitlements`), sonst stürzt CloudKit beim Erzeugen des Codes ab. Der Owner wählt, wen er
       einlädt: einen Erwachsenen (legt sein Profil selbst an) oder ein Kind mit eigenem Gerät – dessen
       Code ist am Kinderprofil vermerkt (`Member.inviteParticipantID`, neues Feld im CloudKit-Schema),
       und das Kind übernimmt sein Profil beim Beitritt ohne Nachfrage
