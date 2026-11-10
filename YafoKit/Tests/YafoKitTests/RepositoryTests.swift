@@ -22,6 +22,47 @@ import Testing
         #expect(FamilySharing.inviteURL(from: "WIFI:S:home;;") == nil)
     }
 
+    @Test func deleteFamilyTakesEverythingAttachedWithIt() throws {
+        let family = repository.createFamily(name: "Müller", ownerName: "Anna", ownerUserID: "user-anna",
+                                             calendarName: "Familie")
+        let calendar = try #require(family.calendars?.first)
+        repository.createEvent(title: "Zahnarzt", start: .now, end: .now.addingTimeInterval(3600),
+                               isAllDay: false, in: calendar, createdBy: nil)
+        repository.setAppearance(of: calendar, color: "#FF0000")
+        repository.addShoppingItem("Milch", to: .family(family))
+        try repository.save()
+
+        repository.deleteFamily(family)
+        try repository.save()
+
+        #expect(repository.families().isEmpty)
+        #expect(repository.all(Member.self).isEmpty)
+        #expect(repository.all(Event.self).isEmpty)
+        #expect(repository.all(ShoppingItem.self).isEmpty)
+        #expect(repository.all(CalendarAppearance.self).isEmpty)
+    }
+
+    @Test func deleteAllOwnDataKeepsSharedFamilies() throws {
+        repository.createFamily(name: "Müller", ownerName: "Anna", ownerUserID: "user-anna", calendarName: "Familie")
+        let personal = repository.ensurePersonalCalendar(name: "Ich")
+        repository.createEvent(title: "Sport", start: .now, end: .now.addingTimeInterval(3600),
+                               isAllDay: false, in: personal, createdBy: nil)
+        repository.addShoppingItem("Brot", to: .personal)
+        let shared = repository.insert(Family.self, into: persistence.sharedStore)
+        shared.name = "Schmidt"
+        repository.addMember(name: "Bea", kind: .adult, userID: "user-bea", to: shared)
+        try repository.save()
+
+        repository.deleteAllOwnData()
+        try repository.save()
+
+        #expect(repository.families().map(\.name) == ["Schmidt"])
+        #expect(repository.all(Member.self).count == 1)
+        #expect(repository.all(Event.self).isEmpty)
+        #expect(repository.all(ShoppingItem.self).isEmpty)
+        #expect(repository.all(EventCalendar.self).isEmpty)
+    }
+
     @Test func createFamilyPutsEverythingIntoPrivateStore() throws {
         let family = repository.createFamily(name: "Müller", ownerName: "Anna Müller",
                                              ownerUserID: "user-anna", calendarName: "Familie")

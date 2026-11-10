@@ -84,6 +84,11 @@ Roadmap aus dem Architektur-Dokument:
       einlädt: einen Erwachsenen (legt sein Profil selbst an) oder ein Kind mit eigenem Gerät – dessen
       Code ist am Kinderprofil vermerkt (`Member.inviteParticipantID`, neues Feld im CloudKit-Schema),
       und das Kind übernimmt sein Profil beim Beitritt ohne Nachfrage
+- [x] **Verlassen und löschen** (Familie › „Verlassen oder löschen“): Mitglieder verlassen eine Familie (Profil
+      bleibt als „ehemalig“), der Owner löscht sie für alle, und „Alle meine Daten löschen“ räumt den eigenen
+      Kalender, private Listen, Einstellungen und eigene Familien ab – jeweils mit Dialog und zweiter Nachfrage,
+      bei der der Familienname (bzw. „yafo“) einzutippen ist. Geteilte Familien gehen über
+      `purgeObjectsAndRecordsInZone`, alles andere über Core-Data-Löschregeln und den normalen Sync
 - [x] **Bedienung wählbar** (Familie › Bedienung, nur auf dem Gerät): „Tabs“ wie bisher oder „Wischen“ –
       ohne Tab-Leiste, Monate blättern nach oben und unten wie im Apple-Kalender, nach rechts wischen für Todos,
       nach links für die Einkaufsliste, unten eine kleine Seitenanzeige, „Familie“ als Knopf oben rechts

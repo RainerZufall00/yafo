@@ -481,6 +481,16 @@
         }
       }
     },
+    "All members lose the family's calendars, events, shopping list and to-dos. This cannot be undone.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle Mitglieder verlieren Kalender, Termine, Einkaufsliste und Todos der Familie. Das lässt sich nicht rückgängig machen."
+          }
+        }
+      }
+    },
     "Allow Access to Calendars": {
       "localizations": {
         "de": {
@@ -517,6 +527,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Weiteres Kind"
+          }
+        }
+      }
+    },
+    "Are you really sure?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bist du wirklich sicher?"
           }
         }
       }
@@ -1209,6 +1229,16 @@
         }
       }
     },
+    "Delete All My Data": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle meine Daten löschen"
+          }
+        }
+      }
+    },
     "Delete Completed": {
       "localizations": {
         "de": {
@@ -1225,6 +1255,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Termin löschen"
+          }
+        }
+      }
+    },
+    "Delete Everything": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alles löschen"
+          }
+        }
+      }
+    },
+    "Delete Family": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Familie löschen"
           }
         }
       }
@@ -1249,12 +1299,32 @@
         }
       }
     },
+    "Delete all your data?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle deine Daten löschen?"
+          }
+        }
+      }
+    },
     "Delete this event?": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Diesen Termin löschen?"
+          }
+        }
+      }
+    },
+    "Deletes the family for all %lld members, including every calendar, event and list.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Löscht die Familie für alle %lld Mitglieder, mit allen Kalendern, Terminen und Listen."
           }
         }
       }
@@ -1689,6 +1759,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Alles"
+          }
+        }
+      }
+    },
+    "Everything here is permanent. There is no undo. Make a backup first under Export & Backup if you are not sure.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alles hier ist endgültig, es gibt kein Zurück. Lege vorher unter „Export & Backup“ eine Sicherung an, wenn du unsicher bist."
           }
         }
       }
@@ -2141,6 +2221,46 @@
           "stringUnit": {
             "state": "translated",
             "value": "Später"
+          }
+        }
+      }
+    },
+    "Leave %@?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„%@“ verlassen?"
+          }
+        }
+      }
+    },
+    "Leave Family": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Familie verlassen"
+          }
+        }
+      }
+    },
+    "Leave a family, delete one you own, or delete all your data.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eine Familie verlassen, eine eigene löschen oder alle deine Daten löschen."
+          }
+        }
+      }
+    },
+    "Leave or Delete": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verlassen oder löschen"
           }
         }
       }
@@ -2941,6 +3061,16 @@
         }
       }
     },
+    "Removes your own calendar, your private lists, your settings and every family you own, on this device and in your iCloud. Families you were invited to stay; leave them above.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entfernt deinen eigenen Kalender, deine privaten Listen, deine Einstellungen und jede Familie, deren Owner du bist – auf diesem Gerät und in deiner iCloud. Familien, in die du eingeladen wurdest, bleiben; verlasse sie oben."
+          }
+        }
+      }
+    },
     "Rename": {
       "localizations": {
         "de": {
@@ -3711,6 +3841,16 @@
         }
       }
     },
+    "Type “%@” to confirm.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tippe „%@“ ein, um zu bestätigen."
+          }
+        }
+      }
+    },
     "Unknown": {
       "localizations": {
         "de": {
@@ -3931,6 +4071,16 @@
         }
       }
     },
+    "You are the only member. Calendars, events and lists are deleted from your iCloud.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du bist das einzige Mitglied. Kalender, Termine und Listen werden aus deiner iCloud gelöscht."
+          }
+        }
+      }
+    },
     "You can change this at any time under Family.": {
       "localizations": {
         "de": {
@@ -3961,6 +4111,26 @@
         }
       }
     },
+    "You lose access to the family's calendars and lists. The others keep them.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du verlierst den Zugriff auf Kalender und Listen der Familie. Die anderen behalten sie."
+          }
+        }
+      }
+    },
+    "You lose access to the family's calendars and lists. Your profile stays marked as former member so the others keep their events.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du verlierst den Zugriff auf Kalender und Listen der Familie. Dein Profil bleibt als „ehemalig“ erhalten, damit die anderen ihre Termine behalten."
+          }
+        }
+      }
+    },
     "You're All Set": {
       "localizations": {
         "de": {
@@ -3987,6 +4157,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Deine Familie"
+          }
+        }
+      }
+    },
+    "Your calendar, lists, settings and the families you own are deleted everywhere. This cannot be undone.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dein Kalender, deine Listen, Einstellungen und die Familien, deren Owner du bist, werden überall gelöscht. Das lässt sich nicht rückgängig machen."
           }
         }
       }

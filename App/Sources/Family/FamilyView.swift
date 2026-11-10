@@ -103,6 +103,17 @@ struct FamilyView: View {
                     Text("Swipe: months scroll up and down like in Apple's Calendar, swipe right for to-dos and left for the shopping list. Family is at the top right. Only on this device.")
                 }
 
+                Section {
+                    NavigationLink {
+                        DangerZoneView()
+                    } label: {
+                        Label("Leave or Delete", systemImage: "trash")
+                            .foregroundStyle(.red)
+                    }
+                } footer: {
+                    Text("Leave a family, delete one you own, or delete all your data.")
+                }
+
                 if families.isEmpty {
                     Section {
                         ContentUnavailableView {

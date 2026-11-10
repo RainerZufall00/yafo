@@ -188,6 +188,13 @@ final class AppModel {
         refreshAfterSync()
     }
 
+    /// Familie löschen (Owner) oder verlassen (Mitglied); Fehler zeigt die aufrufende Ansicht.
+    func remove(_ family: Family) async throws {
+        if family.id?.uuidString == listScopeKey { listScopeKey = "" }
+        try await sharing.remove(family, me: me(in: family))
+        refreshAfterSync()
+    }
+
     /// Alle eigenen Daten löschen, auch in iCloud; Familien anderer Owner bleiben.
     func deleteAllOwnData() {
         listScopeKey = ""

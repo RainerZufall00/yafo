@@ -78,6 +78,32 @@ public final class Repository {
         member.leftAt = .now
     }
 
+    /// Familie samt Mitgliedern, Kalendern, Terminen und Listen löschen; eigene Einstellungen dazu
+    /// (Farben, Lesestand) gehen mit. Bei geteilten Familien kümmert sich `FamilySharing.remove` um iCloud.
+    public func deleteFamily(_ family: Family) {
+        for calendar in family.calendars ?? [] {
+            if let appearance = appearance(for: calendar) { context.delete(appearance) }
+        }
+        if let familyID = family.id?.uuidString {
+            let request = makeRequest(ReadState.self)
+            request.predicate = NSPredicate(format: "familyID == %@", familyID)
+            ((try? context.fetch(request)) ?? []).forEach(context.delete)
+        }
+        context.delete(family)
+    }
+
+    /// Alles Eigene löschen: eigener Kalender, private Listen, eigene Einstellungen und alle Familien,
+    /// deren Owner man ist. Familien, in die man eingeladen wurde, bleiben (siehe `FamilySharing.remove`).
+    public func deleteAllOwnData() {
+        for entity in context.persistentStoreCoordinator?.managedObjectModel.entities ?? [] {
+            guard let name = entity.name else { continue }
+            let request = NSFetchRequest<NSManagedObject>(entityName: name)
+            request.affectedStores = [persistence.privateStore, persistence.localStore]
+            request.includesPropertyValues = false
+            ((try? context.fetch(request)) ?? []).forEach(context.delete)
+        }
+    }
+
     public func activeMembers(of family: Family) -> [Member] {
         (family.members ?? [])
             .filter { $0.leftAt == nil }

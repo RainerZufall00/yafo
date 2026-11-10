@@ -163,6 +163,36 @@ public final class FamilySharing {
         try await accept(metadata)
     }
 
+    // MARK: - Löschen und Verlassen
+
+    /// Owner: Familie mit allen Daten löschen, auch aus iCloud und bei allen Mitgliedern.
+    /// Mitglied: die Familie verlassen; das eigene Profil bleibt als „ehemalig“ erhalten, damit
+    /// Termine und Kommentare der anderen lesbar bleiben.
+    public func remove(_ family: Family, me: Member?) async throws {
+        let repository = Repository(persistence: persistence)
+        guard let share = try existingShare(for: family) else {
+            // Nie geteilt (oder ohne iCloud): nur lokal löschen, der Sync räumt den Rest ab.
+            repository.deleteFamily(family)
+            try persistence.save()
+            return
+        }
+        if isOwner(of: family) {
+            repository.deleteFamily(family)
+            try persistence.save()
+            // Die Löschung synchronisiert ohnehin (mit dem Familien-Record fällt auch der Share); die
+            // Zone gleich mit abzuräumen ist nur Aufräumen und darf offline scheitern.
+            _ = try? await persistence.container.purgeObjectsAndRecordsInZone(with: share.recordID.zoneID,
+                                                                              in: persistence.privateStore)
+        } else {
+            if let me { repository.markLeft(me) }
+            try persistence.save()
+            // Im geteilten Store entfernt das den eigenen Platz im Share und die lokale Kopie.
+            _ = try await persistence.container.purgeObjectsAndRecordsInZone(with: share.recordID.zoneID,
+                                                                             in: persistence.sharedStore)
+        }
+        persistence.viewContext.refreshAllObjects()
+    }
+
     /// Einladungslink angenommen: Familiendaten erscheinen im geteilten Store.
     public func accept(_ metadata: CKShare.Metadata) async throws {
         guard isAvailable else { throw SharingError.cloudUnavailable }
