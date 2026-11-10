@@ -1,19 +1,15 @@
 import SwiftUI
 import YafoKit
 
-/// Nach dem Annehmen einer Einladung: eigenes Profil anlegen oder, als Teenager,
-/// ein vorhandenes Kinderprofil übernehmen (bisherige Teilnahmen bleiben).
+/// Nach dem Annehmen einer Einladung als Erwachsener: eigenes Profil anlegen. Kinder mit eigenem
+/// Gerät lädt der Owner gezielt für ihr Kinderprofil ein; sie übernehmen es ohne diesen Dialog
+/// (`AppModel.claimInvitedProfiles`).
 struct JoinFamilyView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
     let family: Family
 
     @State private var name = ""
-    @State private var linkedProfile: Member?
-
-    private var unlinkedChildren: [Member] {
-        model.repository.activeMembers(of: family).filter { $0.kind == .child && !$0.hasAccount }
-    }
 
     var body: some View {
         NavigationStack {
@@ -21,29 +17,16 @@ struct JoinFamilyView: View {
                 Section {
                     TextField("Your name", text: $name)
                         .textContentType(.givenName)
-                        .disabled(linkedProfile != nil)
                 } header: {
                     Text("Welcome to \(family.name ?? "")")
-                }
-                if !unlinkedChildren.isEmpty {
-                    Section {
-                        Picker("Child profile", selection: $linkedProfile) {
-                            Text("None, I'm new here").tag(Member?.none)
-                            ForEach(unlinkedChildren) { child in
-                                Text(child.displayLabel).tag(Member?.some(child))
-                            }
-                        }
-                        .pickerStyle(.inline)
-                        .labelsHidden()
-                    } header: {
-                        Text("Already have a child profile?")
-                    } footer: {
-                        Text("Link your Apple Account to an existing profile to keep its events.")
-                    }
                 }
             }
             .onAppear {
                 if name.isEmpty { name = model.sharing.invitedName(in: family) ?? "" }
+            }
+            // Das Profil kam inzwischen anders zustande (Kinderprofil übernommen, anderes Gerät).
+            .onChange(of: model.familiesNeedingProfile) {
+                if !model.familiesNeedingProfile.contains(family) { dismiss() }
             }
             .navigationTitle("Join Family")
             .navigationBarTitleDisplayMode(.inline)
@@ -53,8 +36,7 @@ struct JoinFamilyView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Join", role: .confirm) { join() }
-                        .disabled(model.userID == nil
-                                  || linkedProfile == nil && name.trimmingCharacters(in: .whitespaces).isEmpty)
+                        .disabled(model.userID == nil || name.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
             }
         }
@@ -62,8 +44,7 @@ struct JoinFamilyView: View {
 
     private func join() {
         guard let userID = model.userID else { return }
-        model.repository.join(family, userID: userID, name: name.trimmingCharacters(in: .whitespaces),
-                              linking: linkedProfile)
+        model.repository.join(family, userID: userID, name: name.trimmingCharacters(in: .whitespaces))
         model.save()
         model.refreshAfterSync()
         dismiss()

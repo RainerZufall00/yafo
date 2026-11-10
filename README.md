@@ -44,6 +44,7 @@ Startargumente fürs Entwickeln (im Scheme unter *Run › Arguments*, dort schon
 | `-yafoLocalOnly` | Kein CloudKit, nur lokale Stores |
 | `-yafoInMemory` | Leere Stores in einem temporären Ordner |
 | `-yafoDemoData` | Beispielfamilie mit Terminen, Serien, Listen und Todos (nur Debug) |
+| `-yafoOnboarding` | Onboarding bei jedem Start zeigen, auch wenn es schon eine Familie gibt |
 | `-com.apple.CoreData.CloudKitDebug 1` | Ausführliches CloudKit-Sync-Log |
 
 Tests des Packages:
@@ -76,6 +77,13 @@ Roadmap aus dem Architektur-Dokument:
 - [x] **2. Kalender:** Monatsansicht zum Blättern, Jahresansicht, Termine mit Teilnehmern, Farbsystem,
       Personenfilter, Serien (RRULE, Ausnahmen, nur dieser / folgende / alle), Kommentare,
       Geburtstage mit mitzählendem Alter
+- [x] **Onboarding** beim ersten Start: Begrüßung, Bedienung wählen, dann Familie anlegen, beitreten oder
+      allein loslegen. Einladen und Beitreten auch per QR-Code (Familie › „Mit QR-Code einladen“ bzw.
+      „+“ › „Mit QR-Code beitreten“): je Code ein Einmal-Link für eine Person
+      (`CKShare.Participant.oneTimeURLParticipant`), der Share bleibt privat. Der Owner wählt, wen er
+      einlädt: einen Erwachsenen (legt sein Profil selbst an) oder ein Kind mit eigenem Gerät – dessen
+      Code ist am Kinderprofil vermerkt (`Member.inviteParticipantID`, neues Feld im CloudKit-Schema),
+      und das Kind übernimmt sein Profil beim Beitritt ohne Nachfrage
 - [x] **Bedienung wählbar** (Familie › Bedienung, nur auf dem Gerät): „Tabs“ wie bisher oder „Wischen“ –
       ohne Tab-Leiste, Monate blättern nach oben und unten wie im Apple-Kalender, nach rechts wischen für Todos,
       nach links für die Einkaufsliste, unten eine kleine Seitenanzeige, „Familie“ als Knopf oben rechts

@@ -41,6 +41,16 @@
         }
       }
     },
+    "%@ is ready. To invite the others, sign in to iCloud in Settings.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ ist angelegt. Um die anderen einzuladen, melde dich in den Einstellungen bei iCloud an."
+          }
+        }
+      }
+    },
     "%@ · %@": {
       "localizations": {
         "de": {
@@ -281,6 +291,26 @@
         }
       }
     },
+    "A tab bar at the bottom. Months flip sideways.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tab-Leiste unten. Monate blättern seitlich."
+          }
+        }
+      }
+    },
+    "Accepting invitation…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einladung wird angenommen …"
+          }
+        }
+      }
+    },
     "Add": {
       "localizations": {
         "de": {
@@ -341,6 +371,16 @@
         }
       }
     },
+    "Add Family": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Familie hinzufügen"
+          }
+        }
+      }
+    },
     "Add Shared Calendar": {
       "localizations": {
         "de": {
@@ -387,6 +427,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Adresse"
+          }
+        }
+      }
+    },
+    "Adult": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erwachsener"
           }
         }
       }
@@ -441,16 +491,6 @@
         }
       }
     },
-    "Already have a child profile?": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gibt es schon ein Kinderprofil für dich?"
-          }
-        }
-      }
-    },
     "Already imported into %@": {
       "localizations": {
         "de": {
@@ -467,6 +507,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bereits über „%@“ abonniert. Es erscheint trotzdem nur einmal."
+          }
+        }
+      }
+    },
+    "Another child": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weiteres Kind"
+          }
+        }
+      }
+    },
+    "Ask someone in the family to open Family › Invite with QR Code, then scan it.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bitte jemanden aus der Familie, Familie › Mit QR-Code einladen zu öffnen, und scanne den Code."
           }
         }
       }
@@ -777,12 +837,32 @@
         }
       }
     },
+    "Camera access is turned off.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Kamerazugriff ist ausgeschaltet."
+          }
+        }
+      }
+    },
     "Cancel": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Abbrechen"
+          }
+        }
+      }
+    },
+    "Child": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kind"
           }
         }
       }
@@ -803,6 +883,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kind mit Apple Account"
+          }
+        }
+      }
+    },
+    "Child with Own Device": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kind mit eigenem Gerät"
           }
         }
       }
@@ -929,6 +1019,16 @@
         }
       }
     },
+    "Continue Without Waiting": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ohne Warten weiter"
+          }
+        }
+      }
+    },
     "Copies the events into a calendar on this iPhone, e.g. your work calendar. Copying again replaces the earlier copies. Later changes in yafo are not copied automatically.": {
       "localizations": {
         "de": {
@@ -979,12 +1079,22 @@
         }
       }
     },
-    "Create a family to share calendars and lists, or accept an invitation link. Until then yafo works with your own calendar.": {
+    "Create a Family": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Lege eine Familie an, um Kalender und Listen zu teilen, oder öffne einen Einladungslink. Bis dahin funktioniert yafo mit deinem eigenen Kalender."
+            "value": "Familie anlegen"
+          }
+        }
+      }
+    },
+    "Create a family to share calendars and lists, or join one with an invitation link or QR code. Until then yafo works with your own calendar.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lege eine Familie an, um Kalender und Listen zu teilen, oder tritt einer per Einladungslink oder QR-Code bei. Bis dahin funktioniert yafo mit deinem eigenen Kalender."
           }
         }
       }
@@ -1563,12 +1673,32 @@
         }
       }
     },
+    "Everyone sees who has to be where, with a color for each calendar.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle sehen, wer wann wo sein muss, jeder Kalender in seiner Farbe."
+          }
+        }
+      }
+    },
     "Everything": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Alles"
+          }
+        }
+      }
+    },
+    "Everything stays in your family's iCloud. There is no yafo server.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alles bleibt in der iCloud deiner Familie. Einen yafo-Server gibt es nicht."
           }
         }
       }
@@ -1693,12 +1823,32 @@
         }
       }
     },
+    "Get Started": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Los geht’s"
+          }
+        }
+      }
+    },
     "Google exports a ZIP file. Unzip it in the Files app first.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Google exportiert eine ZIP-Datei. Entpacke sie zuerst in der Dateien-App."
+          }
+        }
+      }
+    },
+    "Got a link instead? Tap it in Messages or Mail, or paste it here.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du hast einen Link bekommen? Tippe ihn in Nachrichten oder Mail an oder füge ihn hier ein."
           }
         }
       }
@@ -1759,6 +1909,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Haushalt"
+          }
+        }
+      }
+    },
+    "How do you want to move around in yafo?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wie möchtest du dich in yafo bewegen?"
           }
         }
       }
@@ -1863,12 +2023,42 @@
         }
       }
     },
+    "Invite": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einladen"
+          }
+        }
+      }
+    },
     "Invite Members": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Mitglieder einladen"
+          }
+        }
+      }
+    },
+    "Invite Your Family": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lade deine Familie ein"
+          }
+        }
+      }
+    },
+    "Invite with QR Code": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mit QR-Code einladen"
           }
         }
       }
@@ -1905,6 +2095,26 @@
         }
       }
     },
+    "Join a Family": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Familie beitreten"
+          }
+        }
+      }
+    },
+    "Join with QR Code": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mit QR-Code beitreten"
+          }
+        }
+      }
+    },
     "Just me": {
       "localizations": {
         "de": {
@@ -1935,12 +2145,12 @@
         }
       }
     },
-    "Link your Apple Account to an existing profile to keep its events.": {
+    "Let the others scan this code to join %@.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Verknüpfe deinen Apple Account mit einem bestehenden Profil, damit seine Termine erhalten bleiben."
+            "value": "Lass die anderen diesen Code scannen, um %@ beizutreten."
           }
         }
       }
@@ -1971,6 +2181,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Laden"
+          }
+        }
+      }
+    },
+    "Loading the family from iCloud…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Familie wird aus iCloud geladen …"
           }
         }
       }
@@ -2085,6 +2305,16 @@
         }
       }
     },
+    "Name of the child": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name des Kindes"
+          }
+        }
+      }
+    },
     "Navigation": {
       "localizations": {
         "de": {
@@ -2111,6 +2341,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Neuer Geburtstag"
+          }
+        }
+      }
+    },
+    "New Code": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neuer Code"
           }
         }
       }
@@ -2245,6 +2485,16 @@
         }
       }
     },
+    "No tab bar. Swipe sideways for to-dos and shopping, months scroll up and down.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ohne Tab-Leiste. Seitlich wischen für Todos und Einkauf, Monate blättern nach oben und unten."
+          }
+        }
+      }
+    },
     "None": {
       "localizations": {
         "de": {
@@ -2255,22 +2505,22 @@
         }
       }
     },
-    "None, I'm new here": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Keins, ich bin neu hier"
-          }
-        }
-      }
-    },
     "Not Imported": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Wird nicht übernommen"
+          }
+        }
+      }
+    },
+    "Not Now, Just Me": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jetzt nicht, nur ich"
           }
         }
       }
@@ -2365,6 +2615,16 @@
         }
       }
     },
+    "Only for %@: after scanning, this device uses %@'s profile, with all events and to-dos.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nur für %1$@: Nach dem Scannen nutzt dieses Gerät das Profil von %2$@, mit allen Terminen und Todos."
+          }
+        }
+      }
+    },
     "Only names and birthdays are read. Nothing leaves your device unless you put a birthday in a shared calendar.": {
       "localizations": {
         "de": {
@@ -2411,6 +2671,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "In Karten öffnen"
+          }
+        }
+      }
+    },
+    "Open yafo": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "yafo öffnen"
           }
         }
       }
@@ -2499,6 +2769,16 @@
         }
       }
     },
+    "Pick Your Style": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wähle deinen Stil"
+          }
+        }
+      }
+    },
     "Previous Month": {
       "localizations": {
         "de": {
@@ -2565,6 +2845,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Setzt den Artikel wieder auf die Liste"
+          }
+        }
+      }
+    },
+    "QR code": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "QR-Code"
           }
         }
       }
@@ -2793,6 +3083,26 @@
         }
       }
     },
+    "Scan the QR code of someone who is already in.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scanne den QR-Code von jemandem, der schon dabei ist."
+          }
+        }
+      }
+    },
+    "Scan with the iPhone camera or in yafo under “Join a Family”. Each code works for one person.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mit der iPhone-Kamera scannen oder in yafo unter „Familie beitreten“. Jeder Code gilt für eine Person."
+          }
+        }
+      }
+    },
     "School Holidays": {
       "localizations": {
         "de": {
@@ -2833,12 +3143,42 @@
         }
       }
     },
+    "Send Link": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Link senden"
+          }
+        }
+      }
+    },
+    "Set Up Profile": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profil anlegen"
+          }
+        }
+      }
+    },
     "Set up your profile in %@": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Profil in „%@“ einrichten"
+          }
+        }
+      }
+    },
+    "Share calendars and lists with the people you live with.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teile Kalender und Listen mit den Menschen, mit denen du lebst."
           }
         }
       }
@@ -2853,12 +3193,32 @@
         }
       }
     },
+    "Shared Calendars": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gemeinsame Kalender"
+          }
+        }
+      }
+    },
     "Shopping": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Einkauf"
+          }
+        }
+      }
+    },
+    "Shopping List": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einkaufsliste"
           }
         }
       }
@@ -2913,6 +3273,16 @@
         }
       }
     },
+    "Sign in to iCloud in Settings to share with your family.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Melde dich in den Einstellungen bei iCloud an, um mit deiner Familie zu teilen."
+          }
+        }
+      }
+    },
     "Sign in to iCloud to invite family members.": {
       "localizations": {
         "de": {
@@ -2923,12 +3293,32 @@
         }
       }
     },
+    "Sign in to iCloud to join a family.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Melde dich bei iCloud an, um einer Familie beizutreten."
+          }
+        }
+      }
+    },
     "Something went wrong": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Etwas ist schiefgelaufen"
+          }
+        }
+      }
+    },
+    "Sorted by aisle, so nobody walks through the store twice.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach Abteilungen sortiert, damit niemand zweimal durch den Laden läuft."
           }
         }
       }
@@ -2951,6 +3341,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Beginn"
+          }
+        }
+      }
+    },
+    "Start one and invite the others with a QR code.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lege eine an und lade die anderen per QR-Code ein."
           }
         }
       }
@@ -3095,6 +3495,16 @@
         }
       }
     },
+    "The family's data is stored in your iCloud.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Daten der Familie liegen in deiner iCloud."
+          }
+        }
+      }
+    },
     "The family's data is stored in your iCloud. You can invite other adults afterwards.": {
       "localizations": {
         "de": {
@@ -3111,6 +3521,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Die Liste ist so sortiert, wie man durch den Supermarkt läuft."
+          }
+        }
+      }
+    },
+    "The organizer for your whole family.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Der Organizer für die ganze Familie."
           }
         }
       }
@@ -3147,6 +3567,26 @@
         }
       }
     },
+    "This can take a moment. If you continue, yafo asks for your profile as soon as the family is there.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das kann einen Moment dauern. Wenn du weitermachst, fragt yafo nach deinem Profil, sobald die Familie da ist."
+          }
+        }
+      }
+    },
+    "This device can't scan codes. Paste the invitation link instead.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dieses Gerät kann keine Codes scannen. Füge stattdessen den Einladungslink ein."
+          }
+        }
+      }
+    },
     "This file is not a yafo backup.": {
       "comment": "Used in YafoKit (export).",
       "extractionState": "manual",
@@ -3165,6 +3605,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dies ist ein wiederholter Termin."
+          }
+        }
+      }
+    },
+    "This is not a yafo invitation.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das ist keine yafo-Einladung."
           }
         }
       }
@@ -3227,6 +3677,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Morgen"
+          }
+        }
+      }
+    },
+    "Try Again": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erneut versuchen"
           }
         }
       }
@@ -3351,6 +3811,16 @@
         }
       }
     },
+    "Welcome to yafo": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Willkommen bei yafo"
+          }
+        }
+      }
+    },
     "What do you need?": {
       "localizations": {
         "de": {
@@ -3387,6 +3857,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ganze Familie"
+          }
+        }
+      }
+    },
+    "With due dates, and with a name on them.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mit Fälligkeit und mit einem Namen dran."
           }
         }
       }
@@ -3441,12 +3921,92 @@
         }
       }
     },
+    "You are part of %@.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du gehörst zu %@."
+          }
+        }
+      }
+    },
+    "You can change this at any time under Family.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Das kannst du jederzeit unter „Familie“ ändern."
+          }
+        }
+      }
+    },
+    "You can invite more people later under Family.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weitere Personen kannst du später unter „Familie“ einladen."
+          }
+        }
+      }
+    },
+    "You have joined %@. Set up your profile so the others can add you to events.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du bist %@ beigetreten. Lege dein Profil an, damit die anderen dich zu Terminen hinzufügen können."
+          }
+        }
+      }
+    },
+    "You're All Set": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alles bereit"
+          }
+        }
+      }
+    },
+    "You're Invited": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du bist eingeladen"
+          }
+        }
+      }
+    },
+    "Your Family": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine Familie"
+          }
+        }
+      }
+    },
     "Your family won't see anything you add here.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Was du hier einträgst, sieht deine Familie nicht."
+          }
+        }
+      }
+    },
+    "Your iCloud, No Account": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine iCloud, kein Konto"
           }
         }
       }

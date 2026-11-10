@@ -21,7 +21,7 @@ nonisolated public enum YafoModel {
         let member = entity(Member.self, [
             uuid("id"), string("displayName"), string("initials"),
             string("kindRaw", default: MemberKind.adult.rawValue),
-            string("cloudKitUserID"), date("leftAt"), date("createdAt")
+            string("cloudKitUserID"), string("inviteParticipantID"), date("leftAt"), date("createdAt")
         ])
         let calendar = entity(EventCalendar.self, [
             uuid("id"), string("name"),

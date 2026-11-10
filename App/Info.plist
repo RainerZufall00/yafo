@@ -36,6 +36,8 @@
 	<false/>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>yafo shows or imports events from your calendars and can copy yafo events into them.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>yafo uses the camera to scan the QR code of a family invitation.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>yafo reads names and birthdays from your contacts so you can add them to a calendar.</string>
 	<key>NSUbiquitousContainers</key>

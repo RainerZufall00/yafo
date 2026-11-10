@@ -12,6 +12,16 @@ import Testing
         repository = Repository(persistence: persistence)
     }
 
+    @Test func inviteURLAcceptsOnlyICloudShareLinks() {
+        #expect(FamilySharing.inviteURL(from: " https://www.icloud.com/share/0abcDEF#Millers\n") != nil)
+        #expect(FamilySharing.inviteURL(from: "https://icloud.com/share/0abc") != nil)
+        #expect(FamilySharing.inviteURL(from: "http://www.icloud.com/share/0abc") == nil)
+        #expect(FamilySharing.inviteURL(from: "https://evilicloud.com/share/0abc") == nil)
+        #expect(FamilySharing.inviteURL(from: "https://www.icloud.com.evil.example/share/0abc") == nil)
+        #expect(FamilySharing.inviteURL(from: "https://www.icloud.com/photos/0abc") == nil)
+        #expect(FamilySharing.inviteURL(from: "WIFI:S:home;;") == nil)
+    }
+
     @Test func createFamilyPutsEverythingIntoPrivateStore() throws {
         let family = repository.createFamily(name: "Müller", ownerName: "Anna Müller",
                                              ownerUserID: "user-anna", calendarName: "Familie")

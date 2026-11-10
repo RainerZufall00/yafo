@@ -27,6 +27,7 @@ struct FamilyView: View {
 
     @AppStorage(LaunchTab.key) private var launchTab = LaunchTab.last.rawValue
     @State private var creatingFamily = false
+    @State private var joiningByCode = false
     @State private var importing = false
     @State private var importingBirthdays = false
     @State private var exporting = false
@@ -107,10 +108,12 @@ struct FamilyView: View {
                         ContentUnavailableView {
                             Label("No family yet", systemImage: "person.3")
                         } description: {
-                            Text("Create a family to share calendars and lists, or accept an invitation link. Until then yafo works with your own calendar.")
+                            Text("Create a family to share calendars and lists, or join one with an invitation link or QR code. Until then yafo works with your own calendar.")
                         } actions: {
                             Button("Create Family") { creatingFamily = true }
                                 .buttonStyle(.borderedProminent)
+                            Button("Join with QR Code") { joiningByCode = true }
+                                .disabled(!model.sharing.isAvailable)
                         }
                     }
                 }
@@ -124,11 +127,18 @@ struct FamilyView: View {
                 }
                 // Als Blatt steht rechts „Fertig“, dann wandert „+“ nach links.
                 ToolbarItem(placement: onDone == nil ? .topBarTrailing : .topBarLeading) {
-                    Button("Create Family", systemImage: "plus") { creatingFamily = true }
+                    Menu("Add Family", systemImage: "plus") {
+                        Button("Create Family", systemImage: "person.3") { creatingFamily = true }
+                        Button("Join with QR Code", systemImage: "qrcode.viewfinder") { joiningByCode = true }
+                            .disabled(!model.sharing.isAvailable)
+                    }
                 }
             }
             .sheet(isPresented: $creatingFamily) {
                 CreateFamilyView()
+            }
+            .sheet(isPresented: $joiningByCode) {
+                JoinCodeView()
             }
             .sheet(item: $joining) { family in
                 JoinFamilyView(family: family)
@@ -183,6 +193,7 @@ private struct FamilySection: View {
     let addCalendar: () -> Void
 
     @State private var inviting = false
+    @State private var showingCode = false
 
     private var isOwner: Bool { model.isOwner(of: family) }
 
@@ -212,6 +223,11 @@ private struct FamilySection: View {
                     Task { await invite() }
                 }
                 .disabled(!model.sharing.isAvailable || inviting)
+                Button("Invite with QR Code", systemImage: "qrcode") { showingCode = true }
+                    .disabled(!model.sharing.isAvailable)
+                    .sheet(isPresented: $showingCode) {
+                        InviteCodeView(family: family)
+                    }
             }
         } header: {
             HStack {

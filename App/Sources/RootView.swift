@@ -11,6 +11,8 @@ struct RootView: View {
     /// Schon einmal angebotene Familien; nach „Später“ erst beim nächsten Start wieder.
     @State private var offeredJoins: Set<NSManagedObjectID> = []
     @AppStorage(InterfaceStyle.storageKey) private var interfaceStyle = InterfaceStyle.tabs
+    @AppStorage(OnboardingView.doneKey) private var onboardingDone = false
+    @State private var showingOnboarding = false
 
     /// Eine .ics-Datei, mit der yafo geöffnet wurde (Teilen, Dateien-App, Mail).
     struct OpenedFile: Identifiable {
@@ -27,7 +29,14 @@ struct RootView: View {
         }
         .onAppear {
             leaveFamilyTabIfSwiping()
+            offerOnboarding()
             offerJoin()
+        }
+        .fullScreenCover(isPresented: $showingOnboarding, onDismiss: offerJoin) {
+            OnboardingView {
+                onboardingDone = true
+                showingOnboarding = false
+            }
         }
         .onChange(of: interfaceStyle) { leaveFamilyTabIfSwiping() }
         .onChange(of: model.selectedTab) { leaveFamilyTabIfSwiping() }
@@ -66,10 +75,22 @@ struct RootView: View {
         if interfaceStyle == .swipe, model.selectedTab == .family { model.selectedTab = .calendar }
     }
 
+    /// Beim ersten Start das Onboarding zeigen. Wer schon eine Familie hat (Update, Demo-Daten),
+    /// braucht es nicht; `-yafoOnboarding` zeigt es zum Entwickeln immer.
+    private func offerOnboarding() {
+        let forced = ProcessInfo.processInfo.arguments.contains("-yafoOnboarding")
+        guard forced || !onboardingDone else { return }
+        if forced || model.repository.families().isEmpty {
+            showingOnboarding = true
+        } else {
+            onboardingDone = true
+        }
+    }
+
     /// Nach dem Beitritt gleich nach dem eigenen Profil fragen; ohne Profil taucht man in der
     /// Familie nicht auf und kann nicht als Teilnehmer gewählt werden.
     private func offerJoin() {
-        guard joining == nil, openedFile == nil,
+        guard !showingOnboarding, !model.joinHandledElsewhere, joining == nil, openedFile == nil,
               let family = model.familiesNeedingProfile.first(where: { !offeredJoins.contains($0.objectID) })
         else { return }
         offeredJoins.insert(family.objectID)

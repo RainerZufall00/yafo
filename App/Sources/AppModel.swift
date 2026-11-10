@@ -20,6 +20,10 @@ final class AppModel {
     /// Familien, denen man beigetreten ist, ohne dort schon ein Profil zu haben.
     private(set) var familiesNeedingProfile: [Family] = []
     var errorMessage: String?
+    /// Onboarding oder „Beitreten per Code“ fragen selbst nach dem Profil; `RootView` hält sich dann zurück.
+    var joinHandledElsewhere = false
+    /// Zuletzt per Einladung übernommenes Kinderprofil; der Beitritt per Code wartet darauf.
+    private(set) var claimedProfile: Member?
     /// Gewählte Liste in Einkauf und Todos: `id` der Familie oder „personal“ für „Nur ich“.
     var listScopeKey: String = UserDefaults.standard.string(forKey: "listScope") ?? "" {
         didSet {
@@ -139,9 +143,25 @@ final class AppModel {
 
     func refreshAfterSync() {
         repository.mergeDuplicatePersonalCalendars()
-        if let userID { repository.claimOwnerProfiles(userID: userID) }
+        if let userID {
+            repository.claimOwnerProfiles(userID: userID)
+            claimInvitedProfiles(userID: userID)
+        }
         save()
+        // Familien, deren Mitglieder noch nicht aus iCloud da sind, erst danach anbieten; sonst
+        // fragt die App ein eingeladenes Kind nach einem Namen, bevor sein Profil angekommen ist.
         familiesNeedingProfile = repository.familiesNeedingProfile(userID: userID)
+            .filter { !($0.members ?? []).isEmpty }
+    }
+
+    /// Wurde die Einladung für ein Kinderprofil ausgestellt, übernimmt man es ohne Nachfrage.
+    private func claimInvitedProfiles(userID: String) {
+        for family in repository.familiesNeedingProfile(userID: userID) {
+            guard let profile = sharing.invitedProfile(in: family) else { continue }
+            repository.join(family, userID: userID, name: "", linking: profile)
+            profile.inviteParticipantID = nil
+            claimedProfile = profile
+        }
     }
 
     /// Erledigt, was Widgets (Abhaken) in der App Group abgelegt haben. Läuft beim Start und bei
@@ -160,6 +180,20 @@ final class AppModel {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+
+    /// Beitritt per gescanntem QR-Code oder eingefügtem Link; Fehler zeigt die aufrufende Ansicht.
+    func accept(inviteURL: URL) async throws {
+        try await sharing.accept(inviteURL: inviteURL)
+        refreshAfterSync()
+    }
+
+    /// Alle eigenen Daten löschen, auch in iCloud; Familien anderer Owner bleiben.
+    func deleteAllOwnData() {
+        listScopeKey = ""
+        repository.deleteAllOwnData()
+        save()
+        refreshAfterSync()
     }
 
     func save() {

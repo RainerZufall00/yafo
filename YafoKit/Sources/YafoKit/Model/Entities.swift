@@ -24,6 +24,9 @@ nonisolated public final class Member: NSManagedObject, Identifiable {
     @NSManaged public var kindRaw: String?
     /// Record-Name des Apple Accounts; fehlt bei Kinderprofilen.
     @NSManaged public var cloudKitUserID: String?
+    /// Kinderprofil mit offener Einladung: `participantID` des Einmal-Links im Share. Wer mit diesem
+    /// Link beitritt, übernimmt das Profil (`FamilySharing.invitedProfile`).
+    @NSManaged public var inviteParticipantID: String?
     @NSManaged public var leftAt: Date?
     @NSManaged public var createdAt: Date?
     @NSManaged public var family: Family?

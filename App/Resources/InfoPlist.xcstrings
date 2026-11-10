@@ -18,6 +18,23 @@
         }
       }
     },
+    "NSCameraUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yafo nutzt die Kamera, um den QR-Code einer Familien-Einladung zu scannen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yafo uses the camera to scan the QR code of a family invitation."
+          }
+        }
+      }
+    },
     "NSContactsUsageDescription" : {
       "extractionState" : "manual",
       "localizations" : {
