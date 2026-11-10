@@ -195,12 +195,14 @@ final class AppModel {
         refreshAfterSync()
     }
 
-    /// Alle eigenen Daten löschen, auch in iCloud; Familien anderer Owner bleiben.
+    /// Alle eigenen Daten löschen, auch in iCloud; Familien anderer Owner bleiben. Danach beginnt die
+    /// App wieder mit dem Onboarding, statt leer dazustehen.
     func deleteAllOwnData() {
         listScopeKey = ""
         repository.deleteAllOwnData()
         save()
         refreshAfterSync()
+        UserDefaults.standard.set(false, forKey: OnboardingView.doneKey)
     }
 
     func save() {

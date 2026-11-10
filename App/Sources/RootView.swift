@@ -38,6 +38,8 @@ struct RootView: View {
                 showingOnboarding = false
             }
         }
+        // Nach „Alle meine Daten löschen“ beginnt die App wieder mit dem Onboarding.
+        .onChange(of: onboardingDone) { if !onboardingDone { offerOnboarding() } }
         .onChange(of: interfaceStyle) { leaveFamilyTabIfSwiping() }
         .onChange(of: model.selectedTab) { leaveFamilyTabIfSwiping() }
         .onChange(of: model.familiesNeedingProfile) { offerJoin() }
