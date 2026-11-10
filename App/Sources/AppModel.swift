@@ -200,6 +200,8 @@ final class AppModel {
     func deleteAllOwnData() {
         listScopeKey = ""
         repository.deleteAllOwnData()
+        // Den eigenen Kalender gibt es immer; sonst fehlt er bis zum nächsten Start.
+        repository.ensurePersonalCalendar(name: String(localized: "My Calendar"))
         save()
         refreshAfterSync()
         UserDefaults.standard.set(false, forKey: OnboardingView.doneKey)
