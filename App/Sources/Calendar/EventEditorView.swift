@@ -125,7 +125,7 @@ struct EventEditorView: View {
                     repeatSection
                 }
                 Section("Calendar") {
-                    Picker("Calendar", selection: $calendar) {
+                    let picker = Picker("Calendar", selection: $calendar) {
                         ForEach(calendars) { calendar in
                             Label {
                                 Text(calendarLabel(calendar))
@@ -136,7 +136,12 @@ struct EventEditorView: View {
                             .tag(EventCalendar?.some(calendar))
                         }
                     }
-                    .pickerStyle(.navigationLink)
+                    // Wenige Kalender stehen direkt im Formular (ein Tipp), viele auf einer eigenen Seite.
+                    if calendars.count <= Self.inlineCalendarLimit {
+                        picker.pickerStyle(.inline).labelsHidden()
+                    } else {
+                        picker.pickerStyle(.navigationLink)
+                    }
                 }
                 if !familyMembers.isEmpty && kind == .event {
                     Section {
@@ -250,6 +255,9 @@ struct EventEditorView: View {
     }
 
     /// Den Familiennamen nur anhängen, wenn man in mehreren Familien ist.
+    /// Bis zu so vielen Kalendern zeigt das Formular sie als Zeilen zum direkten Antippen.
+    private static let inlineCalendarLimit = 4
+
     private func calendarLabel(_ calendar: EventCalendar) -> String {
         let familyCount = Set(calendars.compactMap(\.family)).count
         if familyCount > 1, let family = calendar.family?.name {
