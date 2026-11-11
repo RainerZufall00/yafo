@@ -797,6 +797,16 @@
         }
       }
     },
+    "Bring back calendars and lists from a yafo backup file.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalender und Listen aus einer yafo-Backup-Datei zurückholen."
+          }
+        }
+      }
+    },
     "Calendar": {
       "localizations": {
         "de": {
@@ -847,12 +857,12 @@
         }
       }
     },
-    "Calendars and lists as files, a copy in a device calendar, and the weekly backup.": {
+    "Calendars and lists as files, a copy in a device calendar, and the weekly backup. Restoring adds what is missing and keeps what is there.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kalender und Listen als Dateien, eine Kopie im Gerätekalender und das wöchentliche Backup."
+            "value": "Kalender und Listen als Dateien, eine Kopie im Gerätekalender und das wöchentliche Backup. Wiederherstellen ergänzt, was fehlt, und lässt Vorhandenes stehen."
           }
         }
       }
@@ -1075,6 +1085,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "In Gerätekalender kopieren"
+          }
+        }
+      }
+    },
+    "Couldn't Read Backup": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup konnte nicht gelesen werden"
           }
         }
       }
@@ -3129,6 +3149,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Backup wiederherstellen?"
+          }
+        }
+      }
+    },
+    "Restore a Backup": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup einspielen"
           }
         }
       }

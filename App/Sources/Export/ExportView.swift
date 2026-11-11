@@ -33,8 +33,6 @@ struct ExportView: View {
     @State private var deviceResult: DeviceCalendarExport.Result?
 
     @State private var choosingBackup = false
-    @State private var pendingRestore: Backup?
-    @State private var restoreResult: RestoreResult?
     @State private var errorText: String?
 
     var body: some View {
@@ -69,24 +67,7 @@ struct ExportView: View {
                 }
             }
             .task(id: scope) { files = makeFiles() }
-            .fileImporter(isPresented: $choosingBackup, allowedContentTypes: [.json]) { result in
-                readBackup(result)
-            }
-            .confirmationDialog("Restore Backup?", isPresented: Binding(get: { pendingRestore != nil },
-                                                                        set: { if !$0 { pendingRestore = nil } }),
-                                titleVisibility: .visible, presenting: pendingRestore) { backup in
-                Button("Restore") { restore(backup) }
-                Button("Cancel", role: .cancel) {}
-            } message: { backup in
-                Text("Backup from \(backup.createdAt.formatted(date: .abbreviated, time: .shortened)). Entries that still exist are kept; only missing ones are added again.")
-            }
-            .alert("Backup Restored", isPresented: Binding(get: { restoreResult != nil },
-                                                           set: { if !$0 { restoreResult = nil } }),
-                   presenting: restoreResult) { _ in
-                Button("OK") {}
-            } message: { result in
-                Text(restoreMessage(result))
-            }
+            .backupRestore(isPresented: $choosingBackup) { _ in files = makeFiles() }
         }
     }
 
@@ -240,38 +221,5 @@ struct ExportView: View {
         result.replaced > 0
             ? String(localized: "\(result.copied + result.replaced) events copied, \(result.replaced) of them replaced.")
             : String(localized: "\(result.copied) events copied.")
-    }
-
-    // MARK: Wiederherstellen
-
-    private func readBackup(_ result: Result<URL, Error>) {
-        do {
-            let url = try result.get()
-            let accessing = url.startAccessingSecurityScopedResource()
-            defer { if accessing { url.stopAccessingSecurityScopedResource() } }
-            pendingRestore = try Backup.decode(Data(contentsOf: url))
-            errorText = nil
-        } catch let error as BackupError {
-            errorText = error.localizedDescription
-        } catch is DecodingError {
-            errorText = BackupError.notABackup.localizedDescription
-        } catch {
-            errorText = error.localizedDescription
-        }
-    }
-
-    private func restore(_ backup: Backup) {
-        restoreResult = model.repository.restore(backup, personalCalendarName: String(localized: "My Calendar"))
-        model.save()
-        model.refreshAfterSync()
-        files = makeFiles()
-    }
-
-    private func restoreMessage(_ result: RestoreResult) -> String {
-        var text = String(localized: "\(result.created) entries added, \(result.skipped) already existed.")
-        if !result.newFamilies.isEmpty {
-            text += "\n" + String(localized: "Created again with you as owner: \(result.newFamilies.formatted(.list(type: .and))).")
-        }
-        return text
     }
 }

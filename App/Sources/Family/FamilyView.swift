@@ -31,6 +31,7 @@ struct FamilyView: View {
     @State private var importing = false
     @State private var importingBirthdays = false
     @State private var exporting = false
+    @State private var restoring = false
     @State private var joining: Family?
     @State private var prompt: Prompt?
     @State private var promptText = ""
@@ -89,8 +90,9 @@ struct FamilyView: View {
 
                 Section {
                     Button("Export & Backup", systemImage: "square.and.arrow.up") { exporting = true }
+                    Button("Restore from Backup…", systemImage: "arrow.counterclockwise") { restoring = true }
                 } footer: {
-                    Text("Calendars and lists as files, a copy in a device calendar, and the weekly backup.")
+                    Text("Calendars and lists as files, a copy in a device calendar, and the weekly backup. Restoring adds what is missing and keeps what is there.")
                 }
 
                 Section {
@@ -163,6 +165,7 @@ struct FamilyView: View {
             .sheet(isPresented: $exporting) {
                 ExportView()
             }
+            .backupRestore(isPresented: $restoring)
             .alert(promptTitle, isPresented: Binding(get: { prompt != nil }, set: { if !$0 { prompt = nil } })) {
                 TextField("Name", text: $promptText)
                 Button("Add") { submitPrompt() }

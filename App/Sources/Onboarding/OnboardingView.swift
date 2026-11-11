@@ -302,6 +302,7 @@ private struct FamilyPage: View {
     let finish: () -> Void
 
     @State private var profileFamily: Family?
+    @State private var restoring = false
 
     var body: some View {
         Group {
@@ -327,6 +328,10 @@ private struct FamilyPage: View {
         .sheet(item: $profileFamily, onDismiss: finish) { family in
             JoinFamilyView(family: family)
         }
+        // Mit Familie im Backup zeigt die Seite danach „You're All Set“, sonst geht es direkt los.
+        .backupRestore(isPresented: $restoring) { _ in
+            if families.isEmpty { finish() }
+        }
     }
 
     private var choice: some View {
@@ -338,6 +343,8 @@ private struct FamilyPage: View {
                 option("qrcode.viewfinder", "Join a Family",
                        "Scan the QR code of someone who is already in.", action: join)
                     .disabled(!model.sharing.isAvailable)
+                option("arrow.counterclockwise.circle.fill", "Restore a Backup",
+                       "Bring back calendars and lists from a yafo backup file.") { restoring = true }
                 if !model.sharing.isAvailable {
                     Label("Sign in to iCloud in Settings to share with your family.", systemImage: "icloud.slash")
                         .font(.footnote)
