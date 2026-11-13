@@ -12,6 +12,8 @@ struct DayListView: View {
     private let interval: DateInterval
     @FetchRequest private var events: FetchedResults<Event>
     @FetchRequest private var subscribed: FetchedResults<SubscribedEvent>
+    @FetchRequest private var todos: FetchedResults<TodoItem>
+    @Environment(\.calendarActions) private var actions
 
     init(day: Date, style: CalendarStyle, showsHeader: Bool = true) {
         self.day = day
@@ -23,12 +25,13 @@ struct DayListView: View {
         _subscribed = FetchRequest(sortDescriptors: [SortDescriptor(\.start)],
                                    predicate: Repository.cachePredicate(sourceKeys: style.subscriptionKeys,
                                                                         interval: interval))
+        _todos = FetchRequest(sortDescriptors: [SortDescriptor(\.dueDate)], predicate: Repository.duePredicate(interval))
     }
 
     var body: some View {
         let occurrences = events.filter(style.includes).flatMap { $0.occurrences(overlapping: interval) }
         let visible = style.entries(occurrences: occurrences, subscribed: subscribed,
-                                    external: model.external.items(overlapping: interval))
+                                    external: model.external.items(overlapping: interval), todos: todos)
             .sorted(by: CalendarEntry.listOrder)
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 6) {
@@ -58,6 +61,8 @@ struct DayListView: View {
                             EventRow(occurrence: occurrence, color: entry.color)
                         }
                         .buttonStyle(.plain)
+                    } else if let todo = entry.todo {
+                        TodoEntryRow(todo: todo, color: entry.color) { actions.openTodo(todo) }
                     } else {
                         ExternalEntryRow(entry: entry)
                     }
@@ -71,7 +76,6 @@ struct DayListView: View {
 
 /// Termin als farbig getönte Karte: Uhrzeit links, Farbstreifen, Titel, Teilnehmer.
 struct EventRow: View {
-    @Environment(\.colorScheme) private var colorScheme
     let occurrence: Occurrence
     let color: Color
 
@@ -135,10 +139,7 @@ struct EventRow: View {
         }
         .padding(.vertical, 8)
         .padding(.trailing, 10)
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(color.opacity(colorScheme == .dark ? 0.22 : 0.12))
-        )
+        .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(color, lineWidth: 1.2))
         .contentShape(RoundedRectangle(cornerRadius: 10))
         .accessibilityElement(children: .combine)
     }
@@ -146,7 +147,6 @@ struct EventRow: View {
 
 /// Abo-Termin oder Termin aus einem Gerätekalender: nur lesen, ohne Teilnehmer.
 struct ExternalEntryRow: View {
-    @Environment(\.colorScheme) private var colorScheme
     let entry: CalendarEntry
 
     var body: some View {
@@ -189,11 +189,66 @@ struct ExternalEntryRow: View {
         }
         .padding(.vertical, 8)
         .padding(.trailing, 10)
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(entry.color.opacity(colorScheme == .dark ? 0.18 : 0.08))
-        )
+        .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(entry.color.opacity(0.6), lineWidth: 1))
         .accessibilityElement(children: .combine)
+    }
+}
+
+/// Fälliges Todo in der Tagesliste: abhaken direkt hier, antippen öffnet es.
+struct TodoEntryRow: View {
+    @Environment(AppModel.self) private var model
+    @ObservedObject var todo: TodoItem
+    let color: Color
+    let onOpen: () -> Void
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Button {
+                withAnimation(.snappy) {
+                    model.repository.complete(todo)
+                    model.save()
+                }
+            } label: {
+                Image(systemName: "circle")
+                    .font(.title3)
+                    .foregroundStyle(color)
+            }
+            .buttonStyle(.plain)
+            .frame(width: 52, alignment: .trailing)
+            .accessibilityLabel("Mark as done")
+
+            RoundedRectangle(cornerRadius: 2)
+                .fill(color)
+                .frame(width: 4)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(todo.title ?? "")
+                    .font(.body.weight(.semibold))
+                    .lineLimit(2)
+                HStack(spacing: 4) {
+                    Text("To-do")
+                    if todo.recurrenceRule != nil {
+                        Image(systemName: "repeat").accessibilityLabel("Repeating")
+                    }
+                    if let family = todo.family?.name {
+                        Text("· \(family)")
+                    }
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 4)
+            if let assignee = todo.assignee {
+                MemberAvatar(member: assignee, size: 24)
+            }
+        }
+        .padding(.vertical, 8)
+        .padding(.trailing, 10)
+        .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(color, style: StrokeStyle(lineWidth: 1.2, dash: [4, 3])))
+        .contentShape(RoundedRectangle(cornerRadius: 10))
+        .onTapGesture(perform: onOpen)
+        .accessibilityElement(children: .combine)
+        .accessibilityAction(named: "Edit", onOpen)
     }
 }
 

@@ -13,7 +13,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "yafo reads your calendars once to import events you choose."
+            "value" : "yafo shows or imports events from your calendars and can copy yafo events into them."
           }
         }
       }

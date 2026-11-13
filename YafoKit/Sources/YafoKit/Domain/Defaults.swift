@@ -19,6 +19,8 @@ nonisolated public enum CalendarColors {
     public static let publicHoliday = "#EB5757"      // Rot
     public static let schoolHoliday = "#FFD8A8"      // Helles Orange
     public static let external = "#8E8E93"           // Grau
+    /// Geburtstage stehen ab Werk in eigener Farbe statt in der ihres Kalenders.
+    public static let birthdayDefault = "#E84393"    // Pink
 
     /// Weitere geteilte Kalender bekommen der Reihe nach eigene, kräftige Farben.
     public static let additionalShared = ["#9B51E0", "#F2994A", "#00B8A9", "#EB5794", "#5B6CFF"]

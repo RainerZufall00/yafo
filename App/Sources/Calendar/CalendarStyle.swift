@@ -1,3 +1,4 @@
+import CoreData
 import SwiftUI
 import YafoKit
 
@@ -14,17 +15,32 @@ struct CalendarStyle {
     var icsColors: [String: Color] = [:]
     /// Schulferien-Quellen sichtbarer Kalender.
     var schoolHolidayKeys: Set<String> = []
+    /// Eigene Farbe für Geburtstage; `nil` = Farbe ihres Kalenders.
+    var birthdayColor: Color?
+    /// Todos mit Fälligkeit im Kalender zeigen (Einstellung, nur auf dem Gerät).
+    var showsTodos = false
+    /// Farbe für Todos je Familie (die ihres ersten Kalenders) und für „Nur ich“.
+    private var familyColors: [NSManagedObjectID: Color] = [:]
+    private var personalColor = Color(hex: CalendarColors.personalDefault)
 
     var subscriptionKeys: Set<String> { Set(icsColors.keys).union(schoolHolidayKeys) }
 
     init(calendars: some Sequence<EventCalendar>, appearances: some Sequence<CalendarAppearance>,
-         person: Member?) {
+         person: Member?, showsTodos: Bool = false) {
         let byID = Dictionary(appearances.compactMap { a in a.calendarID.map { ($0, a) } },
                               uniquingKeysWith: { first, _ in first })
+        birthdayColor = Repository.birthdayColor(appearanceColor: byID[Repository.birthdayAppearanceID]?.color)
+            .map { Color(hex: $0) }
+        self.showsTodos = showsTodos
         for calendar in calendars {
             guard let id = calendar.id else { continue }
             let appearance = byID[id.uuidString]
             colors[id] = Color(hex: appearance?.color ?? calendar.defaultColor ?? CalendarColors.sharedDefault)
+            if let family = calendar.family {
+                if familyColors[family.objectID] == nil { familyColors[family.objectID] = colors[id] }
+            } else if calendar.kind == .personal, let color = colors[id] {
+                personalColor = color
+            }
             if appearance?.isVisible == false {
                 hiddenCalendars.insert(id)
                 continue
@@ -50,7 +66,7 @@ struct CalendarStyle {
     /// Eigene Termine, Abo-Termine und eingeblendete Gerätekalender in einer Liste.
     /// Gerätekalender gehören nur zu einem selbst und fallen beim Personenfilter weg.
     func entries(occurrences: [Occurrence], subscribed: some Sequence<SubscribedEvent>,
-                 external: [ExternalCalendars.Item]) -> [CalendarEntry] {
+                 external: [ExternalCalendars.Item], todos: some Sequence<TodoItem> = [TodoItem]()) -> [CalendarEntry] {
         var result = occurrences.map { occurrence in
             CalendarEntry(id: "\(occurrence.event.objectID.uriRepresentation())#\(occurrence.originalStart.timeIntervalSince1970)",
                           title: occurrence.displayTitle, start: occurrence.start, end: occurrence.end,
@@ -71,7 +87,25 @@ struct CalendarStyle {
                               color: Color(hex: CalendarColors.external), source: .device)
             }
         }
+        if showsTodos {
+            result += todos.filter(includes).compactMap { todo in
+                guard let due = todo.dueDate, !todo.isDone,
+                      let end = Calendar.current.date(byAdding: .day, value: 1, to: due) else { return nil }
+                return CalendarEntry(id: "todo#\(todo.objectID.uriRepresentation())", title: todo.title ?? "",
+                                     start: due, end: end, isAllDay: true, location: nil,
+                                     color: todo.family.flatMap { familyColors[$0.objectID] } ?? personalColor,
+                                     source: .todo(todo))
+            }
+        }
         return result
+    }
+
+    /// Beim Personenfilter: der Person zugewiesen oder niemandem in ihrer Familie. Private Todos
+    /// gehören nur einem selbst.
+    func includes(_ todo: TodoItem) -> Bool {
+        guard let person else { return true }
+        if let assignee = todo.assignee { return assignee == person }
+        return todo.family != nil && todo.family == person.family
     }
 
     /// Schulferien je Tag (Namen), aus dem lokalen Cache.
@@ -92,7 +126,8 @@ struct CalendarStyle {
     }
 
     func color(for event: Event) -> Color {
-        event.calendar?.id.flatMap { colors[$0] } ?? .gray
+        if event.isBirthday, let birthdayColor { return birthdayColor }
+        return event.calendar?.id.flatMap { colors[$0] } ?? .gray
     }
 
     /// Sichtbarer Kalender und, falls gefiltert, die Person ist dabei. Ein Termin ohne
@@ -116,6 +151,7 @@ struct CalendarEntry: Identifiable {
         case event(Occurrence)
         case subscription
         case device
+        case todo(TodoItem)
     }
 
     let id: String
@@ -136,6 +172,16 @@ struct CalendarEntry: Identifiable {
         if case .device = source { return true }
         return false
     }
+
+    var todo: TodoItem? {
+        if case .todo(let todo) = source { return todo }
+        return nil
+    }
+
+    /// Eigene Termine und Todos lassen sich auf einen anderen Tag ziehen, Abos und Gerätekalender nicht.
+    var isMovable: Bool { occurrence != nil || todo != nil }
+
+    var isBirthday: Bool { occurrence?.event.isBirthday == true }
 
     /// Ganztägige zuerst, dann nach Beginn.
     static func listOrder(_ a: CalendarEntry, _ b: CalendarEntry) -> Bool {

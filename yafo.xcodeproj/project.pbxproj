@@ -79,6 +79,7 @@
 				Sources/Calendar/RepeatSettings.swift,
 				Sources/Screenshot/ScreenshotImportView.swift,
 				Sources/Screenshot/ScreenshotReader.swift,
+				Sources/Support/ScreenshotDemo.swift,
 				Sources/Support/Styling.swift,
 			);
 			target = A1000000000000000000A003 /* yafoShare */;

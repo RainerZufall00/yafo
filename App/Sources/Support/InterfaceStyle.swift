@@ -87,6 +87,9 @@ private struct FamilyButton: ViewModifier {
             .sheet(isPresented: $showing) {
                 FamilyView(onDone: { showing = false })
             }
+            #if DEBUG
+            .onAppear { if ScreenshotDemo.take("family") { showing = true } }
+            #endif
     }
 }
 

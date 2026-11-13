@@ -1,0 +1,32 @@
+No account, no login, no in-app purchases, no ads. The app works without any credentials.
+
+PURPOSE AND AUDIENCE
+Free family organizer for iPhone and iPad: a shared calendar, a shopping list and to-dos for a family. Families are shared through Apple CloudKit sharing (CKShare) in the users' own iCloud; the developer runs no servers and receives no data.
+
+HOW TO TEST (single device, no second account needed)
+1. Launch the app. Tap "Get Started", pick a navigation style ("Tabs" or "Swipe"), tap "Continue", then "Create a Family". Enter a family name and your name and tap "Create Family". ("Not Now, Just Me" also works without iCloud.)
+2. Calendar: tap "+" to add an event, choose participants and a repeat rule. Tap an event to see details and add a comment. Long-press "+" for "Event from Screenshot" and pick any picture with a date (e.g. a photo of a letter or invitation). Recognition runs on the device.
+3. Shopping: type an item such as "Milk" or "Bananas" – it is sorted into an aisle with an icon. Tap the tile to check it off.
+4. To-dos: add a to-do with a due date and an assignee.
+5. Family (person icon, top right): members, child profiles, shared calendars, holidays, import/export, backup, and "Invite with QR Code".
+Inviting another person requires a second Apple Account; it uses the standard iCloud share sheet or a one-time QR code (CKShare one-time links, entitlement com.apple.developer.icloud-extended-share-access).
+Without iCloud the app works locally on the device.
+
+PERMISSIONS (all optional; calendars, contacts and camera are asked only when the feature is used)
+- Calendars: show device calendars greyed out, import events once, or copy yafo events into a device calendar.
+- Contacts: import names and birthdays into a calendar.
+- Camera: scan the QR code of a family invitation.
+- Notifications (asked at first launch): local reminders for events and to-dos, no marketing. Remote notifications are only silent CloudKit pushes for syncing.
+
+EXTERNAL SERVICES
+- Apple CloudKit and iCloud Drive (user's own private and shared databases; weekly JSON backup in the user's iCloud Drive).
+- OpenHolidays API (openholidaysapi.org) to download school holiday dates for Germany, Austria and Switzerland when the user turns them on for a calendar. Only the region is sent.
+- ICS/webcal calendar addresses that the user enters (e.g. a Google Calendar address), fetched directly by the device.
+- Apple MapKit for place search in the location field.
+- Apple Vision and Foundation Models, on-device only, for "Event from Screenshot". The picture is not stored or uploaded.
+No analytics, tracking, ads or third-party SDKs.
+
+REGIONAL DIFFERENCES
+Works the same in all regions. UI in English and German. Public and school holidays are only offered for Germany, Austria and Switzerland.
+
+Screenshots use fictional sample data.

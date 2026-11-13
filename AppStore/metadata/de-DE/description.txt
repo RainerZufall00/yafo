@@ -1,0 +1,41 @@
+yafo bringt den Familienalltag an einen Ort: ein gemeinsamer Kalender, eine Einkaufsliste und Todos – für alle in der Familie, auf iPhone und iPad. Alles liegt in eurer iCloud. Kein Konto, kein eigener Server, keine Werbung, kein Tracking.
+
+KALENDER FÜR DIE GANZE FAMILIE
+• Gemeinsame Kalender wie „Familie“, „Sport“ oder „Schule“ und dein eigener Kalender, den nur du siehst.
+• Woche, Monat oder Jahr über den ganzen Bildschirm – mit klaren Farben je Kalender.
+• Teilnehmer an jedem Termin und ein Filter pro Person: Was hat Mia diese Woche vor?
+• Serientermine wie „jeden Dienstag“ oder „alle zwei Wochen“ – einzelne Termine lassen sich ändern oder absagen.
+• Kommentare direkt am Termin: „Wer bringt Snacks mit?“
+• Geburtstage mit Alter, das automatisch mitzählt.
+• Gesetzliche Feiertage für alle Bundesländer, Österreich und die Schweiz, dazu Schulferien als Fläche im Kalender.
+
+TERMIN AUS SCREENSHOT
+Elternbrief, Einladung oder Vereinsnachricht? Bild teilen oder im Kalender „Termin aus Screenshot“ wählen – yafo erkennt Datum, Uhrzeit, Ort und Wiederholung und zeigt dir eine Vorschau zum Anpassen. Die Erkennung läuft komplett auf deinem Gerät, mit Apple Intelligence noch genauer.
+
+EINKAUFSLISTE
+• Artikel als Kacheln mit eigenen Symbolen, sortiert nach Abteilungen in Laufreihenfolge durch den Supermarkt.
+• Mengen und Sorten mit einem Tipp, „Zuletzt gekauft“ und Vorschläge beim Tippen.
+• Abhaken im Laden – die anderen sehen es sofort.
+
+TODOS
+• Mit Fälligkeit und Zuständigen – auch für Kinder ohne eigenes Gerät.
+• Wiederkehrende Aufgaben wie „Mülltonnen rausstellen“ rollen beim Abhaken einfach weiter.
+• Eigene Listen für jede Familie und „Nur ich“ für dich allein.
+
+FAMILIE EINLADEN
+• Familie anlegen und per Link oder QR-Code einladen. Jeder Code gilt für genau eine Person.
+• Kinderprofile ohne eigenes Gerät – und später mit eigenem iPhone übernehmen.
+• Mehrere Familien gleichzeitig, etwa für Patchwork oder die Großeltern.
+
+ERINNERUNGEN UND WIDGETS
+• Erinnerungen an Termine und Todos, pro Person einstellbar oder stumm.
+• Widgets für die nächsten Termine, den Sperrbildschirm, die Einkaufsliste und Todos – direkt im Widget abhakbar.
+
+DEINE DATEN GEHÖREN DIR
+• Alles wird über deine iCloud synchronisiert und geteilt. Der Entwickler sieht keine eurer Daten.
+• Import aus Gerätekalendern, Google-Kalender-Adressen (ICS) und .ics-Dateien, Geburtstage aus den Kontakten.
+• Export als ICS und CSV, dazu ein automatisches Backup in deinem iCloud Drive.
+
+Bedienung nach Wahl: klassisch mit Tabs oder per Wischen – Todos links, Einkauf rechts, Monate nach oben und unten.
+
+yafo ist kostenlos, ohne In-App-Käufe, und auf Deutsch und Englisch verfügbar. Der Quellcode ist offen (MIT-Lizenz).

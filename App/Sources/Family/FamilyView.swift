@@ -36,6 +36,8 @@ struct FamilyView: View {
     @State private var prompt: Prompt?
     @State private var promptText = ""
     @AppStorage(InterfaceStyle.storageKey) private var interfaceStyle = InterfaceStyle.tabs
+    @AppStorage(CalendarDisplay.showsTodosKey) private var showsTodos = true
+    @FetchRequest(sortDescriptors: []) private var appearances: FetchedResults<CalendarAppearance>
     /// Gesetzt, wenn die Ansicht als Blatt offen ist (Knopf oben rechts): zeigt „Fertig“.
     var onDone: (() -> Void)?
 
@@ -74,6 +76,20 @@ struct FamilyView: View {
                     }
                 } footer: {
                     Text("Tapping the widget always opens the calendar.")
+                }
+
+                Section {
+                    Toggle("Show To-dos with Due Date", systemImage: "checklist", isOn: $showsTodos)
+                    birthdayColorRow
+                    NavigationLink {
+                        BirthdaySuggestionsView()
+                    } label: {
+                        Label("Birthday Suggestions", systemImage: "wand.and.sparkles")
+                    }
+                } header: {
+                    Text("Calendar")
+                } footer: {
+                    Text("Drag to-dos in the calendar to change the due date. Touch and hold a day to add an event.")
                 }
 
                 Section {
@@ -172,6 +188,29 @@ struct FamilyView: View {
                     .disabled(promptText.trimmingCharacters(in: .whitespaces).isEmpty)
                 Button("Cancel", role: .cancel) {}
             }
+        }
+    }
+
+    /// Eigene Farbe für Geburtstage oder die ihres Kalenders; gilt nur für einen selbst.
+    @ViewBuilder
+    private var birthdayColorRow: some View {
+        let _ = appearances.count // neu zeichnen, wenn sich die Farbe ändert
+        let color = model.repository.birthdayColor()
+        Toggle("Own Color for Birthdays", systemImage: "birthday.cake", isOn: Binding(
+            get: { color != nil },
+            set: { own in
+                model.repository.setBirthdayColor(own ? CalendarColors.birthdayDefault : nil)
+                model.save()
+            }
+        ))
+        if let color {
+            ColorPicker("Birthday Color", selection: Binding(
+                get: { Color(hex: color) },
+                set: { newColor in
+                    model.repository.setBirthdayColor(newColor.hexString)
+                    model.save()
+                }
+            ), supportsOpacity: false)
         }
     }
 

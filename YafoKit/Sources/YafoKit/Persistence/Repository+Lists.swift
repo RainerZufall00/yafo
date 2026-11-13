@@ -251,3 +251,17 @@ extension Repository {
         return (try? context.fetch(request)) ?? []
     }
 }
+
+extension Repository {
+    /// Für `@FetchRequest`: offene Todos, die im Intervall fällig sind.
+    public static func duePredicate(_ interval: DateInterval) -> NSPredicate {
+        NSPredicate(format: "isDone == NO AND dueDate >= %@ AND dueDate < %@",
+                    interval.start as NSDate, interval.end as NSDate)
+    }
+
+    /// Verschiebt die Fälligkeit (Drag & Drop im Kalender).
+    public func move(_ todo: TodoItem, toDay day: Date) {
+        update(todo, title: todo.title ?? "", dueDate: day, assignee: todo.assignee,
+               recurrenceRule: todo.recurrenceRule)
+    }
+}

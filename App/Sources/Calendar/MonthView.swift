@@ -23,7 +23,11 @@ struct MonthView: View {
     @State private var screenshot: PickedImage?
     @AppStorage("calendarMode") private var mode: CalendarMode = .month
     @State private var openedDay: Date?
+    #if DEBUG
+    @State private var demoEvent: Event?
+    #endif
     @AppStorage(InterfaceStyle.storageKey) private var interfaceStyle = InterfaceStyle.tabs
+    @AppStorage(CalendarDisplay.showsTodosKey) private var showsTodos = true
 
     /// Im Wisch-Modus blättern Monate nach oben und unten, seitlich geht es zu Todos und Einkauf.
     private var isVertical: Bool { interfaceStyle == .swipe }
@@ -40,7 +44,7 @@ struct MonthView: View {
 
     private var style: CalendarStyle {
         let _ = subscriptions.count
-        return CalendarStyle(calendars: calendars, appearances: appearances, person: person)
+        return CalendarStyle(calendars: calendars, appearances: appearances, person: person, showsTodos: showsTodos)
     }
 
     var body: some View {
@@ -63,6 +67,9 @@ struct MonthView: View {
                 } else {
                     periodGrid
                 }
+            }
+            .safeAreaInset(edge: .top, spacing: 0) {
+                BirthdaySuggestionBanner()
             }
             .navigationBarTitleDisplayMode(.inline)
             // Vor der eigenen Leiste angewandt, damit „Familie“ ganz rechts steht.
@@ -88,7 +95,17 @@ struct MonthView: View {
             .navigationDestination(item: $openedDay) { day in
                 DayPage(day: day, style: style) { shown in show(shown) }
             }
+            #if DEBUG
+            .onAppear(perform: showDemoScreen)
+            .sheet(item: $demoEvent) { event in
+                NavigationStack {
+                    EventDetailView(event: event, originalStart: event.start ?? .now, color: style.color(for: event))
+                }
+            }
+            #endif
         }
+        // Außerhalb des Stacks, damit auch geöffnete Tage langes Drücken und Verschieben kennen.
+        .modifier(CalendarEditing())
     }
 
     @ViewBuilder
@@ -97,6 +114,9 @@ struct MonthView: View {
             VStack(spacing: 0) {
                 weekHeader
                 weekPager
+                WeekStrip(weeks: Self.pagedWeeks, selected: week) { target in
+                    withAnimation(.snappy) { scrolledWeek = target }
+                }
             }
         } else {
             VStack(spacing: 0) {
@@ -153,14 +173,16 @@ struct MonthView: View {
         scrolledWeek = week
     }
 
-    /// Kalenderwoche und Zeitraum, mit Pfeilen für VoiceOver.
+    /// Zeitraum und Kalenderwoche, mit Pfeilen für VoiceOver.
     private var weekHeader: some View {
         let end = Calendar.current.date(byAdding: .day, value: 6, to: week) ?? week
         return HStack(alignment: .firstTextBaseline) {
-            Text("Week \(Calendar.current.component(.weekOfYear, from: week))")
+            Text((week..<end).formatted(.interval.day().month(.wide)))
                 .font(.title2.weight(.bold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
                 .accessibilityAddTraits(.isHeader)
-            Text((week..<end).formatted(.interval.day().month(.abbreviated).year()))
+            Text("Week \(Calendar.current.component(.weekOfYear, from: week))")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
@@ -311,6 +333,15 @@ struct MonthView: View {
             }
         }
     }
+
+    #if DEBUG
+    /// `-demoScreen` für die App-Store-Screenshots (`ScreenshotDemo`).
+    private func showDemoScreen() {
+        if ScreenshotDemo.take("day"), sizeClass != .regular { openedDay = selectedDay }
+        if ScreenshotDemo.take("event") { demoEvent = DemoData.featuredEvent }
+        if ScreenshotDemo.take("screenshot") { screenshot = PickedImage(image: ScreenshotDemo.letter()) }
+    }
+    #endif
 
     private func loadScreenshot() async {
         guard let item = screenshotItem else { return }

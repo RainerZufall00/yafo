@@ -36,7 +36,8 @@ struct EventDetailView: View {
 
     private var content: some View {
         let occurrence = occurrence
-        return List {
+        return ScrollViewReader { proxy in
+        List {
             Section {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(occurrence.title)
@@ -52,6 +53,19 @@ struct EventDetailView: View {
                     }
                 } else if let repeatText = repeatDescription(event.recurrenceRule, start: event.start ?? occurrence.start) {
                     Label(repeatText, systemImage: "repeat")
+                }
+            }
+            if let suggestion = model.repository.birthdaySuggestion(for: event) {
+                Section {
+                    Label("Looks like a birthday", systemImage: "birthday.cake")
+                    Button("Convert to Birthday of \(suggestion.name)") {
+                        withAnimation {
+                            model.repository.convertToBirthday(suggestion)
+                            model.save()
+                        }
+                    }
+                } footer: {
+                    Text("Repeats every year, shows the age and gets the birthday color.")
                 }
             }
             if let location = occurrence.location {
@@ -91,6 +105,7 @@ struct EventDetailView: View {
             }
             if event.calendar?.family != nil {
                 CommentsSection(event: event, me: model.me(in: event.calendar?.family))
+                    .id("comments")
             }
             Section {
                 if let creator {
@@ -101,6 +116,15 @@ struct EventDetailView: View {
                     confirmingDelete = true
                 }
             }
+        }
+        #if DEBUG
+        // Screenshot „Termin“: die Kommentare ins Bild holen.
+        .task {
+            guard ScreenshotDemo.screen == "event" else { return }
+            try? await Task.sleep(for: .milliseconds(600))
+            proxy.scrollTo("comments", anchor: .center)
+        }
+        #endif
         }
         .navigationTitle(event.isBirthday ? "Birthday" : "Event")
         .navigationBarTitleDisplayMode(.inline)

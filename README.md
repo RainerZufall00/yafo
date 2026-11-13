@@ -14,6 +14,7 @@ Architektur und Feature-Umfang: [docs/yafo – Architektur & Features.pdf](docs/
 | `ShareExtension/` | „Termin aus Screenshot“ im Teilen-Menü; nutzt `App/Sources/Screenshot/` mit und schreibt ohne eigene iCloud-Synchronisation in die Stores der App Group, die App übernimmt die Änderungen beim Aktivwerden |
 | `YafoKit/` | Swift Package mit Datenmodell, Persistenz (Core Data + CloudKit), Sharing und Logik, inkl. Tests |
 | `docs/` | Architektur-Dokument |
+| `AppStore/` | Store-Eintrag: Texte (fastlane-Layout), Screenshots samt Skripten, Datenschutz und Support-Website – siehe `AppStore/README.md` |
 | `Tools/ItemIcons/` | Generator für die Artikel-Icons der Einkaufsliste (`python3 Tools/ItemIcons/build.py`, braucht `shapely`) |
 | `Tools/AppIcon/` | Generator fürs App-Icon „Familie vor dem Y“ in hell, dunkel und getönt (`swift Tools/AppIcon/build.swift`, `--preview datei.html` für eine Vorschau); `concepts/` enthält die Entwürfe |
 
@@ -45,6 +46,7 @@ Startargumente fürs Entwickeln (im Scheme unter *Run › Arguments*, dort schon
 | `-yafoInMemory` | Leere Stores in einem temporären Ordner |
 | `-yafoDemoData` | Beispielfamilie mit Terminen, Serien, Listen und Todos (nur Debug) |
 | `-yafoOnboarding` | Onboarding bei jedem Start zeigen, auch wenn es schon eine Familie gibt |
+| `-screenshotDemo` | App-Store-Screenshots: Demo-Daten im Speicher, ohne iCloud und Mitteilungs-Dialog; `-demoScreen day\|event\|family\|screenshot` öffnet die Ansicht (nur Debug, siehe `AppStore/README.md`) |
 | `-com.apple.CoreData.CloudKitDebug 1` | Ausführliches CloudKit-Sync-Log |
 
 Tests des Packages:
@@ -76,7 +78,13 @@ Roadmap aus dem Architektur-Dokument:
 - [ ] Prototyp Owner-Übertragung (V1.1)
 - [x] **2. Kalender:** Monatsansicht zum Blättern, Jahresansicht, Termine mit Teilnehmern, Farbsystem,
       Personenfilter, Serien (RRULE, Ausnahmen, nur dieser / folgende / alle), Kommentare,
-      Geburtstage mit mitzählendem Alter
+      Geburtstage mit mitzählendem Alter (eigene Farbe, einstellbar unter Familie › Kalender)
+  - Wochenansicht als Kacheln je Tag (Titel, Uhrzeit, Dauer) mit Wochenleiste; Termine umrandet statt gefüllt
+  - Lange auf einen Tag drücken legt dort einen Termin an; Termine und Todos per Ziehen auf einen anderen Tag
+    verschieben (bei Serien mit Rückfrage)
+  - Todos mit Fälligkeit im Kalender (abschaltbar unter Familie › Kalender)
+  - Geburtstagsvorschläge: ganztägige Termine wie „Geburtstag Oma (1950)“ werden erkannt (`BirthdayDetector`)
+    und lassen sich mit einem Tipp in Geburtstage umwandeln, Kopien aus anderen Jahren fallen dabei weg
 - [x] **Onboarding** beim ersten Start: Begrüßung, Bedienung wählen, dann Familie anlegen, beitreten oder
       allein loslegen. Einladen und Beitreten auch per QR-Code (Familie › „Mit QR-Code einladen“ bzw.
       „+“ › „Mit QR-Code beitreten“): je Code ein Einmal-Link für eine Person
@@ -125,6 +133,9 @@ Roadmap aus dem Architektur-Dokument:
     einstellbar; vollständige Adressen werden gleich in Apple Maps gefunden, für Namen wie „Aula“ gibt es
     Vorschläge zum Antippen
 - [ ] 8. TestFlight, App Store
+  - TestFlight läuft (Build 6). Store-Eintrag vorbereitet in `AppStore/`: Texte DE/EN, Screenshots für iPhone 6,9″/6,3″,
+    iPad 13″ und iPhone Duo innen, Datenschutz- und Support-Seiten für GitHub Pages
+  - Offen: Website veröffentlichen, Duo-Screenshots zugeklappt, Name/Anschrift für die Datenschutzerklärung, Version 1.0
 
 ## Lizenz
 

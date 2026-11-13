@@ -77,6 +77,33 @@ extension Repository {
         }
     }
 
+    /// Verschiebt ein Vorkommen auf einen anderen Tag (Drag & Drop im Kalender); Uhrzeit und Dauer bleiben.
+    /// Geburtstage gelten immer als ganze Serie: Tag und Monat ändern sich, das Geburtsjahr bleibt.
+    @discardableResult
+    public func move(_ event: Event, occurrence originalStart: Date, toDay day: Date,
+                     scope: SeriesScope = .allOccurrences, calendar cal: Calendar = .current) -> Event {
+        let occurrence = event.occurrence(originalStart: originalStart)
+        let days = cal.dateComponents([.day], from: cal.startOfDay(for: occurrence.start),
+                                      to: cal.startOfDay(for: day)).day ?? 0
+        guard days != 0, let calendar = event.calendar else { return event }
+        if event.isBirthday {
+            return updateBirthday(event, name: event.title ?? "", day: day,
+                                  birthYear: event.birthYear > 0 ? Int(event.birthYear) : nil,
+                                  calendar: calendar, notes: event.notes)
+        }
+        let start = cal.date(byAdding: .day, value: days, to: occurrence.start) ?? occurrence.start
+        let end = cal.date(byAdding: .day, value: days, to: occurrence.end) ?? occurrence.end
+        // Nur dieses Vorkommen: seine Abweichungen behalten. Sonst gelten die Werte der Serie.
+        let single = scope == .thisOccurrence && event.isRecurring
+        let draft = EventDraft(title: single ? occurrence.title : event.title ?? "", start: start, end: end,
+                               isAllDay: event.isAllDay,
+                               location: single ? occurrence.location : event.location,
+                               notes: single ? occurrence.notes : event.notes, calendar: calendar,
+                               participants: event.participants ?? [], recurrenceRule: event.recurrenceRule,
+                               geo: event.geo)
+        return update(event, occurrence: originalStart, with: draft, scope: scope)
+    }
+
     /// Löscht einen Termin bzw. Vorkommen einer Serie.
     public func delete(_ event: Event, occurrence originalStart: Date?, scope: SeriesScope) {
         guard event.isRecurring, let originalStart, let seriesStart = event.start, let rule = event.rule,

@@ -14,3 +14,6 @@ Package.resolved
 
 # Eigenes Developer-Team
 Config/Local.xcconfig
+
+# App-Store-Rohaufnahmen
+AppStore/Screenshots/raw/

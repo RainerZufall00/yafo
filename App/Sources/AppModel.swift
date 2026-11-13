@@ -53,8 +53,13 @@ final class AppModel {
 
     private init() {
         let arguments = ProcessInfo.processInfo.arguments
+        #if DEBUG
+        let screenshotDemo = ScreenshotDemo.isActive
+        #else
+        let screenshotDemo = false
+        #endif
         do {
-            persistence = arguments.contains("-yafoInMemory")
+            persistence = arguments.contains("-yafoInMemory") || screenshotDemo
                 ? try PersistenceController.makeTemporary()
                 : try PersistenceController.makeDefault(forceLocal: arguments.contains("-yafoLocalOnly"))
         } catch {
@@ -65,7 +70,7 @@ final class AppModel {
         repository.ensurePersonalCalendar(name: String(localized: "My Calendar"))
         try? repository.save()
         #if DEBUG
-        if arguments.contains("-yafoDemoData") {
+        if arguments.contains("-yafoDemoData") || screenshotDemo {
             DemoData.seedIfNeeded(repository)
         }
         // Legt alle Record-Typen und Felder in der Development-Umgebung von CloudKit an, auch
@@ -88,7 +93,12 @@ final class AppModel {
         userID = await sharing.currentUserID()
         // Die Share Extension braucht die ID für „Erstellt von“, kann CloudKit aber nicht fragen.
         UserDefaults(suiteName: PersistenceController.appGroupIdentifier)?.set(userID, forKey: "userID")
+        #if DEBUG
+        // Für Screenshots keine Nachfrage nach Mitteilungen.
+        if !ScreenshotDemo.isActive { await ReminderScheduler.requestAuthorization() }
+        #else
         await ReminderScheduler.requestAuthorization()
+        #endif
         refreshAfterSync()
         processInbox()
         Task { await refreshSubscriptions() }

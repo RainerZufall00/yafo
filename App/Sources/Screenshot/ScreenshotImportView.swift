@@ -199,7 +199,11 @@ struct ScreenshotImportView: View {
             if result == nil { result = ScreenshotReader.Result(proposals: [], method: .dataDetector) }
             return
         }
+        #if DEBUG
+        let read = if let demo = ScreenshotDemo.letterReading { demo } else { await ScreenshotReader.read(cgImage) }
+        #else
         let read = await ScreenshotReader.read(cgImage)
+        #endif
         proposals = read.proposals
         repeats = Dictionary(uniqueKeysWithValues: read.proposals.map {
             ($0.id, RepeatSettings(rule: $0.recurrenceRule, start: $0.start))

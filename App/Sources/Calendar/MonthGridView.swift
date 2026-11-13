@@ -2,8 +2,9 @@ import CoreData
 import SwiftUI
 import YafoKit
 
-/// Monatsraster mit farbigen Termin-Chips: Titel direkt im Tag, mehrtägige und
+/// Monatsraster mit umrandeten Termin-Chips: Titel direkt im Tag, mehrtägige und
 /// ganztägige Termine als durchgehendes Band. Was nicht passt, zeigt „+n“.
+/// Lange auf einen Tag drücken legt dort einen Termin an; Termine und Todos lassen sich verschieben.
 struct MonthGridView: View {
     @Environment(AppModel.self) private var model
     let grid: MonthGrid
@@ -15,6 +16,7 @@ struct MonthGridView: View {
     private let interval: DateInterval
     @FetchRequest private var events: FetchedResults<Event>
     @FetchRequest private var subscribed: FetchedResults<SubscribedEvent>
+    @FetchRequest private var todos: FetchedResults<TodoItem>
 
     init(grid: MonthGrid, selectedDay: Binding<Date>, style: CalendarStyle, onOpenDay: ((Date) -> Void)? = nil) {
         self.grid = grid
@@ -29,12 +31,13 @@ struct MonthGridView: View {
         _subscribed = FetchRequest(sortDescriptors: [SortDescriptor(\.start)],
                                    predicate: Repository.cachePredicate(sourceKeys: style.subscriptionKeys,
                                                                         interval: interval))
+        _todos = FetchRequest(sortDescriptors: [SortDescriptor(\.dueDate)], predicate: Repository.duePredicate(interval))
     }
 
     var body: some View {
         let occurrences = events.filter(style.includes).flatMap { $0.occurrences(overlapping: interval) }
         let visible = style.entries(occurrences: occurrences, subscribed: subscribed,
-                                    external: model.external.items(overlapping: interval))
+                                    external: model.external.items(overlapping: interval), todos: todos)
         let holidays = style.holidays(in: interval)
         let schoolHolidays = style.schoolHolidays(in: subscribed)
         VStack(spacing: 0) {
@@ -58,23 +61,32 @@ struct MonthGridView: View {
 
 private struct WeekRow: View {
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.calendarActions) private var actions
     let week: [MonthGrid.Day]
     let entries: [CalendarEntry]
     let holidays: [Date: [Holiday]]
     let schoolHolidays: [Date: [String]]
     @Binding var selectedDay: Date
     let onOpenDay: ((Date) -> Void)?
+    @State private var dropTarget: Date?
 
-    /// iPhone: kompakt, damit drei Chips pro Tag passen. iPad: größer und besser lesbar.
+    /// iPhone: kompakt, damit mehrere Chips pro Tag passen. iPad: größer und besser lesbar.
     private var isRegular: Bool { sizeClass == .regular }
     private var headerHeight: CGFloat { isRegular ? 26 : 19 }
     private var chipHeight: CGFloat { isRegular ? 20 : 14 }
+    /// Zweizeilige Chips, wenn die Woche dafür Platz hat: Titel stehen dann meist ganz da.
+    private var tallChipHeight: CGFloat { isRegular ? 34 : 23 }
     private var chipSpacing: CGFloat { 2 }
+    private var fontSize: CGFloat { isRegular ? 12 : 9 }
 
     var body: some View {
         GeometryReader { geometry in
             let columnWidth = geometry.size.width / 7
-            let lanes = Int((geometry.size.height - headerHeight - 2) / (chipHeight + chipSpacing))
+            let available = geometry.size.height - headerHeight - 2
+            let needed = layout(maxLanes: .max).laneCount
+            let isTall = CGFloat(needed) * (tallChipHeight + chipSpacing) <= available
+            let chipHeight = isTall ? tallChipHeight : chipHeight
+            let lanes = Int(available / (chipHeight + chipSpacing))
             let layout = layout(maxLanes: max(lanes, 0))
             let byID = Dictionary(entries.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
 
@@ -86,26 +98,31 @@ private struct WeekRow: View {
                                       isSchoolHoliday: schoolHolidays[day.date] != nil,
                                       titles: (holidays[day.date] ?? []).map { $0.name() }
                                           + (schoolHolidays[day.date] ?? []) + titles(on: day.date),
+                                      isDropTarget: dropTarget == day.date,
                                       fontSize: isRegular ? 15 : 12.5)
                             .frame(width: columnWidth)
-                            .onTapGesture {
-                                selectedDay = day.date
-                                onOpenDay?(day.date)
-                            }
+                            .onTapGesture { open(day.date) }
+                            .onLongPressGesture(minimumDuration: 0.4) { actions.createEvent(day.date) }
                     }
                 }
 
                 ForEach(layout.items) { item in
                     if let entry = byID[item.id] {
                         EventChip(title: entry.title, color: entry.color,
-                                  isSpanning: item.isSpanning && !entry.isDevice,
+                                  icon: entry.todo != nil ? "circle" : nil, isMuted: entry.isDevice,
                                   continuesBefore: item.continuesBefore, continuesAfter: item.continuesAfter,
-                                  fontSize: isRegular ? 12.5 : 10)
+                                  fontSize: fontSize, lineLimit: isTall && !item.isSpanning ? 2 : 1)
                             .frame(width: CGFloat(item.lastColumn - item.firstColumn + 1) * columnWidth - 3,
                                    height: chipHeight)
+                            // Antippen öffnet den Tag unter dem Finger, lange drücken hebt den Termin an.
+                            .gesture(SpatialTapGesture().onEnded { tap in
+                                let column = item.firstColumn + Int((tap.location.x + 1.5) / columnWidth)
+                                if week.indices.contains(column) { open(week[column].date) }
+                            })
+                            .calendarDraggable(entry)
+                            .allowsHitTesting(entry.isMovable)
                             .offset(x: CGFloat(item.firstColumn) * columnWidth + 1.5,
                                     y: headerHeight + CGFloat(item.lane) * (chipHeight + chipSpacing))
-                            .allowsHitTesting(false)
                     }
                 }
 
@@ -122,11 +139,20 @@ private struct WeekRow: View {
                     }
                 }
             }
+            .calendarDrop(entries: entries, hovered: $dropTarget) { location in
+                let column = Int(location.x / columnWidth)
+                return week.indices.contains(column) ? week[column].date : nil
+            }
         }
         .overlay(alignment: .top) {
             Rectangle().fill(.separator).frame(height: 0.5)
         }
         .clipped()
+    }
+
+    private func open(_ day: Date) {
+        selectedDay = day
+        onOpenDay?(day)
     }
 
     private func layout(maxLanes: Int) -> WeekLayout<String> {
@@ -148,6 +174,7 @@ private struct DayBackground: View {
     let isHoliday: Bool
     let isSchoolHoliday: Bool
     let titles: [String]
+    var isDropTarget = false
     let fontSize: CGFloat
 
     private var isToday: Bool { Calendar.current.isDateInToday(day.date) }
@@ -181,45 +208,60 @@ private struct DayBackground: View {
         .overlay(alignment: .trailing) {
             Rectangle().fill(.separator).frame(width: 0.5)
         }
+        .overlay {
+            if isDropTarget {
+                RoundedRectangle(cornerRadius: 4).strokeBorder(Color.accentColor, lineWidth: 2)
+                    .background(Color.accentColor.opacity(0.12))
+            }
+        }
         .opacity(day.isInMonth ? 1 : 0.6)
         .contentShape(Rectangle())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(day.date.formatted(date: .complete, time: .omitted))
         .accessibilityValue(titles.joined(separator: ", "))
         .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
+        .accessibilityHint("Touch and hold to add an event.")
     }
 }
 
-/// Ganztägig/mehrtägig: volle Farbe mit weißer Schrift. Mit Uhrzeit: getönter Hintergrund,
-/// Schrift in der Kalenderfarbe.
+/// Termin im Raster: umrandet in der Kalenderfarbe, Schrift in Textfarbe – so bleibt sie auch klein
+/// lesbar. Lange Titel werden erst etwas kleiner, bevor sie abgeschnitten werden.
+/// Die Jahresansicht nutzt `isFilled` für kräftige Bänder.
 struct EventChip: View {
-    @Environment(\.colorScheme) private var colorScheme
     let title: String
     let color: Color
-    let isSpanning: Bool
+    /// SF Symbol vor dem Titel, z. B. ein Kreis für Todos.
+    var icon: String?
+    /// Gerätekalender: grau statt in Textfarbe.
+    var isMuted = false
+    var isFilled = false
     var continuesBefore = false
     var continuesAfter = false
     var fontSize: CGFloat = 10.5
+    var lineLimit = 1
 
     var body: some View {
-        Text(title)
+        let shape = UnevenRoundedRectangle(topLeadingRadius: continuesBefore ? 0 : 4,
+                                           bottomLeadingRadius: continuesBefore ? 0 : 4,
+                                           bottomTrailingRadius: continuesAfter ? 0 : 4,
+                                           topTrailingRadius: continuesAfter ? 0 : 4)
+        label
             .font(.system(size: fontSize, weight: .semibold))
-            .lineLimit(1)
+            .lineLimit(lineLimit)
+            .minimumScaleFactor(0.8)
             .truncationMode(.tail)
-            .foregroundStyle(isSpanning ? Color.white : textColor)
-            .padding(.horizontal, 3)
+            .lineSpacing(-1)
+            .foregroundStyle(isFilled ? Color.white : isMuted ? Color.secondary : Color.primary)
+            .padding(.horizontal, 2.5)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .background(
-                UnevenRoundedRectangle(topLeadingRadius: continuesBefore ? 0 : 4,
-                                       bottomLeadingRadius: continuesBefore ? 0 : 4,
-                                       bottomTrailingRadius: continuesAfter ? 0 : 4,
-                                       topTrailingRadius: continuesAfter ? 0 : 4)
-                    .fill(isSpanning ? color : color.opacity(colorScheme == .dark ? 0.3 : 0.18))
-            )
+            .background {
+                if isFilled { shape.fill(color) } else { shape.strokeBorder(color, lineWidth: 1.2) }
+            }
+            .contentShape(shape)
             .accessibilityHidden(true)
     }
 
-    private var textColor: Color {
-        colorScheme == .dark ? color.mix(with: .white, by: 0.35) : color.mix(with: .black, by: 0.3)
+    private var label: Text {
+        if let icon { Text("\(Image(systemName: icon)) \(title)") } else { Text(title) }
     }
 }

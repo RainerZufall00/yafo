@@ -1,0 +1,41 @@
+yafo brings family life together in one place: a shared calendar, a shopping list and to-dos – for everyone in the family, on iPhone and iPad. Everything lives in your iCloud. No account, no server of our own, no ads, no tracking.
+
+A CALENDAR FOR THE WHOLE FAMILY
+• Shared calendars such as "Family", "Sports" or "School", plus your own calendar that only you can see.
+• Week, month or year across the whole screen – with clear colors for each calendar.
+• Participants for every event and a filter per person: what's Mia up to this week?
+• Repeating events like "every Tuesday" or "every two weeks" – change or cancel single occurrences.
+• Comments right on the event: "Who brings snacks?"
+• Birthdays with an age that counts up by itself.
+• Public holidays for Germany, Austria and Switzerland, plus school holidays shown as a band in the calendar.
+
+EVENT FROM SCREENSHOT
+A letter from school, an invitation or a club message? Share the picture or choose "Event from Screenshot" in the calendar – yafo picks out date, time, place and repetition and shows you a preview to adjust. Recognition runs entirely on your device, and even more accurately with Apple Intelligence.
+
+SHOPPING LIST
+• Items as tiles with their own icons, sorted by aisle in the order you walk through the store.
+• Quantities and varieties in one tap, "Recently Bought" and suggestions as you type.
+• Check things off in the store – everyone else sees it right away.
+
+TO-DOS
+• With due dates and assignees – even for kids without their own device.
+• Repeating chores like "Take out the bins" simply roll forward when you check them off.
+• Separate lists for each family, and "Just me" for yourself.
+
+INVITE YOUR FAMILY
+• Create a family and invite people by link or QR code. Each code works for exactly one person.
+• Child profiles without their own device – which they can take over later on their own iPhone.
+• Several families at once, for example for blended families or the grandparents.
+
+REMINDERS AND WIDGETS
+• Reminders for events and to-dos, adjustable or muted per person.
+• Widgets for upcoming events, the Lock Screen, the shopping list and to-dos – check items off right in the widget.
+
+YOUR DATA IS YOURS
+• Everything syncs and is shared through your iCloud. The developer sees none of your data.
+• Import from device calendars, Google Calendar addresses (ICS) and .ics files, birthdays from your contacts.
+• Export as ICS and CSV, plus an automatic backup in your iCloud Drive.
+
+Your choice of navigation: classic tabs or swiping – to-dos on the left, shopping on the right, months up and down.
+
+yafo is free, with no in-app purchases, and available in English and German. The source code is open (MIT license).

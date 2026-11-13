@@ -1,0 +1,1 @@
+The first version of yafo: family calendar, shopping list and to-dos – shared via iCloud.

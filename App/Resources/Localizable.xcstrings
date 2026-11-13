@@ -61,6 +61,16 @@
         }
       }
     },
+    "%@ · born %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · geboren %2$@"
+          }
+        }
+      }
+    },
     "%lld already there, skipped": {
       "localizations": {
         "de": {
@@ -211,6 +221,46 @@
         }
       }
     },
+    "%lld events look like birthdays": {
+      "localizations": {
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Termin sieht aus wie ein Geburtstag"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld Termine sehen aus wie Geburtstage"
+                }
+              }
+            }
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld event looks like a birthday"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld events look like birthdays"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld hours before": {
       "localizations": {
         "de": {
@@ -227,6 +277,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld Minuten vorher"
+          }
+        }
+      }
+    },
+    "%lld more": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld weitere"
           }
         }
       }
@@ -491,6 +551,16 @@
         }
       }
     },
+    "All-day events with “Birthday” in the title. As birthdays they repeat every year, show the age and get their own color. Copies from other years are removed.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ganztägige Termine mit „Geburtstag“ im Titel. Als Geburtstag wiederholen sie sich jährlich, zeigen das Alter und bekommen eine eigene Farbe. Kopien aus anderen Jahren werden entfernt."
+          }
+        }
+      }
+    },
     "Allow Access to Calendars": {
       "localizations": {
         "de": {
@@ -537,6 +607,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bist du wirklich sicher?"
+          }
+        }
+      }
+    },
+    "As birthdays they repeat every year and show the age.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Als Geburtstag wiederholen sie sich jährlich und zeigen das Alter."
           }
         }
       }
@@ -731,6 +811,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Geburtstag (geboren %@)"
+          }
+        }
+      }
+    },
+    "Birthday Color": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geburtstagsfarbe"
+          }
+        }
+      }
+    },
+    "Birthday Suggestions": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geburtstagsvorschläge"
           }
         }
       }
@@ -1055,6 +1155,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ohne Warten weiter"
+          }
+        }
+      }
+    },
+    "Convert": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Umwandeln"
+          }
+        }
+      }
+    },
+    "Convert All (%lld)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle umwandeln (%lld)"
+          }
+        }
+      }
+    },
+    "Convert to Birthday of %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In Geburtstag von %@ umwandeln"
           }
         }
       }
@@ -1415,6 +1545,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Fertig"
+          }
+        }
+      }
+    },
+    "Drag to-dos in the calendar to change the due date. Touch and hold a day to add an event.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Todos im Kalender auf einen anderen Tag ziehen, um die Fälligkeit zu ändern. Lange auf einen Tag drücken legt dort einen Termin an."
           }
         }
       }
@@ -2033,6 +2173,26 @@
         }
       }
     },
+    "Ignore": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ignorieren"
+          }
+        }
+      }
+    },
+    "Ignored (%lld)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ignoriert (%lld)"
+          }
+        }
+      }
+    },
     "Import %lld Events": {
       "localizations": {
         "en": {
@@ -2355,6 +2515,16 @@
         }
       }
     },
+    "Looks like a birthday": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sieht aus wie ein Geburtstag"
+          }
+        }
+      }
+    },
     "Mark as done": {
       "localizations": {
         "de": {
@@ -2411,6 +2581,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Monat"
+          }
+        }
+      }
+    },
+    "Move All Events": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle Termine verschieben"
+          }
+        }
+      }
+    },
+    "Move Future Events": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diesen und folgende verschieben"
+          }
+        }
+      }
+    },
+    "Move This Event Only": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nur diesen Termin verschieben"
           }
         }
       }
@@ -2595,6 +2795,16 @@
         }
       }
     },
+    "No events that look like birthdays.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Termine, die wie Geburtstage aussehen."
+          }
+        }
+      }
+    },
     "No family yet": {
       "localizations": {
         "de": {
@@ -2651,6 +2861,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wird nicht übernommen"
+          }
+        }
+      }
+    },
+    "Not Now": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nicht jetzt"
           }
         }
       }
@@ -2831,6 +3051,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sonstiges"
+          }
+        }
+      }
+    },
+    "Own Color for Birthdays": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eigene Farbe für Geburtstage"
           }
         }
       }
@@ -3133,6 +3363,16 @@
         }
       }
     },
+    "Repeats every year, shows the age and gets the birthday color.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wiederholt sich jährlich, zeigt das Alter und bekommt die Geburtstagsfarbe."
+          }
+        }
+      }
+    },
     "Restore": {
       "localizations": {
         "de": {
@@ -3169,6 +3409,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aus Backup wiederherstellen …"
+          }
+        }
+      }
+    },
+    "Review": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ansehen"
           }
         }
       }
@@ -3393,6 +3643,26 @@
         }
       }
     },
+    "Show All Again": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle wieder zeigen"
+          }
+        }
+      }
+    },
+    "Show Day": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tag zeigen"
+          }
+        }
+      }
+    },
     "Show Device Calendars": {
       "localizations": {
         "de": {
@@ -3409,6 +3679,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Gemeinsame Liste"
+          }
+        }
+      }
+    },
+    "Show To-dos with Due Date": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Todos mit Fälligkeit zeigen"
           }
         }
       }
@@ -3837,6 +4117,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Morgen"
+          }
+        }
+      }
+    },
+    "Touch and hold to add an event.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lange drücken, um einen Termin anzulegen."
           }
         }
       }
@@ -4281,12 +4571,42 @@
         }
       }
     },
+    "· %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "· %@"
+          }
+        }
+      }
+    },
     "· edited": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "· bearbeitet"
+          }
+        }
+      }
+    },
+    "“%@” in %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„%1$@“ in %2$@"
+          }
+        }
+      }
+    },
+    "“%@” in %@, %lld entries": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„%1$@“ in %2$@, %3$lld Einträge"
           }
         }
       }

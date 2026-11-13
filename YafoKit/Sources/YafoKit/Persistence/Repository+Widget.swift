@@ -25,7 +25,7 @@ extension Repository {
                     id: "\(event.id?.uuidString ?? "")-\(Int(occurrence.originalStart.timeIntervalSince1970))",
                     title: occurrence.title, start: occurrence.start, end: occurrence.end,
                     isAllDay: occurrence.isAllDay,
-                    colorHex: event.calendar.map(color(of:)) ?? CalendarColors.personalDefault,
+                    colorHex: color(of: event),
                     calendarName: event.calendar?.name ?? "", location: occurrence.location,
                     isBirthday: event.isBirthday, age: occurrence.age,
                     initials: (event.participants ?? []).sorted { ($0.createdAt ?? .distantPast) < ($1.createdAt ?? .distantPast) }

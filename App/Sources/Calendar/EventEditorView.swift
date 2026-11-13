@@ -99,7 +99,8 @@ struct EventEditorView: View {
     var body: some View {
         NavigationStack {
             Form {
-                if event == nil {
+                // Neue Termine, und bestehende lassen sich in einen Geburtstag umwandeln.
+                if event?.isBirthday != true {
                     Picker("Type", selection: $kind) {
                         Label("Event", systemImage: "calendar").tag(EventKind.event)
                         Label("Birthday", systemImage: "birthday.cake").tag(EventKind.birthday)
@@ -180,6 +181,17 @@ struct EventEditorView: View {
             }
             .onAppear {
                 if calendar == nil { calendar = calendars.first }
+            }
+            .onChange(of: kind) {
+                // „Geburtstag Oma (1950)“ wird zu „Oma“ mit Geburtsjahr.
+                guard kind == .birthday, event != nil, let guess = BirthdayDetector.guess(title: title) else { return }
+                title = guess.name
+                if let year = guess.birthYear {
+                    start = Birthday.seriesStart(day: start, birthYear: year)
+                    birthYearKnown = true
+                } else {
+                    birthYearKnown = false
+                }
             }
             .onChange(of: calendar) {
                 participants = participants.filter { $0.family != nil && $0.family == calendar?.family }
