@@ -195,8 +195,8 @@ private struct YearMonthRow: View {
 
             ForEach(row.layout.items) { item in
                 if let entry = byID[item.id] {
-                    EventChip(title: entry.title, color: entry.color, isMuted: entry.isDevice,
-                              isFilled: item.isSpanning && !entry.isDevice,
+                    EventChip(title: entry.title, color: entry.color, isMuted: entry.isMuted,
+                              isFilled: item.isSpanning && !entry.isMuted,
                               continuesBefore: item.continuesBefore, continuesAfter: item.continuesAfter,
                               fontSize: metrics.chipFontSize)
                         .frame(width: CGFloat(item.lastColumn - item.firstColumn + 1) * dayWidth - 3,

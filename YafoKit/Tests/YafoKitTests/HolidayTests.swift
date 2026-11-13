@@ -80,4 +80,57 @@ import Testing
         #expect(repository.activeHolidayRegions().isEmpty)
         #expect((personal.subscriptions ?? []).isEmpty)
     }
+
+    // MARK: Besondere Tage
+
+    func observance(_ name: String, _ region: HolidayRegion, _ year: Int) -> Date? {
+        Holidays.observances(in: region, year: year).first { $0.germanName == name }?.date
+    }
+
+    @Test func adventSundays() {
+        // 2026: Weihnachten ist ein Freitag.
+        #expect(observance("1. Advent", .by, 2026) == date(2026, 11, 29))
+        #expect(observance("2. Advent", .by, 2026) == date(2026, 12, 6))
+        #expect(observance("3. Advent", .by, 2026) == date(2026, 12, 13))
+        #expect(observance("4. Advent", .by, 2026) == date(2026, 12, 20))
+        // Weihnachten an einem Sonntag (2022) und an einem Montag (2023): frühester und spätester 4. Advent.
+        #expect(observance("4. Advent", .nw, 2022) == date(2022, 12, 18))
+        #expect(observance("1. Advent", .nw, 2022) == date(2022, 11, 27))
+        #expect(observance("4. Advent", .nw, 2023) == date(2023, 12, 24))
+        #expect(observance("1. Advent", .nw, 2023) == date(2023, 12, 3))
+        #expect(observance("1. Advent", .at, 2025) == date(2025, 11, 30))
+        #expect(observance("Totensonntag", .by, 2026) == date(2026, 11, 22))
+        #expect(observance("Volkstrauertag", .by, 2026) == date(2026, 11, 15))
+    }
+
+    @Test func customsAndObservanceDays() {
+        #expect(observance("Sankt Martin", .by, 2026) == date(2026, 11, 11))
+        #expect(observance("Halloween", .ch, 2026) == date(2026, 10, 31))
+        #expect(observance("Nikolaus", .at, 2026) == date(2026, 12, 6))
+        #expect(observance("Heiligabend", .by, 2026) == date(2026, 12, 24))
+        #expect(observance("Muttertag", .by, 2026) == date(2026, 5, 10))
+        #expect(observance("Vatertag", .by, 2026) == date(2026, 5, 14))
+        #expect(observance("Vatertag", .at, 2026) == date(2026, 6, 14))
+        #expect(observance("Rosenmontag", .nw, 2026) == date(2026, 2, 16))
+        #expect(observance("Aschermittwoch", .by, 2026) == date(2026, 2, 18))
+        #expect(observance("Rosenmontag", .at, 2026) == nil)
+    }
+
+    @Test func observancesSkipPublicHolidays() {
+        // Ostersonntag ist nur in Brandenburg gesetzlich, Reformationstag u. a. in Sachsen, Buß- und Bettag nur dort.
+        #expect(observance("Ostersonntag", .bb, 2026) == nil)
+        #expect(observance("Ostersonntag", .by, 2026) == date(2026, 4, 5))
+        #expect(observance("Reformationstag", .sn, 2026) == nil)
+        #expect(observance("Reformationstag", .by, 2026) == date(2026, 10, 31))
+        #expect(observance("Buß- und Bettag", .sn, 2026) == nil)
+        #expect(observance("Buß- und Bettag", .by, 2026) == date(2026, 11, 18))
+        #expect(observance("Allerheiligen", .by, 2026) == nil)
+
+        // Mehrere Regionen: was in einer davon Feiertag ist, steht nicht zusätzlich als besonderer Tag da.
+        let april = DateInterval(start: date(2026, 4, 1), end: date(2026, 5, 1))
+        let byDay = Holidays.observances(in: [.by, .bb], overlapping: april)
+        #expect(byDay[date(2026, 4, 5)] == nil)
+        #expect(byDay[date(2026, 4, 2)]?.map(\.germanName) == ["Gründonnerstag"])
+        #expect(byDay[date(2026, 4, 2)]?.first?.englishName == "Maundy Thursday")
+    }
 }

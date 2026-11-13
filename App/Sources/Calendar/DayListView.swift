@@ -31,7 +31,8 @@ struct DayListView: View {
     var body: some View {
         let occurrences = events.filter(style.includes).flatMap { $0.occurrences(overlapping: interval) }
         let visible = style.entries(occurrences: occurrences, subscribed: subscribed,
-                                    external: model.external.items(overlapping: interval), todos: todos)
+                                    external: model.external.items(overlapping: interval), todos: todos,
+                                    observancesIn: interval)
             .sorted(by: CalendarEntry.listOrder)
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 6) {
@@ -145,7 +146,7 @@ struct EventRow: View {
     }
 }
 
-/// Abo-Termin oder Termin aus einem Gerätekalender: nur lesen, ohne Teilnehmer.
+/// Abo-Termin, Termin aus einem Gerätekalender oder besonderer Tag: nur lesen, ohne Teilnehmer.
 struct ExternalEntryRow: View {
     let entry: CalendarEntry
 
@@ -171,8 +172,8 @@ struct ExternalEntryRow: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(entry.title)
-                    .font(.body.weight(entry.isDevice ? .regular : .semibold))
-                    .foregroundStyle(entry.isDevice ? .secondary : .primary)
+                    .font(.body.weight(entry.isMuted ? .regular : .semibold))
+                    .foregroundStyle(entry.isMuted ? .secondary : .primary)
                     .lineLimit(2)
                 if let location = entry.location {
                     Text(location)
@@ -182,10 +183,11 @@ struct ExternalEntryRow: View {
                 }
             }
             Spacer(minLength: 4)
-            Image(systemName: entry.isDevice ? "iphone" : "link")
+            Image(systemName: entry.isObservance ? "sparkles" : entry.isDevice ? "iphone" : "link")
                 .font(.caption)
                 .foregroundStyle(.secondary)
-                .accessibilityLabel(entry.isDevice ? Text("Device calendar") : Text("Subscription"))
+                .accessibilityLabel(entry.isObservance ? Text("Special day")
+                                    : entry.isDevice ? Text("Device calendar") : Text("Subscription"))
         }
         .padding(.vertical, 8)
         .padding(.trailing, 10)

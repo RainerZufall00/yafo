@@ -127,12 +127,32 @@ nonisolated public enum Holidays {
     /// Feiertage aller `regions` im Intervall, je Tag; gleiche Namen erscheinen nur einmal.
     public static func holidays(in regions: Set<HolidayRegion>, overlapping interval: DateInterval,
                                 calendar: Calendar = .current) -> [Date: [Holiday]] {
+        byDay(regions: regions, interval: interval, calendar: calendar) { holidays(in: $0, year: $1, calendar: calendar) }
+    }
+
+    /// Besondere Tage aller `regions` im Intervall, je Tag; gleiche Namen erscheinen nur einmal.
+    /// Gesetzliche Feiertage einer der Regionen fallen weg (z. B. Ostersonntag in Brandenburg).
+    public static func observances(in regions: Set<HolidayRegion>, overlapping interval: DateInterval,
+                                   calendar: Calendar = .current) -> [Date: [Holiday]] {
+        let publicDays = holidays(in: regions, overlapping: interval, calendar: calendar)
+        return byDay(regions: regions, interval: interval, calendar: calendar) {
+            observances(in: $0, year: $1, calendar: calendar)
+        }.compactMapValues { list in
+            let filtered = list.filter { day in
+                !(publicDays[day.date] ?? []).contains { $0.germanName == day.germanName }
+            }
+            return filtered.isEmpty ? nil : filtered
+        }
+    }
+
+    private static func byDay(regions: Set<HolidayRegion>, interval: DateInterval, calendar: Calendar,
+                              list: (HolidayRegion, Int) -> [Holiday]) -> [Date: [Holiday]] {
         let firstYear = calendar.component(.year, from: interval.start)
         let lastYear = calendar.component(.year, from: interval.end)
         var result: [Date: [Holiday]] = [:]
         for region in regions.sorted(by: { $0.rawValue < $1.rawValue }) {
             for year in firstYear...lastYear {
-                for holiday in holidays(in: region, year: year, calendar: calendar)
+                for holiday in list(region, year)
                 where interval.contains(holiday.date) && holiday.date < interval.end {
                     if !(result[holiday.date] ?? []).contains(where: { $0.germanName == holiday.germanName }) {
                         result[holiday.date, default: []].append(holiday)
@@ -141,6 +161,73 @@ nonisolated public enum Holidays {
             }
         }
         return result
+    }
+
+    /// Besondere Tage ohne Feiertagsstatus: Advent, Brauchtum, Gedenk- und Aktionstage. Gesetzliche Feiertage
+    /// der Region sind ausgenommen (Ostersonntag nur dort, wo er keiner ist). Für die Anzeige als Hinweis im Kalender.
+    public static func observances(in region: HolidayRegion, year: Int, calendar: Calendar = .current) -> [Holiday] {
+        let easter = easterSunday(year: year, calendar: calendar)
+        func fixed(_ month: Int, _ day: Int) -> Date {
+            calendar.date(from: DateComponents(year: year, month: month, day: day))!
+        }
+        func easterOffset(_ days: Int) -> Date {
+            calendar.date(byAdding: .day, value: days, to: easter)!
+        }
+        /// `n`-ter Sonntag im Monat.
+        func sunday(_ n: Int, of month: Int) -> Date {
+            calendar.date(from: DateComponents(year: year, month: month, weekday: 1, weekdayOrdinal: n))!
+        }
+        let fourthAdvent = fourthAdventSunday(year: year, calendar: calendar)
+        func beforeFourthAdvent(weeks: Int) -> Date {
+            calendar.date(byAdding: .day, value: -7 * weeks, to: fourthAdvent)!
+        }
+        let germany = region.isGerman
+        var list: [(Date, String, String)] = []
+        func add(_ date: Date, _ german: String, _ english: String, if condition: Bool = true) {
+            if condition { list.append((date, german, english)) }
+        }
+
+        add(fixed(2, 14), "Valentinstag", "Valentine's Day")
+        add(easterOffset(-52), "Weiberfastnacht", "Women's Carnival Day", if: germany)
+        add(easterOffset(-48), "Rosenmontag", "Rose Monday", if: germany)
+        add(easterOffset(-47), region == .ch ? "Fasnachtsdienstag" : "Faschingsdienstag", "Shrove Tuesday")
+        add(easterOffset(-46), "Aschermittwoch", "Ash Wednesday")
+        add(easterOffset(-7), "Palmsonntag", "Palm Sunday")
+        add(easterOffset(-3), "Gründonnerstag", "Maundy Thursday")
+        add(easterOffset(-1), "Karsamstag", "Holy Saturday")
+        add(easter, "Ostersonntag", "Easter Sunday")
+        add(sunday(2, of: 5), "Muttertag", "Mother's Day")
+        add(easterOffset(39), "Vatertag", "Father's Day", if: germany)
+        add(sunday(2, of: 6), "Vatertag", "Father's Day", if: region == .at)
+        add(sunday(1, of: 6), "Vatertag", "Father's Day", if: region == .ch)
+        add(easterOffset(49), "Pfingstsonntag", "Whit Sunday")
+        add(sunday(1, of: 10), "Erntedankfest", "Harvest Festival", if: germany)
+        add(fixed(10, 31), "Reformationstag", "Reformation Day", if: germany)
+        add(fixed(10, 31), "Halloween", "Halloween")
+        add(fixed(11, 1), "Allerheiligen", "All Saints' Day", if: germany)
+        add(fixed(11, 2), "Allerseelen", "All Souls' Day", if: region != .ch)
+        add(fixed(11, 11), "Sankt Martin", "St. Martin's Day")
+        add(beforeFourthAdvent(weeks: 5), "Volkstrauertag", "Day of Mourning", if: germany)
+        add(repentanceDay(year: year, calendar: calendar), "Buß- und Bettag", "Day of Repentance", if: germany)
+        add(beforeFourthAdvent(weeks: 4), "Totensonntag", "Sunday of the Dead", if: germany)
+        add(beforeFourthAdvent(weeks: 3), "1. Advent", "1st Sunday of Advent")
+        add(beforeFourthAdvent(weeks: 2), "2. Advent", "2nd Sunday of Advent")
+        add(beforeFourthAdvent(weeks: 1), "3. Advent", "3rd Sunday of Advent")
+        add(fourthAdvent, "4. Advent", "4th Sunday of Advent")
+        add(fixed(12, 6), "Nikolaus", "St. Nicholas Day")
+        add(fixed(12, 24), "Heiligabend", "Christmas Eve")
+        add(fixed(12, 31), "Silvester", "New Year's Eve")
+
+        let publicNames = Set(holidays(in: region, year: year, calendar: calendar).map(\.germanName))
+        return list.filter { !publicNames.contains($0.1) }
+            .sorted { $0.0 < $1.0 }.map { Holiday(date: $0.0, germanName: $0.1, englishName: $0.2) }
+    }
+
+    /// 4. Advent: der letzte Sonntag vor dem 25. Dezember (frühestens am 18., spätestens am 24.).
+    static func fourthAdventSunday(year: Int, calendar: Calendar) -> Date {
+        let christmas = calendar.date(from: DateComponents(year: year, month: 12, day: 25))!
+        let weekday = calendar.component(.weekday, from: christmas)  // 1 = Sonntag
+        return calendar.date(byAdding: .day, value: -(weekday == 1 ? 7 : weekday - 1), to: christmas)!
     }
 
     /// Ostersonntag nach der Gaußschen Osterformel (gregorianisch, anonymer Algorithmus).

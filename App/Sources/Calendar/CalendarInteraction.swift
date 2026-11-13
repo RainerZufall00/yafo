@@ -17,6 +17,7 @@ extension EnvironmentValues {
 /// Einstellungen der Kalenderansicht, nur auf dem Gerät.
 enum CalendarDisplay {
     static let showsTodosKey = "calendarShowsTodos"
+    static let showsObservancesKey = "calendarShowsObservances"
     static let dismissedBirthdaysKey = "dismissedBirthdaySuggestions"
 }
 

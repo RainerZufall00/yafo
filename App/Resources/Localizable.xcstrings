@@ -1549,16 +1549,6 @@
         }
       }
     },
-    "Drag to-dos in the calendar to change the due date. Touch and hold a day to add an event.": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Todos im Kalender auf einen anderen Tag ziehen, um die Fälligkeit zu ändern. Lange auf einen Tag drücken legt dort einen Termin an."
-          }
-        }
-      }
-    },
     "Drinks": {
       "localizations": {
         "de": {
@@ -3683,6 +3673,16 @@
         }
       }
     },
+    "Show Special Days": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Besondere Tage zeigen"
+          }
+        }
+      }
+    },
     "Show To-dos with Due Date": {
       "localizations": {
         "de": {
@@ -3769,6 +3769,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Quelle"
+          }
+        }
+      }
+    },
+    "Special day": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Besonderer Tag"
+          }
+        }
+      }
+    },
+    "Special days like Advent, St. Martin's Day or Halloween follow the calendars' public holidays. Drag to-dos in the calendar to change the due date. Touch and hold a day to add an event.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Besondere Tage wie Advent, Sankt Martin oder Halloween richten sich nach den Feiertagen der Kalender. Todos im Kalender auf einen anderen Tag ziehen, um die Fälligkeit zu ändern. Lange auf einen Tag drücken legt dort einen Termin an."
           }
         }
       }

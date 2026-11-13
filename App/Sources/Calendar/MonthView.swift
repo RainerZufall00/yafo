@@ -28,6 +28,7 @@ struct MonthView: View {
     #endif
     @AppStorage(InterfaceStyle.storageKey) private var interfaceStyle = InterfaceStyle.tabs
     @AppStorage(CalendarDisplay.showsTodosKey) private var showsTodos = true
+    @AppStorage(CalendarDisplay.showsObservancesKey) private var showsObservances = true
 
     /// Im Wisch-Modus blättern Monate nach oben und unten, seitlich geht es zu Todos und Einkauf.
     private var isVertical: Bool { interfaceStyle == .swipe }
@@ -44,7 +45,8 @@ struct MonthView: View {
 
     private var style: CalendarStyle {
         let _ = subscriptions.count
-        return CalendarStyle(calendars: calendars, appearances: appearances, person: person, showsTodos: showsTodos)
+        return CalendarStyle(calendars: calendars, appearances: appearances, person: person, showsTodos: showsTodos,
+                             showsObservances: showsObservances)
     }
 
     var body: some View {

@@ -37,7 +37,8 @@ struct MonthGridView: View {
     var body: some View {
         let occurrences = events.filter(style.includes).flatMap { $0.occurrences(overlapping: interval) }
         let visible = style.entries(occurrences: occurrences, subscribed: subscribed,
-                                    external: model.external.items(overlapping: interval), todos: todos)
+                                    external: model.external.items(overlapping: interval), todos: todos,
+                                    observancesIn: interval)
         let holidays = style.holidays(in: interval)
         let schoolHolidays = style.schoolHolidays(in: subscribed)
         VStack(spacing: 0) {
@@ -109,7 +110,7 @@ private struct WeekRow: View {
                 ForEach(layout.items) { item in
                     if let entry = byID[item.id] {
                         EventChip(title: entry.title, color: entry.color,
-                                  icon: entry.todo != nil ? "circle" : nil, isMuted: entry.isDevice,
+                                  icon: entry.todo != nil ? "circle" : nil, isMuted: entry.isMuted,
                                   continuesBefore: item.continuesBefore, continuesAfter: item.continuesAfter,
                                   fontSize: fontSize, lineLimit: isTall && !item.isSpanning ? 2 : 1)
                             .frame(width: CGFloat(item.lastColumn - item.firstColumn + 1) * columnWidth - 3,

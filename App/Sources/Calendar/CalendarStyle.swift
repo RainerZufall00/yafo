@@ -19,6 +19,8 @@ struct CalendarStyle {
     var birthdayColor: Color?
     /// Todos mit Fälligkeit im Kalender zeigen (Einstellung, nur auf dem Gerät).
     var showsTodos = false
+    /// Besondere Tage (Advent, Sankt Martin, Halloween …) der Feiertagsregionen zeigen (Einstellung, nur auf dem Gerät).
+    var showsObservances = false
     /// Farbe für Todos je Familie (die ihres ersten Kalenders) und für „Nur ich“.
     private var familyColors: [NSManagedObjectID: Color] = [:]
     private var personalColor = Color(hex: CalendarColors.personalDefault)
@@ -26,12 +28,13 @@ struct CalendarStyle {
     var subscriptionKeys: Set<String> { Set(icsColors.keys).union(schoolHolidayKeys) }
 
     init(calendars: some Sequence<EventCalendar>, appearances: some Sequence<CalendarAppearance>,
-         person: Member?, showsTodos: Bool = false) {
+         person: Member?, showsTodos: Bool = false, showsObservances: Bool = false) {
         let byID = Dictionary(appearances.compactMap { a in a.calendarID.map { ($0, a) } },
                               uniquingKeysWith: { first, _ in first })
         birthdayColor = Repository.birthdayColor(appearanceColor: byID[Repository.birthdayAppearanceID]?.color)
             .map { Color(hex: $0) }
         self.showsTodos = showsTodos
+        self.showsObservances = showsObservances
         for calendar in calendars {
             guard let id = calendar.id else { continue }
             let appearance = byID[id.uuidString]
@@ -64,9 +67,11 @@ struct CalendarStyle {
     }
 
     /// Eigene Termine, Abo-Termine und eingeblendete Gerätekalender in einer Liste.
-    /// Gerätekalender gehören nur zu einem selbst und fallen beim Personenfilter weg.
+    /// Gerätekalender gehören nur zu einem selbst und fallen beim Personenfilter weg. Mit `observancesIn` kommen
+    /// die besonderen Tage dieses Zeitraums als ganztägige, gedämpfte Einträge dazu.
     func entries(occurrences: [Occurrence], subscribed: some Sequence<SubscribedEvent>,
-                 external: [ExternalCalendars.Item], todos: some Sequence<TodoItem> = [TodoItem]()) -> [CalendarEntry] {
+                 external: [ExternalCalendars.Item], todos: some Sequence<TodoItem> = [TodoItem](),
+                 observancesIn interval: DateInterval? = nil) -> [CalendarEntry] {
         var result = occurrences.map { occurrence in
             CalendarEntry(id: "\(occurrence.event.objectID.uriRepresentation())#\(occurrence.originalStart.timeIntervalSince1970)",
                           title: occurrence.displayTitle, start: occurrence.start, end: occurrence.end,
@@ -97,6 +102,17 @@ struct CalendarStyle {
                                      source: .todo(todo))
             }
         }
+        if let interval {
+            let calendar = Calendar.current
+            for (day, list) in observances(in: interval) {
+                guard let end = calendar.date(byAdding: .day, value: 1, to: day) else { continue }
+                result += list.map { observance in
+                    CalendarEntry(id: "observance#\(day.timeIntervalSince1970)#\(observance.germanName)",
+                                  title: observance.name(), start: day, end: end, isAllDay: true, location: nil,
+                                  color: Color(hex: CalendarColors.external), source: .observance)
+                }
+            }
+        }
         return result
     }
 
@@ -125,6 +141,11 @@ struct CalendarStyle {
         holidayRegions.isEmpty ? [:] : Holidays.holidays(in: holidayRegions, overlapping: interval)
     }
 
+    func observances(in interval: DateInterval) -> [Date: [Holiday]] {
+        showsObservances && !holidayRegions.isEmpty
+            ? Holidays.observances(in: holidayRegions, overlapping: interval) : [:]
+    }
+
     func color(for event: Event) -> Color {
         if event.isBirthday, let birthdayColor { return birthdayColor }
         return event.calendar?.id.flatMap { colors[$0] } ?? .gray
@@ -145,13 +166,15 @@ struct CalendarStyle {
     }
 }
 
-/// Ein Eintrag im Raster und in der Tagesliste: eigener Termin, Abo-Termin oder Gerätekalender.
+/// Ein Eintrag im Raster und in der Tagesliste: eigener Termin, Abo-Termin, Gerätekalender, Todo oder besonderer Tag.
 struct CalendarEntry: Identifiable {
     enum Source {
         case event(Occurrence)
         case subscription
         case device
         case todo(TodoItem)
+        /// Besonderer Tag ohne Feiertag, z. B. 1. Advent.
+        case observance
     }
 
     let id: String
@@ -172,6 +195,14 @@ struct CalendarEntry: Identifiable {
         if case .device = source { return true }
         return false
     }
+
+    var isObservance: Bool {
+        if case .observance = source { return true }
+        return false
+    }
+
+    /// Gerätekalender und besondere Tage stehen zurückhaltender da als eigene Termine.
+    var isMuted: Bool { isDevice || isObservance }
 
     var todo: TodoItem? {
         if case .todo(let todo) = source { return todo }

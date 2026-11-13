@@ -59,7 +59,8 @@ struct WeekPageView: View {
     var body: some View {
         let occurrences = events.filter(style.includes).flatMap { $0.occurrences(overlapping: interval) }
         let entries = style.entries(occurrences: occurrences, subscribed: subscribed,
-                                    external: model.external.items(overlapping: interval), todos: todos)
+                                    external: model.external.items(overlapping: interval), todos: todos,
+                                    observancesIn: interval)
             .sorted(by: CalendarEntry.listOrder)
         let holidays = style.holidays(in: interval)
         let schoolHolidays = style.schoolHolidays(in: subscribed)
@@ -218,7 +219,7 @@ private struct WeekDayRow: View {
         for entry in entries {
             result.append(Tile(id: entry.id, title: entry.occurrence?.displayTitle ?? entry.title, color: entry.color,
                                icon: entry.todo != nil ? "circle" : nil, time: timeText(entry),
-                               detail: detailText(entry), isMuted: entry.isDevice, entry: entry))
+                               detail: detailText(entry), isMuted: entry.isMuted, entry: entry))
         }
         return result
     }

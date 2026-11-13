@@ -112,6 +112,8 @@ Roadmap aus dem Architektur-Dokument:
       „Nur ich“, direkt im Widget abhakbar (wirksam in iCloud, sobald die App das nächste Mal geöffnet wird)
 - [x] 5. Abos und Import (Feiertage, Ferien, ICS, EventKit)
   - Gesetzliche Feiertage je Kalender (16 Bundesländer, AT, CH), offline berechnet
+  - Besondere Tage ohne Feiertagsstatus (Advent, Sankt Martin, Halloween, Muttertag …) zur Feiertagsregion,
+    offline berechnet, als graue Einträge; abschaltbar unter Familie (`calendarShowsObservances`)
   - Schulferien (DE, AT, CH) aus der OpenHolidays API (ODbL), als Fläche im Kalender, wöchentlich neu geladen
   - Eigene ICS-/webcal-Adressen je Kalender, lokal zwischengespeichert, beim Öffnen aktualisiert
   - Gerätekalender grau einblenden (nur auf dem Gerät)
@@ -135,7 +137,8 @@ Roadmap aus dem Architektur-Dokument:
 - [ ] 8. TestFlight, App Store
   - TestFlight läuft (Build 6). Store-Eintrag vorbereitet in `AppStore/`: Texte DE/EN, Screenshots für iPhone 6,9″/6,3″,
     iPad 13″ und iPhone Duo innen, Datenschutz- und Support-Seiten für GitHub Pages
-  - Offen: Website veröffentlichen, Duo-Screenshots zugeklappt, Name/Anschrift für die Datenschutzerklärung, Version 1.0
+  - Datenschutz und Support online: https://rainerzufall00.github.io/yafo/ (Branch `gh-pages`)
+  - Offen: Duo-Screenshots zugeklappt, Version 1.0
 
 ## Lizenz
 
