@@ -1,9 +1,10 @@
 import Foundation
 import SwiftUI
 
-/// Die Tabs der App. Der Rohwert landet in den UserDefaults.
+/// Die Tabs der App. Der Rohwert landet in den UserDefaults. „Familie“ ist kein Tab, sondern ein
+/// Knopf oben rechts (`familyButton()`); ein gemerkter alter Wert `family` fällt auf den Kalender zurück.
 enum AppTab: String, CaseIterable, Identifiable {
-    case calendar, shopping, todos, family
+    case calendar, shopping, todos
 
     var id: String { rawValue }
 
@@ -12,7 +13,6 @@ enum AppTab: String, CaseIterable, Identifiable {
         case .calendar: "Calendar"
         case .shopping: "Shopping"
         case .todos: "To-dos"
-        case .family: "Family"
         }
     }
 }

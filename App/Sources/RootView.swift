@@ -28,7 +28,6 @@ struct RootView: View {
             }
         }
         .onAppear {
-            leaveFamilyTabIfSwiping()
             offerOnboarding()
             offerJoin()
         }
@@ -40,8 +39,6 @@ struct RootView: View {
         }
         // Nach „Alle meine Daten löschen“ beginnt die App wieder mit dem Onboarding.
         .onChange(of: onboardingDone) { if !onboardingDone { offerOnboarding() } }
-        .onChange(of: interfaceStyle) { leaveFamilyTabIfSwiping() }
-        .onChange(of: model.selectedTab) { leaveFamilyTabIfSwiping() }
         .onChange(of: model.familiesNeedingProfile) { offerJoin() }
         .sheet(item: $joining) { family in
             JoinFamilyView(family: family)
@@ -72,11 +69,6 @@ struct RootView: View {
         }
     }
 
-    /// Im Wisch-Modus gibt es keine Familie-Seite; ein gemerkter Familie-Tab zeigt dann den Kalender.
-    private func leaveFamilyTabIfSwiping() {
-        if interfaceStyle == .swipe, model.selectedTab == .family { model.selectedTab = .calendar }
-    }
-
     /// Beim ersten Start das Onboarding zeigen. Wer schon eine Familie hat (Update, Demo-Daten),
     /// braucht es nicht; `-yafoOnboarding` zeigt es zum Entwickeln immer.
     private func offerOnboarding() {
@@ -99,7 +91,7 @@ struct RootView: View {
         joining = family
     }
 
-    /// Klassisch: Tab-Leiste unten.
+    /// Klassisch: Tab-Leiste unten. „Familie“ ist wie im Wisch-Modus ein Knopf oben rechts.
     private var tabs: some View {
         @Bindable var model = model
         return TabView(selection: $model.selectedTab) {
@@ -112,10 +104,6 @@ struct RootView: View {
             Tab("To-dos", systemImage: "checklist", value: AppTab.todos) {
                 TodoView()
             }
-            Tab("Family", systemImage: "person.3", value: AppTab.family) {
-                FamilyView()
-            }
-            .badge(model.familiesNeedingProfile.count)
         }
     }
 

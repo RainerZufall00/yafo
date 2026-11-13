@@ -36,7 +36,7 @@ struct FamilyView: View {
     @State private var prompt: Prompt?
     @State private var promptText = ""
     @AppStorage(InterfaceStyle.storageKey) private var interfaceStyle = InterfaceStyle.tabs
-    /// Gesetzt, wenn die Ansicht als Blatt offen ist (Wisch-Modus): zeigt „Fertig“.
+    /// Gesetzt, wenn die Ansicht als Blatt offen ist (Knopf oben rechts): zeigt „Fertig“.
     var onDone: (() -> Void)?
 
     var body: some View {
@@ -102,7 +102,7 @@ struct FamilyView: View {
                         }
                     }
                 } footer: {
-                    Text("Swipe: months scroll up and down like in Apple's Calendar, swipe right for to-dos and left for the shopping list. Family is at the top right. Only on this device.")
+                    Text("Swipe: months scroll up and down like in Apple's Calendar, swipe right for to-dos and left for the shopping list. Only on this device.")
                 }
 
                 Section {

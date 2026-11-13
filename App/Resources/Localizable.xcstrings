@@ -3575,12 +3575,12 @@
         }
       }
     },
-    "Swipe: months scroll up and down like in Apple's Calendar, swipe right for to-dos and left for the shopping list. Family is at the top right. Only on this device.": {
+    "Swipe: months scroll up and down like in Apple's Calendar, swipe right for to-dos and left for the shopping list. Only on this device.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Wischen: Monate blättern nach oben und unten wie im Apple-Kalender, nach rechts wischen für Todos, nach links für die Einkaufsliste. „Familie“ liegt oben rechts. Gilt nur auf diesem Gerät."
+            "value": "Wischen: Monate blättern nach oben und unten wie im Apple-Kalender, nach rechts wischen für Todos, nach links für die Einkaufsliste. Gilt nur auf diesem Gerät."
           }
         }
       }
