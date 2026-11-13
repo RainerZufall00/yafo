@@ -1,6 +1,7 @@
 import CloudKit
 import CoreData
 import Foundation
+import os
 
 /// Einladen und Beitreten über CloudKit-Sharing. Jede Familie ist ein eigener `CKShare`;
 /// alles, was an der Familie hängt, wird mitgeteilt.
@@ -11,6 +12,11 @@ public final class FamilySharing {
         case noInviteCode
         case ownFamily
         case alreadyMember
+        case inviteWithdrawn
+        case shareMissingInCloud
+        /// Annehmen scheiterte; enthält den eigentlichen Grund aus CloudKit, den Core Data nur als
+        /// „Failed to accept some shares“ meldet.
+        case acceptFailed(String)
 
         public var errorDescription: String? {
             switch self {
@@ -19,6 +25,10 @@ public final class FamilySharing {
             case .alreadyMember: "You are already a member of this family."
             case .cloudUnavailable: "iCloud is not available."
             case .notOwner: "Only the owner can invite members."
+            case .inviteWithdrawn: "This invitation was withdrawn. Ask for a new QR code."
+            case .shareMissingInCloud:
+                "This family is not in iCloud. Export a backup, reinstall yafo and restore the backup."
+            case .acceptFailed(let reason): "The invitation could not be accepted. \(reason)"
             }
         }
     }
@@ -27,6 +37,11 @@ public final class FamilySharing {
 
     public init(persistence: PersistenceController) {
         self.persistence = persistence
+    }
+
+    private var cloud: CloudCalls {
+        CloudCalls(container: persistence.container, privateStore: persistence.privateStore,
+                   sharedStore: persistence.sharedStore)
     }
 
     public var isAvailable: Bool { persistence.cloudContainerIdentifier != nil }
@@ -55,15 +70,15 @@ public final class FamilySharing {
     public func share(for family: Family) async throws -> CKShare {
         guard isAvailable else { throw SharingError.cloudUnavailable }
         guard isOwner(of: family) else { throw SharingError.notOwner }
-        if let share = try existingShare(for: family) {
+        if let share = try await cloud.existingShare(for: family.objectID) {
             return share
         }
         try persistence.save()
-        let (_, share, _) = try await persistence.container.share([family], to: nil)
+        let share = try await cloud.share(Unchecked(value: [family]))
         share[CKShare.SystemFieldKey.title] = family.name
         // Alle Erwachsenen bekommen Schreibrechte; eine Rechte-Auswahl gibt es in V1 nicht.
         share.publicPermission = .none
-        try await persistence.container.persistUpdatedShare(share, in: persistence.privateStore)
+        try await cloud.persistUpdatedShare(share)
         return share
     }
 
@@ -91,7 +106,17 @@ public final class FamilySharing {
         let local = try await share(for: family)
         let database = ckContainer.privateCloudDatabase
         // Der Stand in Core Data kann veraltet sein (jemand ist inzwischen beigetreten).
-        let share = (try? await database.record(for: local.recordID)) as? CKShare ?? local
+        let share: CKShare
+        do {
+            share = try await database.record(for: local.recordID) as? CKShare ?? local
+        } catch let error as CKError where Self.missingOnServer.contains(error.code) {
+            // Lokal geteilt, in iCloud aber unbekannt, z. B. Daten aus einem Xcode-Build
+            // (Development) nach dem Wechsel auf TestFlight (Production). Ein Code daraus wäre
+            // nie einlösbar („Share not found“).
+            throw SharingError.shareMissingInCloud
+        } catch {
+            share = local
+        }
 
         // Offene Codes gehören entweder zu einem Kinderprofil oder sind für Erwachsene.
         let reserved = Set((family.members ?? []).compactMap(\.inviteParticipantID))
@@ -120,7 +145,7 @@ public final class FamilySharing {
         guard let participantID, let url = savedShare.oneTimeURL(for: participantID) else {
             throw SharingError.noInviteCode
         }
-        try await persistence.container.persistUpdatedShare(savedShare, in: persistence.privateStore)
+        try await cloud.persistUpdatedShare(savedShare)
         if let child {
             child.inviteParticipantID = participantID
             try persistence.save()
@@ -136,6 +161,8 @@ public final class FamilySharing {
             $0.inviteParticipantID == participantID && $0.leftAt == nil && $0.cloudKitUserID == nil
         }
     }
+
+    private static let missingOnServer: Set<CKError.Code> = [.unknownItem, .zoneNotFound, .userDeletedZone]
 
     /// Noch nicht eingelöster Einmal-Link: wartend und ohne bekannte Person dahinter.
     private static func isOpenCode(_ participant: CKShare.Participant, in share: CKShare) -> Bool {
@@ -160,6 +187,7 @@ public final class FamilySharing {
         let metadata = try await ckContainer.shareMetadata(for: inviteURL)
         guard metadata.participantRole != .owner else { throw SharingError.ownFamily }
         guard metadata.participantStatus != .accepted else { throw SharingError.alreadyMember }
+        guard metadata.participantStatus != .removed else { throw SharingError.inviteWithdrawn }
         try await accept(metadata)
     }
 
@@ -170,7 +198,7 @@ public final class FamilySharing {
     /// Termine und Kommentare der anderen lesbar bleiben.
     public func remove(_ family: Family, me: Member?) async throws {
         let repository = Repository(persistence: persistence)
-        guard let share = try existingShare(for: family) else {
+        guard let share = try await cloud.existingShare(for: family.objectID) else {
             // Nie geteilt (oder ohne iCloud): nur lokal löschen, der Sync räumt den Rest ab.
             repository.deleteFamily(family)
             try persistence.save()
@@ -181,14 +209,12 @@ public final class FamilySharing {
             try persistence.save()
             // Die Löschung synchronisiert ohnehin (mit dem Familien-Record fällt auch der Share); die
             // Zone gleich mit abzuräumen ist nur Aufräumen und darf offline scheitern.
-            _ = try? await persistence.container.purgeObjectsAndRecordsInZone(with: share.recordID.zoneID,
-                                                                              in: persistence.privateStore)
+            try? await cloud.purgeZone(share.recordID.zoneID, shared: false)
         } else {
             if let me { repository.markLeft(me) }
             try persistence.save()
             // Im geteilten Store entfernt das den eigenen Platz im Share und die lokale Kopie.
-            _ = try await persistence.container.purgeObjectsAndRecordsInZone(with: share.recordID.zoneID,
-                                                                             in: persistence.sharedStore)
+            try await cloud.purgeZone(share.recordID.zoneID, shared: true)
         }
         persistence.viewContext.refreshAllObjects()
     }
@@ -196,7 +222,86 @@ public final class FamilySharing {
     /// Einladungslink angenommen: Familiendaten erscheinen im geteilten Store.
     public func accept(_ metadata: CKShare.Metadata) async throws {
         guard isAvailable else { throw SharingError.cloudUnavailable }
-        _ = try await persistence.container.acceptShareInvitations(from: [metadata],
-                                                                   into: persistence.sharedStore)
+        do {
+            try await cloud.accept(metadata)
+        } catch {
+            Self.log.error("Einladung annehmen fehlgeschlagen: \(String(describing: error), privacy: .public)")
+            throw SharingError.acceptFailed(Self.reason(for: error))
+        }
+    }
+
+    private static let log = Logger(subsystem: "de.yafo.app", category: "sharing")
+
+    /// Lesbarer Grund für einen gescheiterten Beitritt. Core Data verpackt die CloudKit-Fehler
+    /// (oft als Teilfehler je Share), deshalb wird bis zum ersten `CKError` ausgepackt.
+    static func reason(for error: Error) -> String {
+        let leaves = leafErrors(of: error as NSError)
+        guard let ck = leaves.first(where: { $0.domain == CKError.errorDomain }) else {
+            let detail = leaves.first ?? error as NSError
+            return "\(detail.localizedDescription) (\(detail.domain) \(detail.code))"
+        }
+        let hint: String = switch CKError.Code(rawValue: ck.code) {
+        case .notAuthenticated: "Please sign in to iCloud in Settings."
+        case .networkUnavailable, .networkFailure, .serviceUnavailable, .requestRateLimited, .zoneBusy:
+            "iCloud cannot be reached right now. Please try again in a moment."
+        case .unknownItem, .zoneNotFound, .userDeletedZone:
+            "The family no longer exists or the code has expired. Ask for a new QR code."
+        case .permissionFailure, .participantMayNeedVerification:
+            "The code has already been used or was withdrawn. Ask for a new QR code."
+        case .quotaExceeded: "The iCloud storage of the family owner is full."
+        case .incompatibleVersion: "Please update yafo on both devices."
+        default: ck.localizedDescription
+        }
+        return "\(hint) (CKError \(ck.code))"
+    }
+
+    /// Alle innersten Fehler, auch aus Teilfehlern und Fehlerlisten.
+    private static func leafErrors(of error: NSError, depth: Int = 0) -> [NSError] {
+        guard depth < 6 else { return [error] }
+        var children = error.underlyingErrors.map { $0 as NSError }
+        if let details = error.userInfo["NSDetailedErrors"] as? [Error] {
+            children += details.map { $0 as NSError }
+        }
+        if let partial = error.userInfo[CKPartialErrorsByItemIDKey] as? [AnyHashable: Error] {
+            children += partial.values.map { $0 as NSError }
+        }
+        guard !children.isEmpty else { return [error] }
+        return children.flatMap { leafErrors(of: $0, depth: depth + 1) }
+    }
+}
+
+/// Wert, der ohne Prüfung des Compilers über Threads gereicht wird. Nur für Objekte, die der
+/// Empfänger nicht anfasst, sondern an Core Data weitergibt.
+nonisolated struct Unchecked<Value>: @unchecked Sendable {
+    let value: Value
+}
+
+/// Die CloudKit-Aufrufe von `NSPersistentCloudKitContainer` warten intern synchron, bis der Sync
+/// sie annimmt (`_PFRequestExecutor wait`). Auf dem Main Thread friert das die App ein, solange ein
+/// Import oder Export läuft, bis der Watchdog sie beendet (0x8BADF00D beim Tippen auf
+/// „Mit QR-Code einladen“). Deshalb laufen sie hier immer im Hintergrund.
+nonisolated private struct CloudCalls: @unchecked Sendable {
+    let container: NSPersistentCloudKitContainer
+    let privateStore: NSPersistentStore
+    let sharedStore: NSPersistentStore
+
+    @concurrent func existingShare(for id: NSManagedObjectID) async throws -> CKShare? {
+        try container.fetchShares(matching: [id])[id]
+    }
+
+    @concurrent func share(_ objects: Unchecked<[NSManagedObject]>) async throws -> CKShare {
+        try await container.share(objects.value, to: nil).1
+    }
+
+    @concurrent func persistUpdatedShare(_ share: CKShare) async throws {
+        try await container.persistUpdatedShare(share, in: privateStore)
+    }
+
+    @concurrent func purgeZone(_ zoneID: CKRecordZone.ID, shared: Bool) async throws {
+        _ = try await container.purgeObjectsAndRecordsInZone(with: zoneID, in: shared ? sharedStore : privateStore)
+    }
+
+    @concurrent func accept(_ metadata: CKShare.Metadata) async throws {
+        _ = try await container.acceptShareInvitations(from: [metadata], into: sharedStore)
     }
 }
