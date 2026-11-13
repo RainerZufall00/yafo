@@ -73,14 +73,15 @@ Minute von selbst wieder – dann mit Motiven fortsetzen, z. B. `… aussen <UDI
 ## Vor dem Einreichen
 
 ### Muss noch erledigt werden
-- [ ] **Datenschutz- und Support-URL veröffentlichen:** `AppStore/Tools/publish-website.sh` legt den Branch `gh-pages`
-      im öffentlichen Repo `RainerZufall00/yafo` an und schaltet GitHub Pages ein. Danach erreichbar:
+- [x] **Datenschutz- und Support-URL:** liegen auf GitHub Pages im Branch `gh-pages` des öffentlichen Repos
+      `RainerZufall00/yafo` (nur die Seiten, eigene Historie). Ändern: Texte bzw. `Tools/make-website.py`, dann
+      `AppStore/Tools/publish-website.sh`.
   - Datenschutz: https://rainerzufall00.github.io/yafo/datenschutz/ · https://rainerzufall00.github.io/yafo/privacy/
   - Support: https://rainerzufall00.github.io/yafo/support/ · https://rainerzufall00.github.io/yafo/support/en/
   - Kontakt läuft vorerst über die Issues des Repos.
-- [ ] **Verantwortlicher und E-Mail auf der Website:** In `Website/contact.json` `name`, `address` und gern `email`
-      ergänzen, dann neu veröffentlichen. Bis dahin steht dort nur „der Entwickler von yafo (GitHub: RainerZufall00)“ –
-      für die DSGVO gehören Name und Anschrift hinein.
+- [ ] Optional **Verantwortlicher und E-Mail auf der Website:** Bewusst weggelassen wie bei den anderen Apps; dort steht
+      „der Entwickler von yafo (GitHub: RainerZufall00)“. Nachtragen ginge über `name`, `address`, `email` in
+      `Website/contact.json` und neu veröffentlichen.
 - [ ] **Copyright**: In `copyright.txt` steht vorläufig „2026 Matthias“ – vollständigen Namen eintragen.
 - [ ] **Review-Kontakt**: Name, E-Mail, Telefon in App Store Connect bzw. `review_information/`.
 - [ ] **Name prüfen**: Ist „yafo – Familien-Organizer“ im App Store frei? Beim Anlegen sagt App Store Connect Bescheid.
