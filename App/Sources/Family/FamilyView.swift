@@ -38,6 +38,7 @@ struct FamilyView: View {
     @AppStorage(InterfaceStyle.storageKey) private var interfaceStyle = InterfaceStyle.tabs
     @AppStorage(CalendarDisplay.showsTodosKey) private var showsTodos = true
     @AppStorage(CalendarDisplay.showsObservancesKey) private var showsObservances = true
+    @AppStorage(CalendarDisplay.showsHolidayEntriesKey) private var showsHolidayEntries = true
     @FetchRequest(sortDescriptors: []) private var appearances: FetchedResults<CalendarAppearance>
     /// Gesetzt, wenn die Ansicht als Blatt offen ist (Knopf oben rechts): zeigt „Fertig“.
     var onDone: (() -> Void)?
@@ -81,6 +82,7 @@ struct FamilyView: View {
 
                 Section {
                     Toggle("Show To-dos with Due Date", systemImage: "checklist", isOn: $showsTodos)
+                    Toggle("Show Holidays as Events", systemImage: "flag", isOn: $showsHolidayEntries)
                     Toggle("Show Special Days", systemImage: "sparkles", isOn: $showsObservances)
                     birthdayColorRow
                     NavigationLink {
@@ -91,7 +93,7 @@ struct FamilyView: View {
                 } header: {
                     Text("Calendar")
                 } footer: {
-                    Text("Special days like Advent, St. Martin's Day or Halloween follow the calendars' public holidays. Drag to-dos in the calendar to change the due date. Touch and hold a day to add an event.")
+                    Text("Holidays and special days like Christmas Eve, Advent or Halloween follow the calendars' public holidays. Drag to-dos in the calendar to change the due date. Touch and hold a day to add an event.")
                 }
 
                 Section {

@@ -38,7 +38,7 @@ struct MonthGridView: View {
         let occurrences = events.filter(style.includes).flatMap { $0.occurrences(overlapping: interval) }
         let visible = style.entries(occurrences: occurrences, subscribed: subscribed,
                                     external: model.external.items(overlapping: interval), todos: todos,
-                                    observancesIn: interval)
+                                    specialDaysIn: interval)
         let holidays = style.holidays(in: interval)
         let schoolHolidays = style.schoolHolidays(in: subscribed)
         VStack(spacing: 0) {
@@ -98,6 +98,7 @@ private struct WeekRow: View {
                                       isHoliday: holidays[day.date] != nil,
                                       isSchoolHoliday: schoolHolidays[day.date] != nil,
                                       titles: (holidays[day.date] ?? []).map { $0.name() }
+                                          .filter { !titles(on: day.date).contains($0) }
                                           + (schoolHolidays[day.date] ?? []) + titles(on: day.date),
                                       isDropTarget: dropTarget == day.date,
                                       fontSize: isRegular ? 15 : 12.5)
@@ -110,16 +111,20 @@ private struct WeekRow: View {
                 ForEach(layout.items) { item in
                     if let entry = byID[item.id] {
                         EventChip(title: entry.title, color: entry.color,
-                                  icon: entry.todo != nil ? "circle" : nil, isMuted: entry.isMuted,
+                                  icon: entry.todo != nil ? "circle" : entry.isHoliday ? "flag.fill" : nil,
+                                  isMuted: entry.isMuted,
                                   continuesBefore: item.continuesBefore, continuesAfter: item.continuesAfter,
                                   fontSize: fontSize, lineLimit: isTall && !item.isSpanning ? 2 : 1)
                             .frame(width: CGFloat(item.lastColumn - item.firstColumn + 1) * columnWidth - 3,
                                    height: chipHeight)
-                            // Antippen öffnet den Tag unter dem Finger, lange drücken hebt den Termin an.
-                            .gesture(SpatialTapGesture().onEnded { tap in
-                                let column = item.firstColumn + Int((tap.location.x + 1.5) / columnWidth)
-                                if week.indices.contains(column) { open(week[column].date) }
-                            })
+                            // Antippen öffnet Termin bzw. Todo als Blatt, lange drücken hebt ihn an.
+                            .onTapGesture {
+                                if let occurrence = entry.occurrence {
+                                    actions.openEvent(occurrence, entry.color)
+                                } else if let todo = entry.todo {
+                                    actions.openTodo(todo)
+                                }
+                            }
                             .calendarDraggable(entry)
                             .allowsHitTesting(entry.isMovable)
                             .offset(x: CGFloat(item.firstColumn) * columnWidth + 1.5,
@@ -145,11 +150,21 @@ private struct WeekRow: View {
                 return week.indices.contains(column) ? week[column].date : nil
             }
         }
+        .background {
+            if isCurrentWeek { Color.accentColor.opacity(0.07) }
+        }
+        .overlay(alignment: .leading) {
+            if isCurrentWeek {
+                Rectangle().fill(Color.accentColor).frame(width: 3).allowsHitTesting(false)
+            }
+        }
         .overlay(alignment: .top) {
             Rectangle().fill(.separator).frame(height: 0.5)
         }
         .clipped()
     }
+
+    private var isCurrentWeek: Bool { week.contains { Calendar.current.isDateInToday($0.date) } }
 
     private func open(_ day: Date) {
         selectedDay = day
@@ -213,12 +228,16 @@ private struct DayBackground: View {
             if isDropTarget {
                 RoundedRectangle(cornerRadius: 4).strokeBorder(Color.accentColor, lineWidth: 2)
                     .background(Color.accentColor.opacity(0.12))
+            } else if isToday {
+                RoundedRectangle(cornerRadius: 4).strokeBorder(Color.accentColor, lineWidth: 2)
+                    .padding(1)
             }
         }
-        .opacity(day.isInMonth ? 1 : 0.6)
+        .opacity(day.isInMonth || isToday ? 1 : 0.6)
         .contentShape(Rectangle())
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(day.date.formatted(date: .complete, time: .omitted))
+        .accessibilityLabel(isToday ? Text("Today, \(day.date.formatted(date: .complete, time: .omitted))")
+                            : Text(day.date.formatted(date: .complete, time: .omitted)))
         .accessibilityValue(titles.joined(separator: ", "))
         .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
         .accessibilityHint("Touch and hold to add an event.")

@@ -107,13 +107,10 @@ struct EventDetailView: View {
                 CommentsSection(event: event, me: model.me(in: event.calendar?.family))
                     .id("comments")
             }
-            Section {
-                if let creator {
+            if let creator {
+                Section {
                     Text("Created by \(creator.displayLabel)")
                         .foregroundStyle(.secondary)
-                }
-                Button("Delete Event", systemImage: "trash", role: .destructive) {
-                    confirmingDelete = true
                 }
             }
         }
@@ -128,25 +125,34 @@ struct EventDetailView: View {
         }
         .navigationTitle(event.isBirthday ? "Birthday" : "Event")
         .navigationBarTitleDisplayMode(.inline)
+        // Bearbeiten und Löschen oben, damit beides auch im halbhohen Blatt gleich erreichbar ist.
         .toolbar {
-            Button("Edit") { editing = true }
+            ToolbarItem(placement: .topBarLeading) {
+                Button("Delete Event", systemImage: "trash", role: .destructive) { confirmingDelete = true }
+                    .tint(.red)
+                    .confirmationDialog(occurrence.isRecurring && !event.isBirthday
+                                        ? "This is a repeating event." : "Delete this event?",
+                                        isPresented: $confirmingDelete, titleVisibility: .visible) {
+                    if occurrence.isRecurring && !event.isBirthday {
+                        Button("Delete This Event Only", role: .destructive) { delete(.thisOccurrence) }
+                        Button("Delete All Future Events", role: .destructive) { delete(.thisAndFollowing) }
+                        Button("Delete All Events", role: .destructive) { delete(.allOccurrences) }
+                    } else {
+                        Button("Delete Event", role: .destructive) { delete(.allOccurrences) }
+                    }
+                } message: {
+                    if isForeign, let creator {
+                        Text("\(creator.displayLabel) created this event. It will be deleted for everyone.")
+                    }
+                }
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Edit") { editing = true }
+                    .buttonStyle(.borderedProminent)
+            }
         }
         .sheet(isPresented: $editing) {
             EventEditorView(event: event, occurrence: occurrence)
-        }
-        .confirmationDialog(occurrence.isRecurring && !event.isBirthday ? "This is a repeating event." : "Delete this event?",
-                            isPresented: $confirmingDelete, titleVisibility: .visible) {
-            if occurrence.isRecurring && !event.isBirthday {
-                Button("Delete This Event Only", role: .destructive) { delete(.thisOccurrence) }
-                Button("Delete All Future Events", role: .destructive) { delete(.thisAndFollowing) }
-                Button("Delete All Events", role: .destructive) { delete(.allOccurrences) }
-            } else {
-                Button("Delete Event", role: .destructive) { delete(.allOccurrences) }
-            }
-        } message: {
-            if isForeign, let creator {
-                Text("\(creator.displayLabel) created this event. It will be deleted for everyone.")
-            }
         }
     }
 

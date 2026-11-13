@@ -114,6 +114,7 @@ Roadmap aus dem Architektur-Dokument:
   - Gesetzliche Feiertage je Kalender (16 Bundesländer, AT, CH), offline berechnet
   - Besondere Tage ohne Feiertagsstatus (Advent, Sankt Martin, Halloween, Muttertag …) zur Feiertagsregion,
     offline berechnet, als graue Einträge; abschaltbar unter Familie (`calendarShowsObservances`)
+  - Feiertage wahlweise auch als rote Einträge im Raster (`calendarShowsHolidayEntries`, Standard an)
   - Schulferien (DE, AT, CH) aus der OpenHolidays API (ODbL), als Fläche im Kalender, wöchentlich neu geladen
   - Eigene ICS-/webcal-Adressen je Kalender, lokal zwischengespeichert, beim Öffnen aktualisiert
   - Gerätekalender grau einblenden (nur auf dem Gerät)

@@ -21,6 +21,8 @@ struct CalendarStyle {
     var showsTodos = false
     /// Besondere Tage (Advent, Sankt Martin, Halloween …) der Feiertagsregionen zeigen (Einstellung, nur auf dem Gerät).
     var showsObservances = false
+    /// Gesetzliche Feiertage zusätzlich als Einträge im Raster zeigen, nicht nur als rote Tageszahl.
+    var showsHolidayEntries = false
     /// Farbe für Todos je Familie (die ihres ersten Kalenders) und für „Nur ich“.
     private var familyColors: [NSManagedObjectID: Color] = [:]
     private var personalColor = Color(hex: CalendarColors.personalDefault)
@@ -28,13 +30,15 @@ struct CalendarStyle {
     var subscriptionKeys: Set<String> { Set(icsColors.keys).union(schoolHolidayKeys) }
 
     init(calendars: some Sequence<EventCalendar>, appearances: some Sequence<CalendarAppearance>,
-         person: Member?, showsTodos: Bool = false, showsObservances: Bool = false) {
+         person: Member?, showsTodos: Bool = false, showsObservances: Bool = false,
+         showsHolidayEntries: Bool = false) {
         let byID = Dictionary(appearances.compactMap { a in a.calendarID.map { ($0, a) } },
                               uniquingKeysWith: { first, _ in first })
         birthdayColor = Repository.birthdayColor(appearanceColor: byID[Repository.birthdayAppearanceID]?.color)
             .map { Color(hex: $0) }
         self.showsTodos = showsTodos
         self.showsObservances = showsObservances
+        self.showsHolidayEntries = showsHolidayEntries
         for calendar in calendars {
             guard let id = calendar.id else { continue }
             let appearance = byID[id.uuidString]
@@ -67,11 +71,11 @@ struct CalendarStyle {
     }
 
     /// Eigene Termine, Abo-Termine und eingeblendete Gerätekalender in einer Liste.
-    /// Gerätekalender gehören nur zu einem selbst und fallen beim Personenfilter weg. Mit `observancesIn` kommen
-    /// die besonderen Tage dieses Zeitraums als ganztägige, gedämpfte Einträge dazu.
+    /// Gerätekalender gehören nur zu einem selbst und fallen beim Personenfilter weg. Mit `specialDaysIn` kommen
+    /// je nach Einstellung Feiertage (rot) und besondere Tage (grau) dieses Zeitraums als ganztägige Einträge dazu.
     func entries(occurrences: [Occurrence], subscribed: some Sequence<SubscribedEvent>,
                  external: [ExternalCalendars.Item], todos: some Sequence<TodoItem> = [TodoItem](),
-                 observancesIn interval: DateInterval? = nil) -> [CalendarEntry] {
+                 specialDaysIn interval: DateInterval? = nil) -> [CalendarEntry] {
         var result = occurrences.map { occurrence in
             CalendarEntry(id: "\(occurrence.event.objectID.uriRepresentation())#\(occurrence.originalStart.timeIntervalSince1970)",
                           title: occurrence.displayTitle, start: occurrence.start, end: occurrence.end,
@@ -104,14 +108,18 @@ struct CalendarStyle {
         }
         if let interval {
             let calendar = Calendar.current
-            for (day, list) in observances(in: interval) {
-                guard let end = calendar.date(byAdding: .day, value: 1, to: day) else { continue }
-                result += list.map { observance in
-                    CalendarEntry(id: "observance#\(day.timeIntervalSince1970)#\(observance.germanName)",
-                                  title: observance.name(), start: day, end: end, isAllDay: true, location: nil,
-                                  color: Color(hex: CalendarColors.external), source: .observance)
+            func add(_ days: [Date: [Holiday]], color: String, source: CalendarEntry.Source) {
+                for (day, list) in days {
+                    guard let end = calendar.date(byAdding: .day, value: 1, to: day) else { continue }
+                    result += list.map { holiday in
+                        CalendarEntry(id: "\(source.key)#\(day.timeIntervalSince1970)#\(holiday.germanName)",
+                                      title: holiday.name(), start: day, end: end, isAllDay: true, location: nil,
+                                      color: Color(hex: color), source: source)
+                    }
                 }
             }
+            if showsHolidayEntries { add(holidays(in: interval), color: CalendarColors.publicHoliday, source: .holiday) }
+            add(observances(in: interval), color: CalendarColors.external, source: .observance)
         }
         return result
     }
@@ -173,8 +181,19 @@ struct CalendarEntry: Identifiable {
         case subscription
         case device
         case todo(TodoItem)
+        /// Gesetzlicher Feiertag als Eintrag (Einstellung „Feiertage als Termine“).
+        case holiday
         /// Besonderer Tag ohne Feiertag, z. B. 1. Advent.
         case observance
+
+        /// Präfix der Eintrags-ID für Feiertage und besondere Tage.
+        var key: String {
+            switch self {
+            case .holiday: "holiday"
+            case .observance: "observance"
+            default: "entry"
+            }
+        }
     }
 
     let id: String
@@ -193,6 +212,11 @@ struct CalendarEntry: Identifiable {
 
     var isDevice: Bool {
         if case .device = source { return true }
+        return false
+    }
+
+    var isHoliday: Bool {
+        if case .holiday = source { return true }
         return false
     }
 

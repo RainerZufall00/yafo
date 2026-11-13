@@ -29,6 +29,7 @@ struct MonthView: View {
     @AppStorage(InterfaceStyle.storageKey) private var interfaceStyle = InterfaceStyle.tabs
     @AppStorage(CalendarDisplay.showsTodosKey) private var showsTodos = true
     @AppStorage(CalendarDisplay.showsObservancesKey) private var showsObservances = true
+    @AppStorage(CalendarDisplay.showsHolidayEntriesKey) private var showsHolidayEntries = true
 
     /// Im Wisch-Modus blättern Monate nach oben und unten, seitlich geht es zu Todos und Einkauf.
     private var isVertical: Bool { interfaceStyle == .swipe }
@@ -46,7 +47,7 @@ struct MonthView: View {
     private var style: CalendarStyle {
         let _ = subscriptions.count
         return CalendarStyle(calendars: calendars, appearances: appearances, person: person, showsTodos: showsTodos,
-                             showsObservances: showsObservances)
+                             showsObservances: showsObservances, showsHolidayEntries: showsHolidayEntries)
     }
 
     var body: some View {
@@ -188,6 +189,16 @@ struct MonthView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
+            if week == Self.startOfWeek(.now) {
+                Text("This Week")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Capsule().fill(Color.accentColor))
+                    .lineLimit(1)
+                    .fixedSize()
+            }
             Spacer()
             Button("Previous Week", systemImage: isVertical ? "chevron.up" : "chevron.left") { showWeek(offset: -1) }
             Button("Next Week", systemImage: isVertical ? "chevron.down" : "chevron.right") { showWeek(offset: 1) }
@@ -245,22 +256,12 @@ struct MonthView: View {
         Calendar.current.dateInterval(of: .month, for: date)?.start ?? date
     }
 
-    /// Monatsname mit Pfeilen; Wischen allein wäre für VoiceOver nicht erreichbar.
+    /// Monate als Leiste zum Wischen („November 26 · Dezember 26 · Januar 27“); antippen springt hin.
+    /// Jeder Monat ist ein Knopf, damit bleibt das auch für VoiceOver ohne Wischen erreichbar.
     private var monthHeader: some View {
-        HStack {
-            Text(month.formatted(.dateTime.month(.wide).year()))
-                .font(.title2.weight(.bold))
-                .accessibilityAddTraits(.isHeader)
-            Spacer()
-            Button("Previous Month", systemImage: isVertical ? "chevron.up" : "chevron.left") { showMonth(offset: -1) }
-            Button("Next Month", systemImage: isVertical ? "chevron.down" : "chevron.right") { showMonth(offset: 1) }
+        MonthStrip(months: Self.pagedMonths, selected: month) { target in
+            withAnimation(.snappy) { scrolledMonth = target }
         }
-        .labelStyle(.iconOnly)
-        .imageScale(.large)
-        .buttonStyle(.borderless)
-        .padding(.horizontal, 16)
-        .padding(.top, 4)
-        .padding(.bottom, 6)
     }
 
     private var yearHeader: some View {
@@ -294,11 +295,6 @@ struct MonthView: View {
             month = Calendar.current.date(byAdding: .year, value: offset, to: month) ?? month
             scrolledMonth = month
         }
-    }
-
-    private func showMonth(offset: Int) {
-        guard let target = Calendar.current.date(byAdding: .month, value: offset, to: month) else { return }
-        withAnimation(.snappy) { scrolledMonth = target }
     }
 
     @ToolbarContentBuilder
@@ -387,6 +383,56 @@ struct MonthView: View {
             Label("Filter", systemImage: person == nil && style.hiddenCalendars.isEmpty
                   ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
         }
+    }
+}
+
+/// Monatsleiste über dem Raster: der angezeigte Monat gefüllt und mittig, der aktuelle umrandet.
+struct MonthStrip: View {
+    let months: [Date]
+    let selected: Date
+    let onSelect: (Date) -> Void
+    @State private var position: Date?
+
+    var body: some View {
+        ScrollView(.horizontal) {
+            LazyHStack(spacing: 4) {
+                ForEach(months, id: \.self) { month in
+                    Button { onSelect(month) } label: { label(for: month) }
+                        .buttonStyle(.plain)
+                }
+            }
+            .scrollTargetLayout()
+        }
+        .scrollIndicators(.hidden)
+        .scrollPosition(id: $position, anchor: .center)
+        .contentMargins(.horizontal, 12, for: .scrollContent)
+        .frame(height: 40)
+        .padding(.top, 2)
+        .padding(.bottom, 6)
+        .onAppear { position = selected }
+        .onChange(of: selected) { withAnimation(.snappy) { position = selected } }
+    }
+
+    private func label(for month: Date) -> some View {
+        let isSelected = month == selected
+        let isCurrent = Calendar.current.isDate(month, equalTo: .now, toGranularity: .month)
+        return Text(month.formatted(.dateTime.month(.wide).year(.twoDigits)))
+            .font(isSelected ? .headline : .subheadline.weight(.medium))
+            .foregroundStyle(isSelected ? Color.white : isCurrent ? Color.accentColor : Color.primary)
+            .lineLimit(1)
+            .fixedSize()
+            .padding(.horizontal, 14)
+            .frame(height: 36)
+            .background {
+                if isSelected {
+                    Capsule().fill(Color.accentColor)
+                } else if isCurrent {
+                    Capsule().strokeBorder(Color.accentColor, lineWidth: 2)
+                }
+            }
+            .contentShape(Capsule())
+            .accessibilityLabel(month.formatted(.dateTime.month(.wide).year()))
+            .accessibilityAddTraits(isSelected ? [.isButton, .isSelected, .isHeader] : .isButton)
     }
 }
 

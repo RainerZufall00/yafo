@@ -60,7 +60,7 @@ struct WeekPageView: View {
         let occurrences = events.filter(style.includes).flatMap { $0.occurrences(overlapping: interval) }
         let entries = style.entries(occurrences: occurrences, subscribed: subscribed,
                                     external: model.external.items(overlapping: interval), todos: todos,
-                                    observancesIn: interval)
+                                    specialDaysIn: interval)
             .sorted(by: CalendarEntry.listOrder)
         let holidays = style.holidays(in: interval)
         let schoolHolidays = style.schoolHolidays(in: subscribed)
@@ -166,7 +166,9 @@ private struct WeekDayRow: View {
 
     @ViewBuilder
     private var background: some View {
-        if isSelected && sizeClass == .regular {
+        if isToday {
+            Color.accentColor.opacity(0.1)
+        } else if isSelected && sizeClass == .regular {
             Color.accentColor.opacity(0.08)
         } else if !schoolHolidays.isEmpty {
             Color(hex: CalendarColors.schoolHoliday).opacity(0.3)
@@ -184,7 +186,11 @@ private struct WeekDayRow: View {
             Text(day.formatted(.dateTime.day()))
                 .font(.title2.weight(isToday ? .bold : .medium))
                 .monospacedDigit()
-                .foregroundStyle(accent)
+                .foregroundStyle(isToday ? Color.white : accent)
+                .frame(minWidth: 36, minHeight: 36)
+                .background {
+                    if isToday { Circle().fill(Color.accentColor) }
+                }
             if !schoolHolidays.isEmpty {
                 Image(systemName: "backpack.fill")
                     .font(.caption2)
@@ -212,13 +218,11 @@ private struct WeekDayRow: View {
     }
 
     private var tiles: [Tile] {
-        let red = Color(hex: CalendarColors.publicHoliday)
-        var result = holidays.map { name in
-            Tile(id: "h-\(name)", title: name, color: red, icon: "flag.fill", time: String(localized: "All day"))
-        }
+        var result: [Tile] = []
         for entry in entries {
             result.append(Tile(id: entry.id, title: entry.occurrence?.displayTitle ?? entry.title, color: entry.color,
-                               icon: entry.todo != nil ? "circle" : nil, time: timeText(entry),
+                               icon: entry.todo != nil ? "circle" : entry.isHoliday ? "flag.fill" : nil,
+                               time: timeText(entry),
                                detail: detailText(entry), isMuted: entry.isMuted, entry: entry))
         }
         return result
@@ -229,13 +233,9 @@ private struct WeekDayRow: View {
         let content = EntryTile(title: tile.title, color: tile.color, icon: tile.icon, time: tile.time,
                                 detail: tile.detail, isMuted: tile.isMuted)
         if let entry = tile.entry, let occurrence = entry.occurrence {
-            NavigationLink {
-                EventDetailView(event: occurrence.event, originalStart: occurrence.originalStart, color: entry.color)
-            } label: {
-                content
-            }
-            .buttonStyle(.plain)
-            .calendarDraggable(entry)
+            Button { actions.openEvent(occurrence, entry.color) } label: { content }
+                .buttonStyle(.plain)
+                .calendarDraggable(entry)
         } else if let entry = tile.entry, let todo = entry.todo {
             Button { actions.openTodo(todo) } label: { content }
                 .buttonStyle(.plain)
@@ -350,6 +350,7 @@ struct WeekStrip: View {
         let cal = Calendar.current
         let end = cal.date(byAdding: .day, value: 6, to: week) ?? week
         let isSelected = week == selected
+        let isCurrent = cal.isDate(week, equalTo: .now, toGranularity: .weekOfYear)
         let sameMonth = cal.isDate(week, equalTo: end, toGranularity: .month)
         let months = sameMonth ? week.formatted(.dateTime.month(.abbreviated))
             : "\(week.formatted(.dateTime.month(.abbreviated)))–\(end.formatted(.dateTime.month(.abbreviated)))"
@@ -367,11 +368,16 @@ struct WeekStrip: View {
         .foregroundStyle(isSelected ? Color.white : Color.primary)
         .frame(width: 66, height: 46)
         .background {
-            if isSelected { Capsule().fill(Color.accentColor) }
+            if isSelected {
+                Capsule().fill(Color.accentColor)
+            } else if isCurrent {
+                Capsule().strokeBorder(Color.accentColor, lineWidth: 2)
+            }
         }
         .contentShape(Capsule())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel((week..<end).formatted(.interval.day().month(.wide)))
+        .accessibilityValue(isCurrent ? Text("This Week") : Text(""))
         .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
     }
 }

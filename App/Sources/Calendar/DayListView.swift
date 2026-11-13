@@ -32,7 +32,8 @@ struct DayListView: View {
         let occurrences = events.filter(style.includes).flatMap { $0.occurrences(overlapping: interval) }
         let visible = style.entries(occurrences: occurrences, subscribed: subscribed,
                                     external: model.external.items(overlapping: interval), todos: todos,
-                                    observancesIn: interval)
+                                    specialDaysIn: interval)
+            .filter { !$0.isHoliday }
             .sorted(by: CalendarEntry.listOrder)
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 6) {
@@ -55,10 +56,7 @@ struct DayListView: View {
                 }
                 ForEach(visible) { entry in
                     if let occurrence = entry.occurrence {
-                        NavigationLink {
-                            EventDetailView(event: occurrence.event, originalStart: occurrence.originalStart,
-                                            color: entry.color)
-                        } label: {
+                        Button { actions.openEvent(occurrence, entry.color) } label: {
                             EventRow(occurrence: occurrence, color: entry.color)
                         }
                         .buttonStyle(.plain)

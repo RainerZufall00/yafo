@@ -3,11 +3,12 @@ import UniformTypeIdentifiers
 import YafoKit
 
 /// Was Wochen- und Monatsansicht beim Bedienen auslösen: lange auf einen Tag drücken legt einen Termin an,
-/// ein Termin oder Todo lässt sich auf einen anderen Tag ziehen, ein Todo antippen öffnet es.
+/// ein Termin oder Todo lässt sich auf einen anderen Tag ziehen, antippen öffnet ihn als Blatt von unten.
 struct CalendarActions {
     var createEvent: (Date) -> Void = { _ in }
     var move: (CalendarEntry, Date) -> Void = { _, _ in }
     var openTodo: (TodoItem) -> Void = { _ in }
+    var openEvent: (Occurrence, Color) -> Void = { _, _ in }
 }
 
 extension EnvironmentValues {
@@ -18,6 +19,7 @@ extension EnvironmentValues {
 enum CalendarDisplay {
     static let showsTodosKey = "calendarShowsTodos"
     static let showsObservancesKey = "calendarShowsObservances"
+    static let showsHolidayEntriesKey = "calendarShowsHolidayEntries"
     static let dismissedBirthdaysKey = "dismissedBirthdaySuggestions"
 }
 
@@ -88,13 +90,20 @@ private struct CalendarDropModifier: ViewModifier {
 }
 
 /// Stellt `CalendarActions` bereit und zeigt, was dazu gehört: Editor für neue Termine,
-/// Rückfrage beim Verschieben einer Serie, Todo-Editor.
+/// Rückfrage beim Verschieben einer Serie, Todo-Editor und angetippter Termin (halbhohes Blatt mit
+/// Bearbeiten und Löschen, hochziehen zeigt alles).
 struct CalendarEditing: ViewModifier {
     @Environment(AppModel.self) private var model
 
     private struct NewEvent: Identifiable {
         let id = UUID()
         let day: Date
+    }
+
+    private struct OpenedEvent: Identifiable {
+        let id = UUID()
+        let occurrence: Occurrence
+        let color: Color
     }
 
     private struct PendingMove {
@@ -105,6 +114,7 @@ struct CalendarEditing: ViewModifier {
     @State private var newEvent: NewEvent?
     @State private var pendingMove: PendingMove?
     @State private var editingTodo: TodoItem?
+    @State private var openedEvent: OpenedEvent?
     @State private var feedback = 0
 
     func body(content: Content) -> some View {
@@ -115,11 +125,20 @@ struct CalendarEditing: ViewModifier {
                     newEvent = NewEvent(day: day)
                 },
                 move: move,
-                openTodo: { editingTodo = $0 }
+                openTodo: { editingTodo = $0 },
+                openEvent: { openedEvent = OpenedEvent(occurrence: $0, color: $1) }
             ))
             .sensoryFeedback(.impact(weight: .medium), trigger: feedback)
             .sheet(item: $newEvent) { new in
                 EventEditorView(initialDay: new.day)
+            }
+            .sheet(item: $openedEvent) { opened in
+                NavigationStack {
+                    EventDetailView(event: opened.occurrence.event, originalStart: opened.occurrence.originalStart,
+                                    color: opened.color)
+                }
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
             }
             .sheet(item: $editingTodo) { todo in
                 TodoEditorView(todo: todo, scope: todo.family.map(ListScope.family) ?? .personal)
