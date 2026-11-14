@@ -1,0 +1,37 @@
+# Baut die App bei jedem Push für den Simulator, ohne Signatur. Gedacht als
+# Rückmeldung für Claude-Cloud-Sessions, die selbst kein iOS kompilieren können.
+# TestFlight-Builds macht Xcode Cloud (ci_scripts/ci_post_clone.sh).
+name: CI
+
+on:
+  push:
+    branches-ignore: [gh-pages]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ios:
+    # Pull Requests nur aus Forks, eigene Branches baut schon der Push.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork
+    runs-on: xcode-27
+    timeout-minutes: 30
+    env:
+      # Fest, damit ein neues Xcode auf dem Runner nicht über Nacht alles rot macht.
+      # Zusammen mit dem Xcode in Xcode Cloud anheben.
+      XCODE_APP: /Applications/Xcode_27.2.app
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: sudo xcode-select -s "$XCODE_APP"
+      - name: App, Widgets und Share Extension bauen
+        run: >
+          xcodebuild -project yafo.xcodeproj -scheme yafo
+          -destination 'generic/platform=iOS Simulator'
+          CODE_SIGNING_ALLOWED=NO -quiet
+          build

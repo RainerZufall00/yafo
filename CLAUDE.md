@@ -77,3 +77,17 @@ zurück, falls es fehlt.
   (`mergeShareExtensionChanges`).
 - Das Widget-Target bekommt `App/Resources/Assets.xcassets` (Artikel-Icons) über eine Ausnahme im
   synchronisierten Ordner `App`.
+
+## Bauen ohne Mac
+
+Cloud-Sessions laufen auf Linux und können kein iOS bauen. Deshalb:
+
+- Jeder Push startet `.github/workflows/ci.yml` (Simulator-Build mit Xcode 27.2, ohne Signatur). Nach dem Push
+  das Ergebnis abwarten und Build-Fehler beheben, bevor die Arbeit als fertig gilt (`gh run watch`,
+  `gh run view --log-failed`).
+- TestFlight- und App-Store-Builds macht Xcode Cloud, nur von Hand in App Store Connect gestartet.
+  `ci_scripts/ci_post_clone.sh` schreibt `Config/Local.xcconfig` mit der Team-ID, die Build-Nummer vergibt
+  Xcode Cloud.
+- Getestet wird über TestFlight (Release-Build, CloudKit **Production**). Neue Felder im Datenmodell müssen von
+  Hand in der CloudKit Console angelegt und nach Production deployt werden – in der Zusammenfassung ausdrücklich
+  darauf hinweisen.
