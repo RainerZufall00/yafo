@@ -49,7 +49,7 @@ def write(icons):
 
 def preview(icons, target, only=None, zoom=1):
     colors = ['#2E9E52', '#C98A1E', '#D9483B', '#2F80ED', '#E07A1F', '#9C6B3E', '#D6457F', '#00A096',
-              '#2D8FCB', '#8E44C9', '#5B6CFF', '#C95B8C', '#7B5E52']
+              '#2D8FCB', '#8E44C9', '#5B6CFF', '#C95B8C', '#7B5E52', '#7A8C1C']
     cells = []
     keys = [k for k in icons if not only or k in only]
     for i, key in enumerate(keys):

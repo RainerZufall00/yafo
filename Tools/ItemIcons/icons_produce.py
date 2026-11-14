@@ -437,3 +437,76 @@ def rhubarb():
     leaf_ = U(circle(32, 14, 9), circle(38, 18, 6), circle(26, 10, 5)).buffer(0.5)
     leaf_ = minus(leaf_, line([(28, 19), (37, 8)], 1.5))
     return over(stalks, leaf_, 1.6)
+
+
+@icon
+def pomegranate():
+    body = minus(circle(24, 28, 14.5), arc(24, 28, 10, 195, 240, 2))
+    crown = rpoly(0.6, (18.5, 17), (17, 7), (21, 10.5), (24, 6), (27, 10.5), (31, 7), (29.5, 17))
+    return over(body, crown, 1.6)
+
+
+@icon
+def dragon_fruit():
+    body = ellipse(24, 27, 12.5, 15)
+    pos = [(15, 33), (13.5, 21), (33, 33), (34.5, 21)]
+    tips = [move(rot(leaf(0, 0, 11, 5.5), ang, 0, 0), x, y) for (x, y), ang in
+            zip(pos, [-140, -125, -40, -55])]
+    top = U(leaf(20.5, 10, 9, 4.5, -115), leaf(27.5, 10, 9, 4.5, -65), leaf(24, 9, 9, 4.5, -90))
+    g = body
+    for t in tips + [top]:
+        g = over(g, t, 1.4)
+    middle = leaf(24, 26, 10, 5.5, -90)
+    return minus(g, middle.boundary.buffer(0.8, quad_segs=Q))
+
+
+@icon
+def passion_fruit():
+    whole = minus(circle(17, 18, 11), arc(17, 18, 7, 200, 245, 1.8))
+    half = gap(circle(29, 29, 14), circle(29, 29, 10.5), 1.6)
+    seeds = U(*[circle(29 + r * math.cos(math.radians(a)), 29 + r * math.sin(math.radians(a)), 1.5)
+                for r, n, off in [(6.5, 8, 0), (2.8, 4, 45)] for a in range(off, 360 + off, 360 // n)])
+    half = minus(half, seeds)
+    return over(whole, half, 1.6)
+
+
+@icon
+def lychee():
+    pts = [(24 + 13.5 * math.cos(math.radians(a)), 28 + 13.5 * math.sin(math.radians(a))) for a in range(0, 360, 30)]
+    body = U(circle(24, 28, 13.5), *[circle(x, y, 2.4) for x, y in pts])
+    dots = U(*[poly((x, y - 1.3), (x + 1.3, y + 1), (x - 1.3, y + 1)) for x, y in
+               [(18, 23), (24, 21), (30, 23), (15.5, 29.5), (21, 28), (27, 28), (32.5, 29.5), (18.5, 34.5), (24, 34), (29.5, 34.5)]])
+    return over(minus(body, dots), stem_leaf(24, 14, 6, (31, 9), -25, 10, 6), 1.6)
+
+
+@icon
+def physalis():
+    left = move(rot(leaf(0, 0, 26, 11), -62, 0, 0), 17.5, 19)
+    right = move(rot(leaf(0, 0, 26, 11), -118, 0, 0), 30.5, 19)
+    stem = line([(24, 9), (24.5, 4)], 2.2)
+    husk = U(left, right, stem)
+    husk = minus(husk, line(bez((24, 9), (18, 16), (13, 27)), 1.4), line(bez((24, 9), (30, 16), (35, 27)), 1.4))
+    berry = minus(circle(24, 32, 10.5), arc(24, 32, 6.5, 200, 245, 1.8))
+    return over(husk, berry, 1.6)
+
+
+@icon
+def artichoke():
+    stem = rect(22, 36, 4, 8, 1.5)
+    petals = [(24, 13, -90, 14, 10), (16, 19, -115, 13, 9), (32, 19, -65, 13, 9), (24, 21, -90, 14, 11),
+              (12.5, 27, -130, 12, 8.5), (35.5, 27, -50, 12, 8.5), (18, 29, -105, 13, 10), (30, 29, -75, 13, 10),
+              (24, 32, -90, 12, 10)]
+    g = stem
+    for x, y, a, l, w in petals:
+        g = over(g, leaf(x, y, l, w, a), 1.4)
+    return g
+
+
+@icon
+def parsnip():
+    body = path(bez((15, 16), (14, 28), (24, 44)), bez((24, 44), (34, 28), (33, 16))[1:],
+                bez((33, 16), (24, 13.5), (15, 16))[1:])
+    body = body.buffer(0.8).buffer(-0.8)
+    cuts = U(line([(18, 23), (22, 23.5)], 1.4), line([(26.5, 28.5), (30, 28)], 1.4), line([(21, 34), (24, 34.5)], 1.4))
+    tops = U(leaf(17.5, 7.5, 11, 4.5, -110), leaf(24, 6.5, 11, 4.5, -90), leaf(30.5, 7.5, 11, 4.5, -70))
+    return over(minus(body, cuts), tops, 1.6)

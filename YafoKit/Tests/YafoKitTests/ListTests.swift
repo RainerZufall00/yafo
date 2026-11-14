@@ -186,6 +186,20 @@ import Testing
         #expect(ShoppingCatalog.article(for: "Feuchttücher")?.emoji != ShoppingCatalog.article(for: "Klopapier")?.emoji)
     }
 
+    @Test func newAndUnusualArticles() {
+        #expect(ShoppingCatalog.article(for: "Stevia")?.icon == "stevia")
+        #expect(ShoppingCatalog.article(for: "Süßstoff")?.icon == "stevia")
+        #expect(ShoppingCatalog.article(for: "Granatapfel")?.category == .produce)
+        #expect(ShoppingCatalog.article(for: "Tintenfischringe")?.icon == "squid")
+        #expect(ShoppingCatalog.category(for: "Zeitung") == .other)
+        // Grundwörter, die sonst falsch greifen würden.
+        #expect(ShoppingCatalog.category(for: "Kontaktlinsen") == .hygiene)
+        #expect(ShoppingCatalog.category(for: "Leberkäse") == .meat)
+        #expect(ShoppingCatalog.category(for: "Serum") == .hygiene)
+        #expect(ShoppingCatalog.category(for: "Ginger beer") == .drinks)
+        #expect(ShoppingCatalog.article(for: "Wacholderbeeren")?.icon == "spice-jar")
+    }
+
     @Test func listIsSortedByAisle() throws {
         let persistence = try PersistenceController.makeTemporary()
         let repository = Repository(persistence: persistence)
@@ -230,6 +244,7 @@ import Testing
         #expect(ShoppingDetails.variants(for: "Batterien", languageCode: "de").contains("AA (Mignon)"))
         #expect(ShoppingDetails.variants(for: "batteries", languageCode: "en").contains("AA"))
         #expect(ShoppingDetails.variants(for: "Vollmilch", languageCode: "de").contains("laktosefrei"))
+        #expect(ShoppingDetails.variants(for: "Süßstoff", languageCode: "de").contains("Tropfen"))
         #expect(ShoppingDetails.variants(for: "Flux capacitor").isEmpty)
     }
 }

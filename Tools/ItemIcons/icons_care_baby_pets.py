@@ -266,3 +266,34 @@ def basket():
     body = rpoly(1.5, (7, 26.6), (41, 26.6), (37, 43), (11, 43))
     slots = U(*[line([(x, 30), (x + (x - 24) * 0.12, 39)], 2) for x in (14, 20, 26, 32)])
     return U(handle.difference(rim.buffer(1.4)), rim, minus(body, slots))
+
+
+@icon
+def eye_drops():
+    body = rect(13, 22, 22, 22, 4)
+    shoulder = poly((14, 25), (34, 25), (29, 17), (19, 17))
+    nozzle = rpoly(0.5, (20.5, 17.5), (27.5, 17.5), (25, 4), (23, 4))
+    eye = circle(24, 26.6, 10.9).intersection(circle(24, 41.4, 10.9))
+    body = minus(U(body, shoulder), eye)
+    return U(over(body, nozzle, 1.4), circle(24, 34, 2.2))
+
+
+@icon
+def condom():
+    pack = rect(8, 8, 32, 32, 2.5)
+    notches = U(*[circle(x, y, 1.1) for i in range(1, 8) for x, y in
+                  [(8 + i * 4, 8), (8 + i * 4, 40), (8, 8 + i * 4), (40, 8 + i * 4)]])
+    pack = minus(pack, notches)
+    ring = U(circle(24, 24, 10.5).boundary.buffer(0.9, quad_segs=Q), circle(24, 24, 7).boundary.buffer(0.9, quad_segs=Q))
+    return minus(pack, ring)
+
+
+@icon
+def rabbit():
+    head = U(ellipse(24, 32, 13, 11))
+    ears = U(ellipse(18, 14, 4.5, 11.5, -12), ellipse(30, 14, 4.5, 11.5, 12))
+    inner = U(ellipse(18, 14, 1.6, 7.5, -12), ellipse(30, 14, 1.6, 7.5, 12))
+    g = over(minus(ears, inner), head, 1.6)
+    eyes = U(circle(19, 30, 1.9), circle(29, 30, 1.9))
+    nose = poly((22, 35), (26, 35), (24, 37.5))
+    return minus(g, eyes, nose)

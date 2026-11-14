@@ -20,7 +20,8 @@ nonisolated public enum ShoppingCategory: String, CaseIterable, Sendable {
         case .hygiene: "#5B6CFF"
         case .baby: "#C95B8C"
         case .pets: "#7B5E52"
-        case .other: "#6E6E73"
+        // Kein Grau: das sähe aus wie bereits gekauft.
+        case .other: "#7A8C1C"
         }
     }
 
@@ -203,7 +204,7 @@ nonisolated public enum ShoppingCatalog {
         a("🥬", "cabbage", .produce, "Kohl|Weißkohl|Rotkohl|Wirsing|Grünkohl|Rosenkohl", "Cabbage|Red cabbage|Savoy cabbage|Kale|Brussels sprouts"),
         a("🥬", "celery", .produce, "Kohlrabi|Sellerie|Staudensellerie|Knollensellerie|Fenchel", "Kohlrabi|Celery|Celeriac|Fennel"),
         a("🥕", "carrot", .produce, "Suppengemüse|Suppengrün", "Soup vegetables"),
-        a("🔴", "radish", .produce, "Radieschen|Rote Bete", "Radishes|Beetroot|Beets"),
+        a("🔴", "radish", .produce, "Radieschen|Rote Bete|Rote Rüben", "Radishes|Beetroot|Beets"),
         a("🥦", "asparagus", .produce, "Spargel", "Asparagus"),
         a("🎃", "pumpkin", .produce, "Kürbis|Hokkaido|Butternut", "Pumpkin|Squash|Butternut squash"),
         a("🍠", "sweet-potato", .produce, "Süßkartoffeln|Süßkartoffel", "Sweet potatoes|Sweet potato"),
@@ -213,6 +214,22 @@ nonisolated public enum ShoppingCatalog {
         a("🍄", "mushroom", .produce, "Steinpilze|Shiitake|Kräuterseitlinge", "Porcini|Shiitake|Oyster mushrooms"),
         a("🍓", "currants", .produce, "Johannisbeeren|Stachelbeeren|Brombeeren", "Currants|Gooseberries|Blackberries"),
         a("🍋", "rhubarb", .produce, "Rhabarber", "Rhubarb"),
+        a("🔴", "pomegranate", .produce, "Granatapfel|Granatäpfel|Granatapfelkerne", "Pomegranate|Pomegranates|Pomegranate seeds"),
+        a("🐉", "dragon-fruit", .produce, "Drachenfrucht|Pitahaya|Pitaya", "Dragon fruit|Pitaya"),
+        a("🟣", "passion-fruit", .produce, "Maracuja|Passionsfrucht|Granadilla", "Passion fruit|Granadilla"),
+        a("🔴", "lychee", .produce, "Litschis|Litschi|Rambutan|Longan", "Lychees|Lychee|Litchi|Rambutan|Longan"),
+        a("🟠", "physalis", .produce, "Physalis|Kapstachelbeeren|Andenbeeren", "Physalis|Cape gooseberries|Golden berries"),
+        a("🌿", "artichoke", .produce, "Artischocken|Artischocke", "Artichokes|Artichoke"),
+        a("🥕", "parsnip", .produce, "Pastinaken|Pastinake|Petersilienwurzel|Wurzelpetersilie|Topinambur|Schwarzwurzeln|Rettich|Meerrettich|Steckrüben|Mairübchen", "Parsnips|Parsnip|Parsley root|Jerusalem artichoke|Salsify|White radish|Daikon|Horseradish|Turnips|Rutabaga"),
+        a("🥭", "mango", .produce, "Papaya|Guaven|Guave", "Papaya|Guava"),
+        a("🍅", "tomato", .produce, "Kaki|Sharonfrucht|Persimone", "Persimmon|Sharon fruit|Kaki"),
+        a("🍊", "orange", .produce, "Kumquats|Kumquat|Pomelo", "Kumquats|Kumquat|Pomelo"),
+        a("🍋", "lemon", .produce, "Yuzu|Bergamotte", "Yuzu|Bergamot"),
+        a("🥬", "leafy-greens", .produce, "Mangold|Postelein|Portulak|Mizuna", "Chard|Swiss chard|Purslane|Mizuna"),
+        a("🥦", "broccoli", .produce, "Romanesco|Brokkolini|Bimi", "Romanesco|Broccolini|Tenderstem broccoli"),
+        a("🫛", "peas", .produce, "Zuckerschoten|Kaiserschoten|Okra", "Snow peas|Sugar snap peas|Okra"),
+        a("🌿", "herbs", .produce, "Bärlauch|Estragon|Kerbel|Liebstöckel|Borretsch|Thai-Basilikum|Shiso", "Wild garlic|Tarragon|Chervil|Lovage|Borage|Thai basil|Shiso"),
+        a("🍄", "mushroom", .produce, "Pfifferlinge|Austernpilze|Enoki|Morcheln|Trüffel", "Chanterelles|Enoki|Morels|Truffle|Truffles"),
 
         // Brot & Backwaren
         a("🍞", "bread", .bakery, "Brot|Toast|Toastbrot", "Bread|Toast"),
@@ -244,6 +261,13 @@ nonisolated public enum ShoppingCatalog {
         a("🐟", "fish", .meat, "Forelle|Kabeljau|Seelachs|Makrele|Sardinen|Hering", "Trout|Cod|Pollock|Mackerel|Sardines|Herring"),
         a("🦪", "mussel", .meat, "Muscheln|Miesmuscheln", "Mussels|Clams"),
         a("🌱", "veggie", .meat, "Fleischersatz|Veggie-Burger|Sojageschnetzeltes|Seitan|Tempeh|Falafel", "Meat substitute|Veggie burger|Seitan|Tempeh|Falafel"),
+        a("🦑", "squid", .meat, "Tintenfisch|Calamari|Tintenfischringe|Oktopus|Pulpo|Sepia", "Squid|Calamari|Squid rings|Octopus"),
+        a("🦀", "crab", .meat, "Hummer|Krebse|Taschenkrebs|Krabbenfleisch|Flusskrebse|Languste|Surimi", "Lobster|Crab|Crabs|Crab meat|Crayfish|Surimi"),
+        a("🐟", "caviar", .meat, "Kaviar|Lachskaviar|Forellenkaviar|Fischrogen", "Caviar|Fish roe|Salmon roe"),
+        a("🍗", "chicken-leg", .meat, "Ente|Entenbrust|Entenkeule|Gans|Gänsebrust|Gänsekeule|Wachteln|Perlhuhn", "Duck|Duck breast|Goose|Quail|Guinea fowl"),
+        a("🥩", "steak", .meat, "Wildfleisch|Hirsch|Hirschgulasch|Rehrücken|Rehkeule|Wildschwein|Kaninchen|Lammkeule|Lammkoteletts|Roastbeef|Tafelspitz|Rinderleber|Kalbsleber|Hühnerleber", "Venison|Wild boar|Rabbit|Leg of lamb|Lamb chops|Roast beef|Liver"),
+        a("🍖", "salami", .meat, "Leberkäse|Fleischkäse|Leberwurst|Teewurst|Mettwurst|Mortadella|Prosciutto|Bündnerfleisch|Corned Beef", "Liverwurst|Mortadella|Prosciutto|Corned beef"),
+        a("🐟", "fish", .meat, "Räucherlachs|Sardellen|Anchovis|Dorade|Wolfsbarsch|Zander|Pangasius|Rotbarsch|Heilbutt|Scholle|Matjes", "Smoked salmon|Anchovies|Sea bream|Sea bass|Pike-perch|Pangasius|Redfish|Halibut|Plaice"),
 
         // Kühlregal: Milch, Käse, Eier
         a("🥛", "milk", .dairy, "Milch|Hafermilch|Sojamilch", "Milk|Oat milk|Soy milk"),
@@ -261,7 +285,9 @@ nonisolated public enum ShoppingCatalog {
         a("🫙", "dip", .dairy, "Hummus|Tzatziki|Aioli|Guacamole|Obatzda", "Hummus|Tzatziki|Aioli|Guacamole"),
         a("🥐", "dough", .dairy, "Blätterteig|Pizzateig|Hefeteig|Mürbeteig|Croissantteig", "Puff pastry|Pizza dough|Dough"),
         a("🍝", "tortellini", .dairy, "Spätzle|Maultaschen|Schupfnudeln|Frische Pasta", "Spaetzle|Fresh pasta"),
-        a("🥚", "egg", .dairy, "Eiersalat", "Egg salad"),
+        a("🥚", "egg", .dairy, "Eiersalat|Wachteleier", "Egg salad|Quail eggs"),
+        a("🧈", "butter", .dairy, "Ghee|Butterschmalz|Kräuterbutter", "Ghee|Clarified butter|Herb butter"),
+        a("🧀", "cheese", .dairy, "Burrata|Manchego|Pecorino|Gruyère|Comté|Raclettekäse|Raclette|Paneer|Veganer Käse", "Burrata|Manchego|Pecorino|Gruyère|Comté|Raclette|Paneer|Vegan cheese"),
 
         // Grundnahrungsmittel, Konserven, Gewürze
         a("🍝", "penne", .pantry, "Nudeln|Pasta|Penne|Rigatoni|Makkaroni", "Pasta|Noodles|Penne|Rigatoni|Macaroni"),
@@ -285,7 +311,7 @@ nonisolated public enum ShoppingCatalog {
         a("🧂", "spice-jar", .pantry, "Curry|Currypulver|Kurkuma|Kreuzkümmel|Kümmel|Koriandersamen|Garam Masala|Kardamom|Muskat|Muskatnuss|Nelken|Gewürznelken|Ingwerpulver|Knoblauchpulver|Zwiebelpulver|Safran|Sternanis|Anis", "Curry powder|Turmeric|Cumin|Caraway|Coriander seeds|Garam masala|Cardamom|Nutmeg|Cloves|Ground ginger|Garlic powder|Onion powder|Saffron|Star anise|Anise"),
         a("🧂", "spice-jar", .pantry, "Meersalz|Pfefferkörner|Zitronenpfeffer|Gewürzmischung|Grillgewürz", "Sea salt|Peppercorns|Lemon pepper|Seasoning|BBQ rub"),
         a("🌼", "vanilla", .pantry, "Vanille|Vanilleschote|Vanilleextrakt|Bourbon-Vanille", "Vanilla|Vanilla pod|Vanilla extract"),
-        a("🍬", "sugar", .pantry, "Puderzucker|Brauner Zucker|Rohrzucker|Gelierzucker|Süßstoff", "Powdered sugar|Icing sugar|Brown sugar|Cane sugar|Jam sugar|Sweetener"),
+        a("🍬", "sugar", .pantry, "Puderzucker|Brauner Zucker|Rohrzucker|Gelierzucker", "Powdered sugar|Icing sugar|Brown sugar|Cane sugar|Jam sugar"),
         a("🧁", "baking", .pantry, "Natron|Trockenhefe|Speisestärke|Gelatine|Agar-Agar|Lebensmittelfarbe|Streusel|Kuvertüre|Kuchenglasur|Backmischung", "Baking soda|Dry yeast|Cornstarch|Gelatin|Agar|Food coloring|Sprinkles|Couverture|Icing|Cake mix"),
         a("🌾", "flour", .pantry, "Weizenmehl|Dinkelmehl|Vollkornmehl|Paniermehl|Semmelbrösel|Grieß|Polenta", "Wheat flour|Spelt flour|Whole wheat flour|Breadcrumbs|Semolina|Polenta"),
         a("🍫", "chocolate", .pantry, "Backkakao|Schokotropfen|Blockschokolade", "Baking cocoa|Chocolate chips|Baking chocolate"),
@@ -311,6 +337,17 @@ nonisolated public enum ShoppingCatalog {
         a("🥔", "potato", .pantry, "Kartoffelpüree|Kartoffelpüreepulver|Knödel|Klöße|Kartoffelknödel|Semmelknödel", "Mashed potato mix|Potato dumplings|Bread dumplings"),
         a("🥣", "stock-cube", .pantry, "Brühwürfel|Hühnerbrühe|Rinderbrühe|Fond", "Stock cubes|Bouillon cubes|Chicken stock|Beef stock"),
         a("🌮", "taco", .pantry, "Tacos|Taco-Schalen|Nachos|Tortilla-Chips|Fajita-Gewürz", "Taco shells|Tacos|Nachos|Tortilla chips|Fajita seasoning"),
+        a("🌿", "stevia", .pantry, "Stevia|Süßstoff|Süßungsmittel|Erythrit|Xylit|Birkenzucker|Kokosblütenzucker|Steviatropfen|Allulose", "Stevia|Sweetener|Erythritol|Xylitol|Birch sugar|Coconut sugar|Stevia drops|Allulose"),
+        a("💪", "protein", .pantry, "Proteinpulver|Eiweißpulver|Whey|Proteinshake|Kreatin|Mahlzeitersatz", "Protein powder|Whey|Protein shake|Creatine|Meal replacement"),
+        a("🌾", "grain", .pantry, "Buchweizen|Amaranth|Tapioka|Flohsamenschalen|Hefeflocken", "Buckwheat|Amaranth|Tapioca|Psyllium husk|Nutritional yeast"),
+        a("🌾", "flour", .pantry, "Panko|Mandelmehl|Kokosmehl|Kichererbsenmehl", "Panko|Almond flour|Coconut flour|Chickpea flour"),
+        a("🧂", "spice-jar", .pantry, "Tonkabohne|Sumach|Za'atar|Ras el Hanout|Bockshornklee|Fenchelsamen|Piment|Wacholderbeeren|Rosenwasser|Orangenblütenwasser", "Tonka bean|Sumac|Za'atar|Ras el hanout|Fenugreek|Fennel seeds|Allspice|Juniper berries|Rose water|Orange blossom water"),
+        a("🫙", "sauce", .pantry, "Wasabi|Sushi-Ingwer|Ponzu|Hoisinsoße|Austernsoße|Mirin|Gochujang", "Wasabi|Pickled ginger|Ponzu|Hoisin sauce|Oyster sauce|Mirin|Gochujang"),
+        a("🫒", "oil", .pantry, "Trüffelöl|Walnussöl|Kürbiskernöl|Leinöl|Avocadoöl|Erdnussöl", "Truffle oil|Walnut oil|Pumpkin seed oil|Linseed oil|Avocado oil|Peanut oil"),
+        a("🍯", "honey", .pantry, "Dattelsirup|Reissirup|Melasse|Zuckerrübensirup|Goldsirup|Rübenkraut", "Date syrup|Rice syrup|Molasses|Golden syrup"),
+        a("🍇", "grapes", .pantry, "Gojibeeren|Goji-Beeren|Backpflaumen|Softaprikosen|Getrocknete Mango|Bananenchips", "Goji berries|Prunes|Dried apricots|Dried mango|Banana chips"),
+        a("🥫", "artichoke", .pantry, "Artischockenherzen|Artischocken im Glas", "Artichoke hearts"),
+        a("🥫", "can", .pantry, "Bambussprossen|Wasserkastanien|Palmherzen|Jackfruit in der Dose", "Bamboo shoots|Water chestnuts|Hearts of palm|Canned jackfruit"),
 
         // Frühstück
         a("🥣", "cereal", .breakfast, "Müsli|Cornflakes|Haferflocken|Cerealien", "Muesli|Cereal|Cornflakes|Oats|Rolled oats"),
@@ -327,6 +364,9 @@ nonisolated public enum ShoppingCatalog {
         a("☕️", "coffee", .breakfast, "Espresso|Kaffeepulver|Filterkaffee|Löslicher Kaffee|Instantkaffee|Kaffeefilter", "Espresso|Ground coffee|Instant coffee|Coffee filters"),
         a("🫖", "tea", .breakfast, "Früchtetee|Kräutertee|Grüner Tee|Schwarzer Tee|Pfefferminztee|Kamillentee", "Fruit tea|Herbal tea|Green tea|Black tea|Peppermint tea|Chamomile tea"),
         a("🥛", "milk", .breakfast, "Kaffeesahne|Kaffeeweißer|Barista-Milch", "Coffee creamer|Creamer"),
+        a("🍵", "matcha", .breakfast, "Matcha|Matchapulver|Matcha-Pulver|Matcha Latte", "Matcha|Matcha powder|Matcha latte"),
+        a("🫖", "tea", .breakfast, "Chai|Chai Latte|Rooibos|Rooibostee|Mate-Tee|Hagebuttentee|Ingwertee", "Chai|Chai latte|Rooibos|Masala chai|Yerba mate|Rosehip tea|Ginger tea"),
+        a("🥜", "spread", .breakfast, "Mandelmus|Cashewmus|Erdnussmus|Nussmus|Haselnussmus", "Almond butter|Cashew butter|Nut butter|Hazelnut butter"),
 
         // Süßes & Snacks
         a("🍫", "chocolate", .snacks, "Schokolade", "Chocolate"),
@@ -343,6 +383,10 @@ nonisolated public enum ShoppingCatalog {
         a("🥣", "bar", .snacks, "Müsliriegel|Proteinriegel", "Granola bars|Cereal bars|Protein bars"),
         a("🥜", "nut", .snacks, "Erdnussflips|Studentenfutter|Cashewkerne|Pistazien", "Peanut puffs|Trail mix|Cashew nuts|Pistachios"),
         a("🥨", "cracker", .snacks, "Cracker|Kräcker|Käsecracker", "Crackers|Cheese crackers"),
+        a("🍫", "chocolate", .snacks, "Schokotrüffel|Rumtrüffel|Nougat", "Chocolate truffles|Rum truffles|Nougat"),
+        a("🍪", "cookie", .snacks, "Macarons|Cantuccini|Amaretti|Baklava", "Macarons|Cantuccini|Amaretti|Baklava"),
+        a("🍬", "candy", .snacks, "Halva|Halwa|Lokum|Türkischer Honig|Zuckerwatte", "Halva|Turkish delight|Nougat candy|Cotton candy"),
+        a("🍖", "salami", .snacks, "Beef Jerky|Jerky|Trockenfleisch|Landjäger|Kabanos", "Beef jerky|Jerky|Dried meat"),
 
         // Getränke
         a("💧", "water", .drinks, "Wasser|Mineralwasser|Sprudel", "Water|Mineral water|Sparkling water"),
@@ -356,6 +400,10 @@ nonisolated public enum ShoppingCatalog {
         a("🍺", "beer", .drinks, "Pils|Radler|Weizenbier|Alkoholfreies Bier|Cider|Apfelwein", "Lager|Shandy|Wheat beer|Alcohol-free beer|Cider"),
         a("🍸", "spirits", .drinks, "Gin|Wodka|Whisky|Likör|Aperol|Lillet|Schnaps|Spirituosen|Glühwein|Eierlikör", "Gin|Vodka|Whisky|Whiskey|Liqueur|Aperol|Lillet|Spirits|Mulled wine|Eggnog"),
         a("🥛", "milk", .drinks, "Hafer Drink|Haferdrink|Mandeldrink|Mandelmilch|Reisdrink|Sojadrink", "Oat drink|Almond milk|Almond drink|Rice milk|Soy drink"),
+        a("🍸", "spirits", .drinks, "Rum|Tequila|Mezcal|Sake|Grappa|Ouzo|Cognac|Brandy|Calvados|Sherry|Portwein|Wermut|Absinth|Amaretto|Baileys", "Rum|Tequila|Mezcal|Sake|Grappa|Ouzo|Cognac|Brandy|Calvados|Sherry|Port wine|Vermouth|Absinthe|Amaretto|Baileys"),
+        a("🍷", "wine", .drinks, "Rosé|Roséwein|Federweißer|Sangria|Dessertwein", "Rosé|Rosé wine|Sangria|Dessert wine"),
+        a("🥤", "soda", .drinks, "Kombucha|Ginger Beer|Wasserkefir|Bubble Tea", "Kombucha|Ginger beer|Water kefir|Bubble tea"),
+        a("🥥", "coconut", .drinks, "Kokoswasser", "Coconut water"),
 
         // Tiefkühl
         a("🍕", "pizza", .frozen, "Pizza|Tiefkühlpizza", "Pizza|Frozen pizza"),
@@ -397,6 +445,7 @@ nonisolated public enum ShoppingCatalog {
         a("🩹", "tape", .household, "Klebeband|Tesafilm|Paketband", "Tape|Sticky tape|Packing tape"),
         a("🎁", "gift", .household, "Geschenkpapier|Geburtstagskarte|Glückwunschkarte|Karte", "Wrapping paper|Birthday card|Greeting card|Card"),
         a("🪴", "plant", .household, "Blumenerde|Dünger|Pflanzen", "Potting soil|Fertilizer|Plants"),
+        a("✉️", "envelope", .household, "Briefmarken|Briefumschläge|Umschläge|Briefpapier|Postkarten", "Stamps|Envelopes|Writing paper|Postcards"),
 
         // Drogerie
         a("🪥", "toothpaste", .hygiene, "Zahnpasta|Zahnbürste|Zahnseide", "Toothpaste|Toothbrush|Floss"),
@@ -420,6 +469,10 @@ nonisolated public enum ShoppingCatalog {
         a("🩹", "bandage", .hygiene, "Blasenpflaster|Verband|Mullbinden|Desinfektionsspray für Wunden|Wundsalbe", "Blister plasters|Bandage|Gauze|Wound spray|Wound ointment"),
         a("😷", "mask", .hygiene, "Masken|FFP2-Masken|Mundschutz", "Masks|Face masks|FFP2 masks"),
         a("🦟", "insect", .hygiene, "Mückenspray|Mückenschutz|Zeckenzange", "Insect repellent|Mosquito spray|Tick remover"),
+        a("👁️", "eye-drops", .hygiene, "Augentropfen|Kontaktlinsen|Kontaktlinsenlösung|Kombilösung|Tageslinsen|Monatslinsen|Brillenputztücher", "Eye drops|Contact lenses|Contact lens solution|Daily lenses|Monthly lenses|Lens wipes"),
+        a("🔵", "condom", .hygiene, "Kondome|Präservative|Gleitgel", "Condoms|Lube|Lubricant"),
+        a("💊", "pills", .hygiene, "Schwangerschaftstest|Ovulationstest|Elektrolyte|Melatonin|Probiotika|Eisentabletten|Vitamin D", "Pregnancy test|Ovulation test|Electrolytes|Melatonin|Probiotics|Iron tablets|Vitamin D"),
+        a("🧴", "cream-jar", .hygiene, "Serum|Gesichtsserum|Hyaluronserum|Augencreme|Retinol|Tuchmaske|Trockenshampoo", "Serum|Face serum|Eye cream|Retinol|Sheet mask|Dry shampoo"),
 
         // Baby
         a("🧷", "diaper", .baby, "Windeln|Pampers|Schwimmwindeln|Pants", "Diapers|Nappies|Swim diapers"),
@@ -435,5 +488,9 @@ nonisolated public enum ShoppingCatalog {
         a("🐾", "paw", .pets, "Katzenleckerlis|Kauknochen|Kotbeutel|Hundekotbeutel|Tierfutter", "Cat treats|Chews|Poop bags|Pet food"),
         a("🐦", "bird", .pets, "Vogelfutter|Meisenknödel", "Bird seed|Fat balls"),
         a("🐠", "fish", .pets, "Fischfutter", "Fish food"),
+        a("🐰", "rabbit", .pets, "Kaninchenfutter|Nagerfutter|Hamsterfutter|Meerschweinchenfutter|Heu|Kleintierstreu|Einstreu", "Rabbit food|Small animal food|Hamster food|Guinea pig food|Hay|Small animal bedding|Bedding"),
+
+        // Sonstiges
+        a("📰", "newspaper", .other, "Zeitung|Zeitschrift|Zeitschriften|Magazin|Rätselheft|Fernsehzeitung|Comic", "Newspaper|Magazine|Magazines|Puzzle book|TV guide|Comic"),
     ]
 }

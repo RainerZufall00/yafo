@@ -73,6 +73,8 @@ nonisolated public enum ShoppingDetails {
         "Reis": ("Basmati|Jasmin|Langkorn|Risotto|Milchreis", "Basmati|Jasmine|Long grain|Risotto|Pudding rice"),
         "Mehl": ("Type 405|Type 550|Type 1050|Dinkel|Vollkorn", "All-purpose|Bread flour|Spelt|Whole wheat"),
         "Zucker": ("weiß|braun|Puderzucker|Gelierzucker", "White|Brown|Powdered|Jam sugar"),
+        "Stevia": ("Pulver|Tropfen|Tabs|Streusüße|Erythrit", "Powder|Drops|Tablets|Granulated|Erythritol"),
+        "Proteinpulver": ("Vanille|Schoko|Erdbeere|neutral|vegan", "Vanilla|Chocolate|Strawberry|Unflavored|Vegan"),
         "Öl": ("Olivenöl|Sonnenblumenöl|Rapsöl|Bratöl", "Olive oil|Sunflower oil|Canola oil|Frying oil"),
         "Müsli": ("Knusper|Früchte|Schoko|ohne Zucker|Haferflocken", "Crunchy|Fruit|Chocolate|No sugar|Oats"),
         "Kaffee": ("Bohnen|gemahlen|Pads|Kapseln|entkoffeiniert", "Beans|Ground|Pods|Capsules|Decaf"),

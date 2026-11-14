@@ -272,3 +272,21 @@ def taco():
              circle(24, 12, 17.9).intersection(box(0, 22, 48, 48)))
     fill = fill.intersection(circle(24, 18, 19.5))
     return over(fill, shell, 1.6)
+
+
+@icon
+def stevia():
+    body = rect(9, 18, 23, 26, 6)
+    button = rect(14.5, 9, 12, 7, 2.5)
+    body = minus(body, leaf(20.5, 31, 13, 7.5, -55).boundary.buffer(0.8, quad_segs=Q), line([(15, 39), (19, 34)], 1.4))
+    tabs = U(circle(38.5, 27, 3.4), circle(39.5, 37.5, 3.4))
+    return U(over(body, button, 1.4), tabs)
+
+
+@icon
+def protein():
+    tub = rect(10, 17, 28, 27, 3)
+    lid = rect(8, 9, 32, 7.5, 2.5)
+    bell = U(rect(17, 29, 14, 2.2), rect(15, 25.5, 3.2, 9.2, 1), rect(29.8, 25.5, 3.2, 9.2, 1),
+             rect(12.5, 27.2, 2.6, 5.8, 1), rect(32.9, 27.2, 2.6, 5.8, 1))
+    return over(minus(tub, bell), lid, 1.4)
