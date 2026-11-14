@@ -737,12 +737,12 @@
         }
       }
     },
-    "Color and visibility only apply to you.": {
+    "Color, event style and visibility only apply to you. The style applies to events with a time; all-day events stay filled.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Farbe und Sichtbarkeit gelten nur für dich."
+            "value": "Farbe, Darstellung und Sichtbarkeit gelten nur für dich. Die Darstellung gilt für Termine mit Uhrzeit, ganztägige bleiben gefüllt."
           }
         }
       }
@@ -1233,6 +1233,16 @@
         }
       }
     },
+    "Event Style": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Darstellung der Termine"
+          }
+        }
+      }
+    },
     "Events": {
       "localizations": {
         "de": {
@@ -1473,6 +1483,16 @@
         }
       }
     },
+    "Filled": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gefüllt"
+          }
+        }
+      }
+    },
     "Filter": {
       "localizations": {
         "de": {
@@ -1579,6 +1599,16 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "Hatched": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schraffiert"
           }
         }
       }
@@ -2145,6 +2175,16 @@
         }
       }
     },
+    "Outlined": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Umrandet"
+          }
+        }
+      }
+    },
     "Owner": {
       "localizations": {
         "de": {
@@ -2671,6 +2711,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Schweiz (allgemein)"
+          }
+        }
+      }
+    },
+    "Tap an item to put it back on the list.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tippe auf einen Artikel, um ihn wieder auf die Liste zu setzen."
           }
         }
       }

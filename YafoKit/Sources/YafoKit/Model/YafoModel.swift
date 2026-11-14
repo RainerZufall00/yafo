@@ -63,7 +63,8 @@ nonisolated public enum YafoModel {
             date("start"), date("end"), bool("isAllDay"), string("location"), date("fetchedAt")
         ])
         let appearance = entity(CalendarAppearance.self, [
-            uuid("id"), string("calendarID"), string("color"), bool("isVisible", default: true)
+            uuid("id"), string("calendarID"), string("color"), bool("isVisible", default: true),
+            string("eventStyleRaw")
         ])
         let alertPreference = entity(AlertPreference.self, [
             uuid("id"), string("itemID"), double("alertOffset"), bool("isMuted")

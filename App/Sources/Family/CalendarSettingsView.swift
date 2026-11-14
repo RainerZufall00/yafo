@@ -2,11 +2,12 @@ import CoreData
 import SwiftUI
 import YafoKit
 
-/// Einstellungen eines Kalenders: eigene Farbe und Sichtbarkeit (nur für mich),
+/// Einstellungen eines Kalenders: eigene Farbe, Termin-Darstellung und Sichtbarkeit (nur für mich),
 /// Abos für Feiertage, Schulferien und eigene ICS-Adressen (für alle; bei geteilten
 /// Kalendern ändert das nur der Owner).
 struct CalendarSettingsView: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.colorScheme) private var colorScheme
     @ObservedObject var calendar: EventCalendar
     @FetchRequest(sortDescriptors: []) private var appearances: FetchedResults<CalendarAppearance>
     @FetchRequest(sortDescriptors: []) private var subscriptions: FetchedResults<CalendarSubscription>
@@ -31,6 +32,7 @@ struct CalendarSettingsView: View {
                         model.save()
                     }
                 ), supportsOpacity: false)
+                eventStylePicker
                 Toggle("Show in Calendar", isOn: Binding(
                     get: { model.repository.isVisible(calendar) },
                     set: { visible in
@@ -39,7 +41,7 @@ struct CalendarSettingsView: View {
                     }
                 ))
             } footer: {
-                Text("Color and visibility only apply to you.")
+                Text("Color, event style and visibility only apply to you. The style applies to events with a time; all-day events stay filled.")
             }
 
             Section {
@@ -138,6 +140,44 @@ struct CalendarSettingsView: View {
         }
         .navigationTitle(calendar.displayName)
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    /// Drei Muster-Termine in der Kalenderfarbe zum Antippen.
+    private var eventStylePicker: some View {
+        let color = Color(hex: model.repository.color(of: calendar))
+        let selected = model.repository.eventStyle(of: calendar)
+        return VStack(alignment: .leading, spacing: 8) {
+            Text("Event Style")
+            HStack(spacing: 8) {
+                ForEach(EventStyle.allCases, id: \.self) { style in
+                    Button {
+                        model.repository.setAppearance(of: calendar, eventStyle: style)
+                        model.save()
+                    } label: {
+                        Text(style.title)
+                            .font(.footnote.weight(.semibold))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                            .foregroundStyle(style.textColor(for: color, in: colorScheme))
+                            .frame(maxWidth: .infinity, minHeight: 30)
+                            .background(EventBackground(shape: RoundedRectangle(cornerRadius: 5), color: color,
+                                                        style: style))
+                            .padding(3)
+                            .contentShape(Rectangle())
+                            .overlay {
+                                if style == selected {
+                                    RoundedRectangle(cornerRadius: 7).strokeBorder(Color.accentColor, lineWidth: 2)
+                                }
+                            }
+                    }
+                    // Borderless: in einer Form-Zeile reagiert sonst die ganze Zeile auf jeden Button.
+                    .buttonStyle(.borderless)
+                    .accessibilityLabel(style.title)
+                    .accessibilityAddTraits(style == selected ? [.isButton, .isSelected] : .isButton)
+                }
+            }
+        }
+        .padding(.vertical, 2)
     }
 
     private func schoolRegions(_ country: SchoolHolidayRegion.Country) -> some View {

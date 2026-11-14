@@ -153,7 +153,12 @@ public final class Repository {
         appearance(for: calendar)?.isVisible ?? true
     }
 
-    public func setAppearance(of calendar: EventCalendar, color: String? = nil, isVisible: Bool? = nil) {
+    public func eventStyle(of calendar: EventCalendar) -> EventStyle {
+        appearance(for: calendar)?.eventStyle ?? .outlined
+    }
+
+    public func setAppearance(of calendar: EventCalendar, color: String? = nil, isVisible: Bool? = nil,
+                              eventStyle: EventStyle? = nil) {
         let appearance = appearance(for: calendar) ?? {
             let new = insert(CalendarAppearance.self, into: persistence.privateStore)
             new.calendarID = calendar.id?.uuidString
@@ -161,6 +166,7 @@ public final class Repository {
         }()
         if let color { appearance.color = color }
         if let isVisible { appearance.isVisible = isVisible }
+        if let eventStyle { appearance.eventStyle = eventStyle }
     }
 
     // MARK: - Termine
@@ -235,4 +241,11 @@ nonisolated public extension Member {
 
 nonisolated public extension EventCalendar {
     var kind: CalendarKind { CalendarKind(rawValue: kindRaw ?? "") ?? .personal }
+}
+
+nonisolated public extension CalendarAppearance {
+    var eventStyle: EventStyle {
+        get { eventStyleRaw.flatMap(EventStyle.init(rawValue:)) ?? .outlined }
+        set { eventStyleRaw = newValue.rawValue }
+    }
 }

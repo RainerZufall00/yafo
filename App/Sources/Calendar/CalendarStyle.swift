@@ -1,10 +1,11 @@
 import SwiftUI
 import YafoKit
 
-/// Was die Ansichten zum Darstellen brauchen: Farben und Sichtbarkeit pro Kalender
+/// Was die Ansichten zum Darstellen brauchen: Farben, Termin-Darstellung und Sichtbarkeit pro Kalender
 /// (aus `CalendarAppearance`, nur für einen selbst) und der Personenfilter.
 struct CalendarStyle {
     var colors: [UUID: Color] = [:]
+    var eventStyles: [UUID: EventStyle] = [:]
     var hiddenCalendars: Set<UUID> = []
     var person: Member?
     /// Feiertagsregionen der sichtbaren Kalender; jede Quelle zählt einmal.
@@ -12,6 +13,7 @@ struct CalendarStyle {
     /// Eigene ICS-Abos sichtbarer Kalender (passend zum Personenfilter), mit der Farbe des
     /// ersten Kalenders, der sie abonniert.
     var icsColors: [String: Color] = [:]
+    var icsStyles: [String: EventStyle] = [:]
     /// Schulferien-Quellen sichtbarer Kalender.
     var schoolHolidayKeys: Set<String> = []
 
@@ -25,6 +27,7 @@ struct CalendarStyle {
             guard let id = calendar.id else { continue }
             let appearance = byID[id.uuidString]
             colors[id] = Color(hex: appearance?.color ?? calendar.defaultColor ?? CalendarColors.sharedDefault)
+            eventStyles[id] = appearance?.eventStyle ?? .outlined
             if appearance?.isVisible == false {
                 hiddenCalendars.insert(id)
                 continue
@@ -39,6 +42,7 @@ struct CalendarStyle {
                     schoolHolidayKeys.insert(key)
                 case .ics where appliesToPerson && icsColors[key] == nil:
                     icsColors[key] = colors[id]
+                    icsStyles[key] = eventStyles[id]
                 default:
                     break
                 }
@@ -55,14 +59,14 @@ struct CalendarStyle {
             CalendarEntry(id: "\(occurrence.event.objectID.uriRepresentation())#\(occurrence.originalStart.timeIntervalSince1970)",
                           title: occurrence.displayTitle, start: occurrence.start, end: occurrence.end,
                           isAllDay: occurrence.isAllDay, location: occurrence.location, color: color(for: occurrence.event),
-                          source: .event(occurrence))
+                          source: .event(occurrence), eventStyle: eventStyle(for: occurrence.event))
         }
         for event in subscribed {
             guard let key = event.sourceKey, let color = icsColors[key], let start = event.start, let end = event.end
             else { continue }
             result.append(CalendarEntry(id: "\(key)#\(event.uid ?? "")", title: event.title ?? "", start: start, end: end,
                                         isAllDay: event.isAllDay, location: event.location, color: color,
-                                        source: .subscription))
+                                        source: .subscription, eventStyle: icsStyles[key] ?? .outlined))
         }
         if person == nil {
             result += external.map { item in
@@ -93,6 +97,10 @@ struct CalendarStyle {
 
     func color(for event: Event) -> Color {
         event.calendar?.id.flatMap { colors[$0] } ?? .gray
+    }
+
+    func eventStyle(for event: Event) -> EventStyle {
+        event.calendar?.id.flatMap { eventStyles[$0] } ?? .outlined
     }
 
     /// Sichtbarer Kalender und, falls gefiltert, die Person ist dabei. Ein Termin ohne
@@ -126,6 +134,8 @@ struct CalendarEntry: Identifiable {
     let location: String?
     let color: Color
     let source: Source
+    /// Gerätekalender bleiben immer umrandet.
+    var eventStyle: EventStyle = .outlined
 
     var occurrence: Occurrence? {
         if case .event(let occurrence) = source { return occurrence }

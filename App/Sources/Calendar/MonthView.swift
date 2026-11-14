@@ -106,8 +106,10 @@ struct MonthView: View {
     /// Monatsname mit Pfeilen; Wischen allein wäre für VoiceOver nicht erreichbar.
     private var monthHeader: some View {
         HStack {
-            Text(month.formatted(.dateTime.month(.wide).year()))
+            // Kurz wie „Nov 26“, „Jan 27“; VoiceOver liest den vollen Monat.
+            Text(month.formatted(.dateTime.month(.abbreviated).year(.twoDigits)).replacingOccurrences(of: ".", with: ""))
                 .font(.title2.weight(.bold))
+                .accessibilityLabel(month.formatted(.dateTime.month(.wide).year()))
                 .accessibilityAddTraits(.isHeader)
             Spacer()
             Button("Previous Month", systemImage: "chevron.left") { showMonth(offset: -1) }
