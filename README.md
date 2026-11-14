@@ -76,8 +76,9 @@ Roadmap aus dem Architektur-Dokument:
 - [x] **1. Fundament:** Datenmodell, Core Data mit CloudKit (privat + geteilt), Familien anlegen und einladen,
       Beitreten mit eigenem Profil oder verknüpftem Kinderprofil, Kinderprofile, mehrere Familien
 - [ ] Prototyp Owner-Übertragung (V1.1)
-- [x] **2. Kalender:** Monatsansicht zum Blättern, Jahresansicht, Termine mit Teilnehmern, Farbsystem,
-      Personenfilter, Serien (RRULE, Ausnahmen, nur dieser / folgende / alle), Kommentare,
+- [x] **2. Kalender:** Monatsansicht zum Blättern, Jahresansicht, Tagesansicht mit Zeitleiste, Termine mit
+      Teilnehmern, Farbsystem und Darstellung pro Kalender (umrandet, schraffiert, gefüllt), Personenfilter,
+      Serien (RRULE, Ausnahmen, nur dieser / folgende / alle), Kommentare,
       Geburtstage mit mitzählendem Alter (eigene Farbe, einstellbar unter Familie › Kalender)
   - Wochenansicht als Kacheln je Tag (Titel, Uhrzeit, Dauer) mit Wochenleiste; Termine umrandet statt gefüllt
   - Lange auf einen Tag drücken legt dort einen Termin an; Termine und Todos per Ziehen auf einen anderen Tag

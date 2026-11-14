@@ -256,7 +256,7 @@ struct MonthView: View {
         Calendar.current.dateInterval(of: .month, for: date)?.start ?? date
     }
 
-    /// Monate als Leiste zum Wischen („November 26 · Dezember 26 · Januar 27“); antippen springt hin.
+    /// Monate als Leiste zum Wischen („Nov 26 · Dez 26 · Jan 27“); antippen springt hin.
     /// Jeder Monat ist ein Knopf, damit bleibt das auch für VoiceOver ohne Wischen erreichbar.
     private var monthHeader: some View {
         MonthStrip(months: Self.pagedMonths, selected: month) { target in
@@ -416,7 +416,8 @@ struct MonthStrip: View {
     private func label(for month: Date) -> some View {
         let isSelected = month == selected
         let isCurrent = Calendar.current.isDate(month, equalTo: .now, toGranularity: .month)
-        return Text(month.formatted(.dateTime.month(.wide).year(.twoDigits)))
+        // Kurz wie „Nov 26“, „Jan 27“; VoiceOver liest den vollen Monat.
+        return Text(month.formatted(.dateTime.month(.abbreviated).year(.twoDigits)).replacingOccurrences(of: ".", with: ""))
             .font(isSelected ? .headline : .subheadline.weight(.medium))
             .foregroundStyle(isSelected ? Color.white : isCurrent ? Color.accentColor : Color.primary)
             .lineLimit(1)

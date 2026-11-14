@@ -158,6 +158,12 @@ import Testing
         try repository.save()
         #expect(repository.color(of: calendar) == "#123456")
         #expect(repository.isVisible(calendar) == false)
+        #expect(repository.eventStyle(of: calendar) == .outlined)
+
+        repository.setAppearance(of: calendar, eventStyle: .hatched)
+        try repository.save()
+        #expect(repository.eventStyle(of: calendar) == .hatched)
+        #expect(repository.color(of: calendar) == "#123456")
     }
 
     @Test func eventsOverlappingInterval() throws {

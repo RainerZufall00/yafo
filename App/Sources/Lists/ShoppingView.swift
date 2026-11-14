@@ -48,6 +48,7 @@ private struct ShoppingListContent: View {
     }
 
     private let columns = [GridItem(.adaptive(minimum: 92, maximum: 140), spacing: 10)]
+    private let recentColumns = [GridItem(.adaptive(minimum: 72, maximum: 110), spacing: 8)]
 
     var body: some View {
         let open = items.filter { !$0.isChecked }
@@ -87,20 +88,25 @@ private struct ShoppingListContent: View {
                         }
                     }
                 }
+                // Eigener Kasten mit kleineren, grauen Kacheln, damit „Zuletzt gekauft“ nicht wie
+                // eine weitere Abteilung aussieht.
                 if !recent.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack {
-                            Text("Recently Bought")
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(.secondary)
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack(alignment: .firstTextBaseline) {
+                            Label("Recently Bought", systemImage: "clock.arrow.circlepath")
+                                .font(.headline)
+                                .accessibilityAddTraits(.isHeader)
                             Spacer()
                             Button("Clear") { confirmingClear = true }
                                 .font(.subheadline)
                         }
-                        LazyVGrid(columns: columns, spacing: 10) {
+                        Text("Tap an item to put it back on the list.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        LazyVGrid(columns: recentColumns, spacing: 8) {
                             ForEach(recent) { item in
                                 ShoppingTile(emoji: item.emoji, icon: item.icon, name: item.name ?? "", quantity: nil,
-                                             color: item.category.color, isChecked: true)
+                                             color: item.category.color, isChecked: true, isCompact: true)
                                     .itemGestures(hint: "Puts the item back on the list") {
                                         withAnimation(.snappy) {
                                             model.repository.setChecked(item, false)
@@ -112,6 +118,9 @@ private struct ShoppingListContent: View {
                             }
                         }
                     }
+                    .padding(12)
+                    .background(RoundedRectangle(cornerRadius: 18).fill(Color(.secondarySystemBackground)))
+                    .padding(.top, 12)
                 }
             }
             .padding(.horizontal, 16)
@@ -211,7 +220,7 @@ private struct AisleHeader: View {
 }
 
 /// Kachel mit großem Piktogramm, Name und Menge. Offen: kräftige Farbe der Abteilung,
-/// abgehakt: grau, Vorschlag: getönt mit Rahmen.
+/// abgehakt: grau (mit `isCompact` kleiner), Vorschlag: getönt mit Rahmen.
 struct ShoppingTile: View {
     @Environment(\.colorScheme) private var colorScheme
     let emoji: String
@@ -221,15 +230,16 @@ struct ShoppingTile: View {
     let color: Color
     let isChecked: Bool
     var isSuggestion = false
+    var isCompact = false
 
     var body: some View {
         VStack(spacing: 3) {
             ItemIcon(icon: icon, emoji: emoji)
-                .frame(width: 40, height: 40)
+                .frame(width: isCompact ? 28 : 40, height: isCompact ? 28 : 40)
                 .foregroundStyle(iconColor)
                 .opacity(isChecked ? 0.6 : 1)
             Text(name)
-                .font(.footnote.weight(.semibold))
+                .font(isCompact ? .caption.weight(.medium) : .footnote.weight(.semibold))
                 .lineLimit(2)
                 .multilineTextAlignment(.center)
                 .minimumScaleFactor(0.8)
@@ -240,8 +250,8 @@ struct ShoppingTile: View {
             }
         }
         .padding(.horizontal, 6)
-        .padding(.vertical, 8)
-        .frame(maxWidth: .infinity, minHeight: 96)
+        .padding(.vertical, isCompact ? 6 : 8)
+        .frame(maxWidth: .infinity, minHeight: isCompact ? 70 : 96)
         .foregroundStyle(foreground)
         .background(RoundedRectangle(cornerRadius: 14).fill(background))
         .overlay {
@@ -264,7 +274,8 @@ struct ShoppingTile: View {
     }
 
     private var background: Color {
-        if isChecked { return Color.secondary.opacity(0.12) }
+        // Hebt sich vom grauen Kasten „Zuletzt gekauft“ ab (hell: weiß, dunkel: etwas heller).
+        if isChecked { return Color(.tertiarySystemBackground) }
         if isSuggestion { return color.opacity(colorScheme == .dark ? 0.25 : 0.14) }
         return color
     }

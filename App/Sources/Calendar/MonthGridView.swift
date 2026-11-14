@@ -94,7 +94,8 @@ private struct WeekRow: View {
             ZStack(alignment: .topLeading) {
                 HStack(spacing: 0) {
                     ForEach(week) { day in
-                        DayBackground(day: day, isSelected: day.date == selectedDay,
+                        // Markiert nur auf dem iPad, wo die Tagesliste daneben steht.
+                        DayBackground(day: day, isSelected: onOpenDay == nil && day.date == selectedDay,
                                       isHoliday: holidays[day.date] != nil,
                                       isSchoolHoliday: schoolHolidays[day.date] != nil,
                                       titles: (holidays[day.date] ?? []).map { $0.name() }
@@ -112,7 +113,7 @@ private struct WeekRow: View {
                     if let entry = byID[item.id] {
                         EventChip(title: entry.title, color: entry.color,
                                   icon: entry.todo != nil ? "circle" : entry.isHoliday ? "flag.fill" : nil,
-                                  isMuted: entry.isMuted,
+                                  isMuted: entry.isMuted, eventStyle: entry.eventStyle,
                                   continuesBefore: item.continuesBefore, continuesAfter: item.continuesAfter,
                                   fontSize: fontSize, lineLimit: isTall && !item.isSpanning ? 2 : 1)
                             .frame(width: CGFloat(item.lastColumn - item.firstColumn + 1) * columnWidth - 3,
@@ -200,7 +201,8 @@ private struct DayBackground: View {
         VStack(alignment: .leading, spacing: 0) {
             Text(day.date.formatted(.dateTime.day()))
                 .font(.system(size: fontSize, weight: isToday || isSelected ? .bold : .medium))
-                .foregroundStyle(isToday ? Color.white : isHoliday ? Color(hex: CalendarColors.publicHoliday)
+                .foregroundStyle(isToday ? Color.white : isSelected ? Color.accentColor
+                                 : isHoliday ? Color(hex: CalendarColors.publicHoliday)
                                  : day.isInMonth ? Color.primary : Color.secondary)
                 .frame(minWidth: fontSize + 6, minHeight: fontSize + 6)
                 .background {
@@ -212,9 +214,7 @@ private struct DayBackground: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background {
-            if isSelected {
-                Color.accentColor.opacity(0.12)
-            } else if isSchoolHoliday {
+            if isSchoolHoliday {
                 // Ferien als Fläche, damit sie keine Termine aus der Zelle verdrängen.
                 Color(hex: CalendarColors.schoolHoliday).opacity(0.45)
             } else if isWeekend || !day.isInMonth {
@@ -244,21 +244,24 @@ private struct DayBackground: View {
     }
 }
 
-/// Termin im Raster: umrandet in der Kalenderfarbe, Schrift in Textfarbe – so bleibt sie auch klein
-/// lesbar. Lange Titel werden erst etwas kleiner, bevor sie abgeschnitten werden.
-/// Die Jahresansicht nutzt `isFilled` für kräftige Bänder.
+/// Termin im Raster nach der Darstellung seines Kalenders: umrandet, schraffiert oder gefüllt. Umrandet und
+/// schraffiert steht die Schrift in Textfarbe – so bleibt sie auch klein lesbar. Lange Titel werden erst etwas
+/// kleiner, bevor sie abgeschnitten werden. Die Jahresansicht nutzt `isFilled` für kräftige Bänder.
 struct EventChip: View {
     let title: String
     let color: Color
     /// SF Symbol vor dem Titel, z. B. ein Kreis für Todos.
     var icon: String?
-    /// Gerätekalender: grau statt in Textfarbe.
+    /// Gerätekalender: grau statt in Textfarbe, immer umrandet.
     var isMuted = false
     var isFilled = false
+    var eventStyle: EventStyle = .outlined
     var continuesBefore = false
     var continuesAfter = false
     var fontSize: CGFloat = 10.5
     var lineLimit = 1
+
+    private var style: EventStyle { isFilled ? .filled : isMuted ? .outlined : eventStyle }
 
     var body: some View {
         let shape = UnevenRoundedRectangle(topLeadingRadius: continuesBefore ? 0 : 4,
@@ -271,12 +274,10 @@ struct EventChip: View {
             .minimumScaleFactor(0.8)
             .truncationMode(.tail)
             .lineSpacing(-1)
-            .foregroundStyle(isFilled ? Color.white : isMuted ? Color.secondary : Color.primary)
+            .foregroundStyle(isMuted ? Color.secondary : style.textColor)
             .padding(.horizontal, 2.5)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .background {
-                if isFilled { shape.fill(color) } else { shape.strokeBorder(color, lineWidth: 1.2) }
-            }
+            .background(EventBackground(shape: shape, color: color, style: style))
             .contentShape(shape)
             .accessibilityHidden(true)
     }
@@ -284,4 +285,56 @@ struct EventChip: View {
     private var label: Text {
         if let icon { Text("\(Image(systemName: icon)) \(title)") } else { Text(title) }
     }
+}
+
+/// Fläche eines Termins: volle Farbe, Rand in der Kalenderfarbe oder Schraffur mit Rand.
+struct EventBackground<S: InsettableShape>: View {
+    @Environment(\.colorScheme) private var colorScheme
+    let shape: S
+    let color: Color
+    let style: EventStyle
+
+    private var isDark: Bool { colorScheme == .dark }
+
+    var body: some View {
+        switch style {
+        case .filled:
+            shape.fill(color)
+        case .outlined:
+            shape.strokeBorder(color, lineWidth: 1.2)
+        case .hatched:
+            Hatching().stroke(color.opacity(isDark ? 0.55 : 0.4), lineWidth: 1.5)
+                .clipShape(shape)
+                .overlay(shape.strokeBorder(color, lineWidth: 1.2))
+        }
+    }
+}
+
+/// Schräge Linien über die ganze Fläche.
+nonisolated struct Hatching: Shape {
+    var spacing: CGFloat = 5
+
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        var x = rect.minX - rect.height
+        while x < rect.maxX {
+            path.move(to: CGPoint(x: x, y: rect.maxY))
+            path.addLine(to: CGPoint(x: x + rect.height, y: rect.minY))
+            x += spacing
+        }
+        return path
+    }
+}
+
+extension EventStyle {
+    var title: String {
+        switch self {
+        case .outlined: String(localized: "Outlined")
+        case .hatched: String(localized: "Hatched")
+        case .filled: String(localized: "Filled")
+        }
+    }
+
+    /// Weiß auf voller Farbe, sonst Textfarbe.
+    var textColor: Color { self == .filled ? .white : .primary }
 }

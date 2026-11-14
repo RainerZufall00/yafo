@@ -1087,12 +1087,12 @@
         }
       }
     },
-    "Color and visibility only apply to you.": {
+    "Color, event style and visibility only apply to you.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Farbe und Sichtbarkeit gelten nur für dich."
+            "value": "Farbe, Darstellung und Sichtbarkeit gelten nur für dich."
           }
         }
       }
@@ -1713,6 +1713,16 @@
         }
       }
     },
+    "Event Style": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Darstellung der Termine"
+          }
+        }
+      }
+    },
     "Event from Screenshot": {
       "localizations": {
         "de": {
@@ -1993,6 +2003,16 @@
         }
       }
     },
+    "Filled": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gefüllt"
+          }
+        }
+      }
+    },
     "Filter": {
       "localizations": {
         "de": {
@@ -2119,6 +2139,16 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "Hatched": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schraffiert"
           }
         }
       }
@@ -3045,6 +3075,16 @@
         }
       }
     },
+    "Outlined": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Umrandet"
+          }
+        }
+      }
+    },
     "Own Color for Birthdays": {
       "localizations": {
         "de": {
@@ -3911,6 +3951,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tabs"
+          }
+        }
+      }
+    },
+    "Tap an item to put it back on the list.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tippe auf einen Artikel, um ihn wieder auf die Liste zu setzen."
           }
         }
       }

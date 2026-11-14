@@ -2,7 +2,8 @@ import CoreData
 import SwiftUI
 import YafoKit
 
-/// Termine des gewählten Tages; Teilnehmer als Initialen-Avatare.
+/// Der gewählte Tag: oben Feiertage, Ferien und ganztägige Termine als Karten, darunter
+/// die Zeitleiste mit Uhrzeiten für alle Termine mit Uhrzeit.
 struct DayListView: View {
     @Environment(AppModel.self) private var model
     let day: Date
@@ -35,41 +36,273 @@ struct DayListView: View {
                                     specialDaysIn: interval)
             .filter { !$0.isHoliday }
             .sorted(by: CalendarEntry.listOrder)
-        ScrollView {
-            LazyVStack(alignment: .leading, spacing: 6) {
-                if showsHeader {
-                    Text(day.formatted(.dateTime.weekday(.wide).day().month(.wide)))
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.secondary)
-                        .padding(.bottom, 2)
-                }
-                ForEach(style.holidays(in: interval)[day] ?? [], id: \.germanName) { holiday in
-                    HolidayRow(name: holiday.name())
-                }
-                ForEach(style.schoolHolidays(in: subscribed)[day] ?? [], id: \.self) { name in
-                    SchoolHolidayRow(name: name)
-                }
-                if visible.isEmpty {
-                    Text("No events")
-                        .foregroundStyle(.secondary)
-                        .padding(.vertical, 8)
-                }
-                ForEach(visible) { entry in
-                    if let occurrence = entry.occurrence {
-                        Button { actions.openEvent(occurrence, entry.color) } label: {
-                            EventRow(occurrence: occurrence, color: entry.color)
+        // Ganztägig oder über den ganzen Tag: oben als Karte, alles andere in der Zeitleiste.
+        let allDay = visible.filter { $0.isAllDay || ($0.start <= interval.start && $0.end >= interval.end) }
+        let timed = visible.filter { !($0.isAllDay || ($0.start <= interval.start && $0.end >= interval.end)) }
+        let holidays = style.holidays(in: interval)[day] ?? []
+        let schoolHolidays = style.schoolHolidays(in: subscribed)[day] ?? []
+        let topCount = allDay.count + holidays.count + schoolHolidays.count + (visible.isEmpty ? 1 : 0)
+
+        VStack(spacing: 0) {
+            if showsHeader || topCount > 0 {
+                Group {
+                    // Viele ganztägige Einträge scrollen für sich, damit die Zeitleiste sichtbar bleibt.
+                    if topCount > 3 {
+                        ScrollView {
+                            topSection(allDay: allDay, holidays: holidays, schoolHolidays: schoolHolidays,
+                                       isEmpty: visible.isEmpty)
                         }
-                        .buttonStyle(.plain)
-                    } else if let todo = entry.todo {
-                        TodoEntryRow(todo: todo, color: entry.color) { actions.openTodo(todo) }
+                        .frame(maxHeight: 190)
                     } else {
-                        ExternalEntryRow(entry: entry)
+                        topSection(allDay: allDay, holidays: holidays, schoolHolidays: schoolHolidays,
+                                   isEmpty: visible.isEmpty)
+                    }
+                }
+                Divider()
+            }
+            DayTimeline(day: day, entries: timed)
+        }
+    }
+
+    private func topSection(allDay: [CalendarEntry], holidays: [Holiday], schoolHolidays: [String],
+                            isEmpty: Bool) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            if showsHeader {
+                Text(day.formatted(.dateTime.weekday(.wide).day().month(.wide)))
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .padding(.bottom, 2)
+            }
+            ForEach(holidays, id: \.germanName) { holiday in
+                HolidayRow(name: holiday.name())
+            }
+            ForEach(schoolHolidays, id: \.self) { name in
+                SchoolHolidayRow(name: name)
+            }
+            if isEmpty {
+                Text("No events")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            ForEach(allDay) { entry in
+                if let todo = entry.todo {
+                    TodoEntryRow(todo: todo, color: entry.color) { actions.openTodo(todo) }
+                } else {
+                    EntryLink(entry: entry) {
+                        if let occurrence = entry.occurrence {
+                            EventRow(occurrence: occurrence, color: entry.color)
+                        } else {
+                            ExternalEntryRow(entry: entry)
+                        }
                     }
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        // Karten nur so hoch wie ihr Inhalt; die Zeitleiste bekommt den Rest.
+        .fixedSize(horizontal: false, vertical: true)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+    }
+}
+
+/// Eigene Termine öffnen die Details als Blatt, Todos ihren Editor; Abo- und Gerätetermine sind nur zum Lesen.
+private struct EntryLink<Content: View>: View {
+    let entry: CalendarEntry
+    @ViewBuilder let label: () -> Content
+    @Environment(\.calendarActions) private var actions
+
+    var body: some View {
+        if let occurrence = entry.occurrence {
+            Button { actions.openEvent(occurrence, entry.color) } label: {
+                label()
+            }
+            .buttonStyle(.plain)
+        } else if let todo = entry.todo {
+            Button { actions.openTodo(todo) } label: {
+                label()
+            }
+            .buttonStyle(.plain)
+        } else {
+            label()
+        }
+    }
+}
+
+/// Zeitleiste des Tages: eine Zeile pro Stunde, Termine nach Beginn und Dauer, sich
+/// überschneidende nebeneinander. Heute zeigt eine rote Linie die aktuelle Uhrzeit.
+private struct DayTimeline: View {
+    let day: Date
+    let entries: [CalendarEntry]
+
+    @ScaledMetric(relativeTo: .caption) private var hourHeight: CGFloat = 54
+    private let labelWidth: CGFloat = 52
+    /// Platz über 0 Uhr und unter 24 Uhr für die Beschriftung.
+    private let inset: CGFloat = 10
+    /// Kürzeste dargestellte Dauer, damit auch kurze Termine einen lesbaren Kasten haben.
+    private let minimumMinutes: Double = 30
+
+    var body: some View {
+        let layout = DayLayout<String>(day: day, entries: entries.map { .init(id: $0.id, start: $0.start, end: $0.end) },
+                               minimumMinutes: minimumMinutes)
+        let byID = Dictionary(entries.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        let isToday = Calendar.current.isDateInToday(day)
+        // Heute ab der aktuellen Stunde, sonst ab dem ersten Termin, ohne Termine ab 7 Uhr.
+        let firstHour = isToday ? Calendar.current.component(.hour, from: .now)
+            : layout.items.map { Int($0.startMinute / 60) }.min() ?? 8
+        let scrollHour = max(firstHour - 1, 0)
+
+        ScrollViewReader { proxy in
+            ScrollView {
+                ZStack(alignment: .topLeading) {
+                    hourGrid
+                    GeometryReader { geometry in
+                        let columnsWidth = max(geometry.size.width - labelWidth - 12, 40)
+                        ZStack(alignment: .topLeading) {
+                            ForEach(layout.items) { item in
+                                if let entry = byID[item.id] {
+                                    let width = columnsWidth / CGFloat(item.columnCount)
+                                    let height = CGFloat(max(item.endMinute - item.startMinute, minimumMinutes) / 60)
+                                        * hourHeight - 2
+                                    EntryLink(entry: entry) {
+                                        TimelineBlock(entry: entry, height: height,
+                                                      continuesBefore: item.continuesBefore,
+                                                      continuesAfter: item.continuesAfter)
+                                    }
+                                    .frame(width: width - 2, height: height)
+                                    .offset(x: labelWidth + 4 + CGFloat(item.column) * width,
+                                            y: y(minute: item.startMinute) + 1)
+                                }
+                            }
+                            if isToday {
+                                TimelineView(.everyMinute) { context in
+                                    nowLine(width: columnsWidth + 8)
+                                        .offset(x: labelWidth, y: y(minute: minuteOfDay(context.date)) - 4)
+                                }
+                                .allowsHitTesting(false)
+                                .accessibilityHidden(true)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    }
+                }
+                .frame(height: hourHeight * 24 + inset * 2)
+            }
+            .task(id: day) {
+                proxy.scrollTo(scrollHour, anchor: .top)
+            }
+        }
+    }
+
+    /// Stundenlinien mit Uhrzeit, die Beschriftung mittig auf der Linie.
+    private var hourGrid: some View {
+        VStack(spacing: 0) {
+            ForEach(0...24, id: \.self) { hour in
+                HStack(alignment: .top, spacing: 6) {
+                    Text(Self.hourLabel(hour))
+                        .font(.caption2.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                        .frame(width: labelWidth - 6, alignment: .trailing)
+                        .offset(y: -7)
+                    Rectangle()
+                        .fill(.separator)
+                        .frame(height: 0.5)
+                }
+                .frame(height: hour == 24 ? 1 : hourHeight, alignment: .top)
+                .id(hour)
+            }
+        }
+        .padding(.top, inset)
+        .accessibilityHidden(true)
+    }
+
+    private func nowLine(width: CGFloat) -> some View {
+        HStack(spacing: 0) {
+            Circle().fill(.red).frame(width: 8, height: 8)
+            Rectangle().fill(.red).frame(height: 1.5)
+        }
+        .frame(width: width, height: 8)
+    }
+
+    private func y(minute: Double) -> CGFloat {
+        inset + CGFloat(minute / 60) * hourHeight
+    }
+
+    private func minuteOfDay(_ date: Date) -> Double {
+        let parts = Calendar.current.dateComponents([.hour, .minute], from: date)
+        return Double((parts.hour ?? 0) * 60 + (parts.minute ?? 0))
+    }
+
+    /// „08:00“ bzw. „8:00 AM“; Stunde 24 als „00:00“. Ein fester Tag ohne Zeitumstellung,
+    /// damit jede Stunde existiert.
+    private static func hourLabel(_ hour: Int) -> String {
+        let date = Calendar.current.date(from: DateComponents(year: 2000, month: 1, day: 1, hour: hour % 24)) ?? .now
+        return date.formatted(date: .omitted, time: .shortened)
+    }
+}
+
+/// Ein Termin in der Zeitleiste, gezeichnet nach der Darstellung seines Kalenders.
+private struct TimelineBlock: View {
+    let entry: CalendarEntry
+    let height: CGFloat
+    let continuesBefore: Bool
+    let continuesAfter: Bool
+
+    private var timeText: String {
+        if let occurrence = entry.occurrence { return occurrence.timeText }
+        return "\(entry.start.formatted(date: .omitted, time: .shortened)) – \(entry.end.formatted(date: .omitted, time: .shortened))"
+    }
+
+    var body: some View {
+        let shape = UnevenRoundedRectangle(topLeadingRadius: continuesBefore ? 0 : 6,
+                                           bottomLeadingRadius: continuesAfter ? 0 : 6,
+                                           bottomTrailingRadius: continuesAfter ? 0 : 6,
+                                           topTrailingRadius: continuesBefore ? 0 : 6)
+        VStack(alignment: .leading, spacing: 1) {
+            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                Text(entry.title)
+                    .font(.caption.weight(.semibold))
+                    .lineLimit(height > 44 ? 2 : 1)
+                if height < 34 {
+                    Text(entry.start.formatted(date: .omitted, time: .shortened))
+                        .font(.caption2)
+                        .opacity(0.8)
+                        .lineLimit(1)
+                }
+            }
+            if height >= 34 {
+                Text(timeText)
+                    .font(.caption2)
+                    .opacity(0.85)
+                    .lineLimit(1)
+            }
+            if height >= 60, let subtitle = entry.location ?? entry.occurrence?.event.calendar?.displayName {
+                Text(subtitle)
+                    .font(.caption2)
+                    .opacity(0.85)
+                    .lineLimit(1)
+            }
+            if height >= 84, let event = entry.occurrence?.event, !event.sortedParticipants.isEmpty {
+                HStack(spacing: -5) {
+                    ForEach(event.sortedParticipants.prefix(4)) { member in
+                        MemberAvatar(member: member, size: 18)
+                            .background(Circle().fill(Color(.systemBackground)))
+                    }
+                }
+                .padding(.top, 2)
+            }
+        }
+        .foregroundStyle(entry.eventStyle.textColor)
+        .padding(.horizontal, 6)
+        .padding(.vertical, 3)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .background(EventBackground(shape: shape, color: entry.color, style: entry.eventStyle))
+        .clipShape(shape)
+        .contentShape(shape)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(entry.title + ", " + timeText)
     }
 }
 

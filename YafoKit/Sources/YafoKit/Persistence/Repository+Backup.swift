@@ -134,6 +134,8 @@ nonisolated public struct Backup: Codable, Equatable, Sendable {
         public var calendarID: String?
         public var color: String?
         public var isVisible: Bool
+        /// Erst seit der Termin-Darstellung pro Kalender; fehlt in älteren Backups.
+        public var eventStyle: String?
     }
 
     public struct AlertData: Codable, Equatable, Sendable {
@@ -292,7 +294,8 @@ extension Repository {
         backup.appearances = all(CalendarAppearance.self).compactMap { appearance in
             guard let id = appearance.id, let calendarID = appearance.calendarID, calendarIDs.contains(calendarID)
             else { return nil }
-            return .init(id: id, calendarID: calendarID, color: appearance.color, isVisible: appearance.isVisible)
+            return .init(id: id, calendarID: calendarID, color: appearance.color, isVisible: appearance.isVisible,
+                         eventStyle: appearance.eventStyleRaw)
         }
         let itemIDs = Set(backup.events.map(\.id.uuidString) + backup.todos.map(\.id.uuidString))
         backup.alertPreferences = all(AlertPreference.self).compactMap { preference in
@@ -501,6 +504,7 @@ extension Repository {
             appearance.calendarID = calendarID
             appearance.color = data.color
             appearance.isVisible = data.isVisible
+            appearance.eventStyleRaw = data.eventStyle
         }
         let knownAlerts = Set(all(AlertPreference.self).compactMap(\.itemID))
         for data in backup.alertPreferences where object(AlertPreference.self, id: data.id) == nil {

@@ -160,6 +160,8 @@ nonisolated public final class CalendarAppearance: NSManagedObject, Identifiable
     @NSManaged public var calendarID: String?
     @NSManaged public var color: String?
     @NSManaged public var isVisible: Bool
+    /// `EventStyle`; fehlt bei älteren Einträgen.
+    @NSManaged public var eventStyleRaw: String?
 }
 
 nonisolated public final class AlertPreference: NSManagedObject, Identifiable {
