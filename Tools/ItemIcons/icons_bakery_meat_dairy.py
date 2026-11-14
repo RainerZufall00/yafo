@@ -287,3 +287,43 @@ def dough():
     dough_ = ellipse(24, 32, 19, 8)
     pin = U(rect(9, 16, 30, 8, 4, rot=-12), line([(3, 23.5), (9.5, 22)], 2.6), line([(38.5, 17.5), (45, 16)], 2.6))
     return over(dough_, pin, 1.6)
+
+
+@icon
+def squid():
+    mantle = path(bez((24, 3), (31, 10), (31, 22)), [(17, 22)], bez((17, 22), (17, 10), (24, 3))[1:])
+    fins = U(poly((18, 8), (11, 14), (18, 16)), poly((30, 8), (37, 14), (30, 16)))
+    head = ellipse(24, 26, 7.5, 4.5)
+    arms = U(*[line(bez((24 + dx * 0.4, 28), (24 + dx * 1.1, 34), (24 + dx * 0.6 + w, 43)), 2.2)
+               for dx, w in [(-10, -3), (-5, 2), (0, -2), (5, -2), (10, 3)]])
+    body = over(over(arms, head, 1.4), U(mantle, fins), 1.4)
+    return minus(body, circle(20.5, 26, 1.5), circle(27.5, 26, 1.5))
+
+
+@icon
+def crab():
+    body = ellipse(24, 29, 13, 8.5)
+    legs = U(*[line([(24 + s * 8, 30 + i * 3), (24 + s * 17, 31 + i * 4), (24 + s * 19, 37 + i * 3.5)], 1.8)
+               for i in range(3) for s in (-1, 1)])
+    arms = U(line([(16, 24), (11, 18)], 2.4), line([(32, 24), (37, 18)], 2.4))
+
+    def claw(x, y, s):
+        c = circle(x, y, 5.2)
+        return minus(c, poly((x, y), (x - s * 2.5, y - 7), (x + s * 3.5, y - 6)))
+    claws = U(claw(10, 14, 1), claw(38, 14, -1))
+    eyes = U(line([(20.5, 21), (19.5, 16.5)], 1.6), line([(27.5, 21), (28.5, 16.5)], 1.6),
+             circle(19.4, 16, 1.9), circle(28.6, 16, 1.9))
+    g = over(U(legs, arms, eyes), body, 1.4)
+    return U(g, claws)
+
+
+@icon
+def caviar():
+    tin = U(rect(7, 27, 34, 11, 2), ellipse(24, 38, 17, 4.5))
+    tin = minus(tin, line([(5, 32.5), (43, 32.5)], 1.6))
+    rim = ellipse(24, 27, 17, 5)
+    pearls = [(x, y) for y, xs in [(22, (13.5, 19, 24.5, 30, 35.5)), (17.6, (16.5, 22, 27.5, 33)), (13.2, (19.5, 25, 30.5))]
+              for x in xs]
+    pile = U(*[circle(x, y, 2.9) for x, y in pearls])
+    pile = minus(pile, *[circle(x, y, 2.9).boundary.buffer(0.55, quad_segs=Q) for x, y in pearls])
+    return over(over(tin, rim, 1.4), pile, 1.4)

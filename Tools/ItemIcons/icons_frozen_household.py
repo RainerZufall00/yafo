@@ -265,3 +265,21 @@ def plant():
     leaves = U(leaf(16.5, 17, 16, 8.5, -140), leaf(31.5, 17, 16, 8.5, -40), leaf(24, 12, 18, 8.5, -90))
     veins = U(line([(24, 25), (24, 6)], 1.3), line([(23, 24), (12, 12)], 1.3), line([(25, 24), (36, 12)], 1.3))
     return over(over(pot, rim, 1.4), minus(leaves, veins).difference(rim.buffer(1.4)), 0.01)
+
+
+@icon
+def envelope():
+    body = rect(5, 11, 38, 26, 3)
+    flap = line([(7, 14), (24, 27), (41, 14)], 1.7)
+    sides = U(line([(7, 35), (19, 24)], 1.5), line([(41, 35), (29, 24)], 1.5))
+    return minus(body, flap, sides)
+
+
+@icon
+def newspaper():
+    back = rect(10, 6, 32, 34, 2)
+    page = rect(5, 10, 32, 34, 2.5)
+    cuts = U(rect(9, 14, 24, 4.5, 1), rect(9, 22, 11, 9, 1),
+             *[line([(23, y), (33, y)], 1.5) for y in (23, 27, 31)],
+             *[line([(9.5, y), (32.5, y)], 1.5) for y in (35.5, 39.5)])
+    return over(back, minus(page, cuts), 1.6)

@@ -239,3 +239,12 @@ def spirits():
     glass = minus(glass, line([(10, 15), (38, 15)], 1.4))
     olive = U(circle(30, 19, 3.6), line([(20, 6), (31, 19)], 1.3))
     return U(over(glass, olive, 1.4), line([(15, 2), (20.5, 6.5)], 1.3))
+
+
+@icon
+def matcha():
+    handle = rect(20.5, 3, 7, 15, 2)
+    bulb = path(bez((19, 17), (8, 28), (16, 38)), bez((16, 38), (24, 46), (32, 38))[1:], bez((32, 38), (40, 28), (29, 17))[1:])
+    tines = U(*[line([(24 + dx * 0.15, 21), (24 + dx, 39)], 1.3) for dx in (-9, -4.5, 0, 4.5, 9)])
+    bulb = minus(bulb, tines)
+    return over(bulb, handle, 1.4)

@@ -305,7 +305,8 @@ extension ShoppingCategory {
         case .hygiene: Color(hex: "#5B6CFF")
         case .baby: Color(hex: "#C95B8C")
         case .pets: Color(hex: "#7B5E52")
-        case .other: Color(hex: "#6E6E73")
+        // Kein Grau: das sähe aus wie bereits gekauft.
+        case .other: Color(hex: "#7A8C1C")
         }
     }
 }
