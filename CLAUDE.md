@@ -85,9 +85,12 @@ Cloud-Sessions laufen auf Linux und können kein iOS bauen. Deshalb:
 - Jeder Push startet `.github/workflows/ci.yml` (Simulator-Build mit Xcode 27.2, ohne Signatur). Nach dem Push
   das Ergebnis abwarten und Build-Fehler beheben, bevor die Arbeit als fertig gilt (`gh run watch`,
   `gh run view --log-failed`).
-- TestFlight- und App-Store-Builds macht Xcode Cloud, nur von Hand in App Store Connect gestartet.
-  `ci_scripts/ci_post_clone.sh` schreibt `Config/Local.xcconfig` mit der Team-ID, die Build-Nummer vergibt
-  Xcode Cloud.
+- TestFlight- und App-Store-Builds macht GitHub Actions: `.github/workflows/testflight.yml`, von Hand gestartet
+  (Actions → TestFlight → Run workflow; `gh workflow run testflight.yml -f version=1.2.3`). Der Workflow ruft
+  `ci_scripts/testflight.sh` auf: archivieren, mit den eigenen Zertifikaten signieren (Repo-Secrets), Signatur prüfen,
+  hochladen. Build-Nummer = UTC-Zeit `yyMMddHHmm`. Ist die Version im Projekt schon freigegeben, eine neue
+  angeben. Nicht Xcode Cloud: dessen Cloud-Zertifikat scheitert am Umlaut im Kontonamen (ITMS-90035).
+  `ci_scripts/ci_post_clone.sh` schreibt weiterhin `Config/Local.xcconfig` mit der Team-ID.
 - Getestet wird über TestFlight (Release-Build, CloudKit **Production**). Neue Felder im Datenmodell müssen von
   Hand in der CloudKit Console angelegt und nach Production deployt werden – in der Zusammenfassung ausdrücklich
   darauf hinweisen.
