@@ -92,7 +92,7 @@ struct YearView: View {
         } label: {
             Text(month.formatted(.dateTime.month(.abbreviated)).replacingOccurrences(of: ".", with: "").uppercased())
                 .font(.system(size: metrics.labelFontSize, weight: .semibold))
-                .foregroundStyle(isCurrent ? Color.accentColor : Color.secondary)
+                .foregroundStyle(isCurrent ? Color.currentWeekMarker : Color.secondary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)

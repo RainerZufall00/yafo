@@ -425,7 +425,7 @@ struct MonthStrip: View {
         // Kurz wie „Nov 26“, „Jan 27“; VoiceOver liest den vollen Monat.
         return Text(month.formatted(.dateTime.month(.abbreviated).year(.twoDigits)).replacingOccurrences(of: ".", with: ""))
             .font(isSelected ? .headline : .subheadline.weight(.medium))
-            .foregroundStyle(isSelected ? Color.white : isCurrent ? Color.accentColor : Color.primary)
+            .foregroundStyle(isSelected ? Color.white : isCurrent ? Color.currentWeekMarker : Color.primary)
             .lineLimit(1)
             .fixedSize()
             .padding(.horizontal, 14)

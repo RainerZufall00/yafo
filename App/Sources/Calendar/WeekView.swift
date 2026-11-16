@@ -373,7 +373,8 @@ struct WeekStrip: View {
             if isSelected {
                 Capsule().fill(Color.accentColor)
             } else if isCurrent {
-                Capsule().strokeBorder(Color.accentColor, lineWidth: 2)
+                Capsule().fill(Color.currentWeekFill)
+                Capsule().strokeBorder(Color.currentWeekMarker, lineWidth: 2)
             }
         }
         .contentShape(Capsule())

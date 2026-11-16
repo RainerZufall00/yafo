@@ -15,6 +15,21 @@ extension Color {
                   blue: Double(value & 0xFF) / 255)
     }
 
+    /// Fläche der aktuellen Woche (bzw. des aktuellen Monats). Im Dunkeln ein helleres Blau mit mehr
+    /// Deckkraft, sonst geht das Akzentblau auf Schwarz unter.
+    static let currentWeekFill = Color(UIColor { traits in
+        traits.userInterfaceStyle == .dark
+            ? UIColor(red: 0x5B / 255, green: 0x9B / 255, blue: 1, alpha: 0.24)
+            : UIColor(red: 0x1E / 255, green: 0x6F / 255, blue: 0xE0 / 255, alpha: 0.09)
+    })
+
+    /// Randlinie und Schrift für „aktuell“; im Dunkeln heller als das Akzentblau.
+    static let currentWeekMarker = Color(UIColor { traits in
+        traits.userInterfaceStyle == .dark
+            ? UIColor(red: 0x5B / 255, green: 0x9B / 255, blue: 1, alpha: 1)
+            : UIColor(red: 0x1E / 255, green: 0x6F / 255, blue: 0xE0 / 255, alpha: 1)
+    })
+
     var hexString: String {
         var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
         UIColor(self).getRed(&red, green: &green, blue: &blue, alpha: &alpha)

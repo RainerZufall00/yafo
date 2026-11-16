@@ -63,6 +63,7 @@ struct MonthGridView: View {
 private struct WeekRow: View {
     @Environment(\.horizontalSizeClass) private var sizeClass
     @Environment(\.calendarActions) private var actions
+    @Environment(\.today) private var today
     let week: [MonthGrid.Day]
     let entries: [CalendarEntry]
     let holidays: [Date: [Holiday]]
@@ -152,11 +153,11 @@ private struct WeekRow: View {
             }
         }
         .background {
-            if isCurrentWeek { Color.accentColor.opacity(0.07) }
+            if isCurrentWeek { Color.currentWeekFill }
         }
         .overlay(alignment: .leading) {
             if isCurrentWeek {
-                Rectangle().fill(Color.accentColor).frame(width: 3).allowsHitTesting(false)
+                Rectangle().fill(Color.currentWeekMarker).frame(width: 4).allowsHitTesting(false)
             }
         }
         .overlay(alignment: .top) {
@@ -165,7 +166,7 @@ private struct WeekRow: View {
         .clipped()
     }
 
-    private var isCurrentWeek: Bool { week.contains { Calendar.current.isDateInToday($0.date) } }
+    private var isCurrentWeek: Bool { week.contains { Calendar.current.isDate($0.date, inSameDayAs: today) } }
 
     private func open(_ day: Date) {
         selectedDay = day
