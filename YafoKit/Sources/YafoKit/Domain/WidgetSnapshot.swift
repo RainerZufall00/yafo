@@ -15,9 +15,16 @@ nonisolated public struct WidgetSnapshot: Codable, Sendable, Equatable {
         public var isBirthday: Bool
         public var age: Int?
         public var initials: [String]
+        /// Gesetzt bei einem fälligen Todo statt eines Termins: `start` ist der Fälligkeitstag,
+        /// `calendarName` die Liste (Familie oder „Nur ich“). Fehlt in älteren Schnappschüssen.
+        public var todoID: UUID?
+        public var isRecurring: Bool?
+
+        public var isTodo: Bool { todoID != nil }
 
         public init(id: String, title: String, start: Date, end: Date, isAllDay: Bool, colorHex: String,
-                    calendarName: String, location: String?, isBirthday: Bool, age: Int?, initials: [String]) {
+                    calendarName: String, location: String?, isBirthday: Bool, age: Int?, initials: [String],
+                    todoID: UUID? = nil, isRecurring: Bool? = nil) {
             self.id = id
             self.title = title
             self.start = start
@@ -29,6 +36,8 @@ nonisolated public struct WidgetSnapshot: Codable, Sendable, Equatable {
             self.isBirthday = isBirthday
             self.age = age
             self.initials = initials
+            self.todoID = todoID
+            self.isRecurring = isRecurring
         }
     }
 
@@ -139,9 +148,10 @@ nonisolated public struct WidgetSnapshot: Codable, Sendable, Equatable {
         lists.first { $0.key == key } ?? lists.first { $0.key == defaultListKey } ?? lists.first
     }
 
-    /// Termine, die ab `date` noch laufen oder kommen, in Anzeigereihenfolge.
+    /// Termine, die ab `date` noch laufen oder kommen, in Anzeigereihenfolge. Offene Todos bleiben
+    /// auch nach ihrem Tag stehen (überfällig), bis die App sie als erledigt meldet.
     public func upcoming(from date: Date) -> [Item] {
-        items.filter { $0.end > date }
+        items.filter { $0.isTodo || $0.end > date }
     }
 
     // MARK: Datei

@@ -1611,6 +1611,16 @@
         }
       }
     },
+    "Due To-dos in Widget": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fällige Todos im Widget"
+          }
+        }
+      }
+    },
     "Edit": {
       "localizations": {
         "de": {

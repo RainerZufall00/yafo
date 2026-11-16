@@ -201,6 +201,26 @@
         }
       }
     },
+    "Overdue": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Überfällig"
+          }
+        }
+      }
+    },
+    "Pack gym bag": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sporttasche packen"
+          }
+        }
+      }
+    },
     "Shopping List": {
       "localizations": {
         "de": {
@@ -271,12 +291,12 @@
         }
       }
     },
-    "Today's and the next events as colored cards.": {
+    "Today's and the next events and due to-dos as colored cards.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Heutige und nächste Termine als farbige Karten."
+            "value": "Heutige und nächste Termine und fällige Todos als farbige Karten."
           }
         }
       }

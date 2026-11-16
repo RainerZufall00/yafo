@@ -257,7 +257,9 @@ final class AppModel {
         reminderTask = Task {
             try? await Task.sleep(for: .seconds(1))
             guard !Task.isCancelled else { return }
-            try? repository.widgetSnapshot(listKey: listScopeKey.isEmpty ? nil : listScopeKey).write()
+            let widgetTodos = UserDefaults.standard.object(forKey: CalendarDisplay.widgetShowsTodosKey) as? Bool ?? true
+            try? repository.widgetSnapshot(listKey: listScopeKey.isEmpty ? nil : listScopeKey,
+                                           includeTodos: widgetTodos).write()
             WidgetCenter.shared.reloadAllTimelines()
             let reminders = repository.plannedReminders(me: { self.me(in: $0) })
             await ReminderScheduler.replace(with: reminders)

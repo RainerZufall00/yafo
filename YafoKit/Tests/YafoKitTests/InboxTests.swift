@@ -76,6 +76,28 @@ import Testing
         #expect(decoded == snapshot)
     }
 
+    @Test func snapshotShowsDueTodosOnTheirDay() throws {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: .now)
+        let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
+        let bins = repository.addTodo("Bins out", dueDate: tomorrow, to: .family(family), createdBy: nil)
+        repository.addTodo("Late", dueDate: calendar.date(byAdding: .day, value: -3, to: today)!, to: .personal,
+                           createdBy: nil)
+        repository.addTodo("Far away", dueDate: calendar.date(byAdding: .day, value: 30, to: today)!, to: .personal,
+                           createdBy: nil)
+        repository.addTodo("No date", to: .personal, createdBy: nil)
+        try repository.save()
+
+        let snapshot = repository.widgetSnapshot()
+        let todos = snapshot.items.filter(\.isTodo)
+        #expect(todos.map(\.title) == ["Late", "Bins out"])
+        let item = try #require(todos.last)
+        #expect(item.todoID == bins.id && item.start == tomorrow && item.calendarName == "Millers")
+        // Überfällige bleiben im Widget stehen, auch über ihren Tag hinaus.
+        #expect(snapshot.upcoming(from: .now).contains { $0.title == "Late" })
+        #expect(repository.widgetSnapshot(includeTodos: false).items.filter(\.isTodo).isEmpty)
+    }
+
     @Test func oldSnapshotsWithoutListsStillDecode() throws {
         let json = #"{"generatedAt": 0, "items": []}"#
         let snapshot = try JSONDecoder().decode(WidgetSnapshot.self, from: Data(json.utf8))

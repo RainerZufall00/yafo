@@ -27,20 +27,28 @@ struct SnapshotProvider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SnapshotEntry) -> Void) {
-        let items = WidgetSnapshot.load().upcoming(from: .now)
+        let items = Self.upcoming(in: WidgetSnapshot.load(), from: .now, pending: AppGroupInbox().pendingItemIDs())
         completion(SnapshotEntry(date: .now, items: context.isPreview && items.isEmpty ? SampleData.items : items))
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<SnapshotEntry>) -> Void) {
         let snapshot = WidgetSnapshot.load()
+        let pending = AppGroupInbox().pendingItemIDs()
         let now = Date.now
         let calendar = Calendar.current
         let midnight = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now))!
         var dates = Set(snapshot.items.map(\.end).filter { $0 > now && $0 < midnight })
         dates.insert(now)
         dates.insert(midnight)
-        let entries = dates.sorted().prefix(40).map { SnapshotEntry(date: $0, items: snapshot.upcoming(from: $0)) }
+        let entries = dates.sorted().prefix(40).map {
+            SnapshotEntry(date: $0, items: Self.upcoming(in: snapshot, from: $0, pending: pending))
+        }
         completion(Timeline(entries: entries, policy: .after(midnight)))
+    }
+
+    /// Ohne Todos, die im Widget schon abgehakt wurden und noch im Postfach liegen.
+    private static func upcoming(in snapshot: WidgetSnapshot, from date: Date, pending: Set<UUID>) -> [WidgetSnapshot.Item] {
+        snapshot.upcoming(from: date).filter { item in item.todoID.map { !pending.contains($0) } ?? true }
     }
 }
 
@@ -55,7 +63,7 @@ struct UpcomingWidget: Widget {
                 .containerBackground(for: .widget) { Color(.systemBackground) }
         }
         .configurationDisplayName("Upcoming")
-        .description("Today's and the next events as colored cards.")
+        .description("Today's and the next events and due to-dos as colored cards.")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }
@@ -108,9 +116,9 @@ struct UpcomingView: View {
                         .foregroundStyle(Calendar.current.isDateInToday(group.day) ? Color.accentColor : .secondary)
                     ForEach(group.items) { item in
                         if family == .systemSmall {
-                            CompactCard(item: item)
+                            CompactCard(item: item, today: entry.date)
                         } else {
-                            EventCard(item: item)
+                            EventCard(item: item, today: entry.date)
                         }
                     }
                 }
@@ -147,15 +155,27 @@ struct UpcomingView: View {
 }
 
 /// Wie die Karten der Tagesliste in der App: Zeit, Farbstreifen, Titel, Kalender bzw. Ort.
+/// Ein Todo hat statt der Zeit einen Kreis zum Abhaken.
 struct EventCard: View {
     @Environment(\.colorScheme) private var colorScheme
     let item: WidgetSnapshot.Item
+    let today: Date
 
     var body: some View {
         let color = Color(hex: item.colorHex)
         HStack(spacing: 8) {
             Group {
-                if item.isBirthday {
+                if let todoID = item.todoID {
+                    Button(intent: CompleteTodoIntent(todoID: todoID)) {
+                        Image(systemName: "circle")
+                            .font(.system(size: 17))
+                            .foregroundStyle(item.isOverdue(today: today) ? Color.red : color)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .invalidatableContent()
+                    .accessibilityLabel(Text("Complete \(item.title)"))
+                } else if item.isBirthday {
                     Image(systemName: "birthday.cake.fill")
                         .foregroundStyle(color)
                 } else if item.isAllDay {
@@ -183,10 +203,15 @@ struct EventCard: View {
                 Text(item.title)
                     .font(.system(size: 13, weight: .semibold))
                     .lineLimit(1)
-                Text(subtitle)
-                    .font(.system(size: 10))
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
+                HStack(spacing: 3) {
+                    Text(subtitle)
+                    if item.isRecurring == true {
+                        Image(systemName: "repeat")
+                    }
+                }
+                .font(.system(size: 10))
+                .foregroundStyle(item.isOverdue(today: today) ? Color.red : Color.secondary)
+                .lineLimit(1)
             }
             Spacer(minLength: 2)
             HStack(spacing: -4) {
@@ -206,6 +231,7 @@ struct EventCard: View {
 
     private var subtitle: String {
         if item.isBirthday, let age = item.age { return String(localized: "Turns \(age)") }
+        if item.isOverdue(today: today) { return String(localized: "Overdue") + " · " + item.calendarName }
         return item.location ?? item.calendarName
     }
 }
@@ -214,6 +240,7 @@ struct EventCard: View {
 struct CompactCard: View {
     @Environment(\.colorScheme) private var colorScheme
     let item: WidgetSnapshot.Item
+    let today: Date
 
     var body: some View {
         let color = Color(hex: item.colorHex)
@@ -225,9 +252,9 @@ struct CompactCard: View {
                 Text(item.isBirthday ? "🎂 \(item.title)" : item.title)
                     .font(.system(size: 12, weight: .semibold))
                     .lineLimit(1)
-                Text(item.timeText)
+                Text(item.isOverdue(today: today) ? String(localized: "Overdue") : item.timeText)
                     .font(.system(size: 10))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(item.isOverdue(today: today) ? Color.red : Color.secondary)
                     .lineLimit(1)
             }
             Spacer(minLength: 0)
@@ -258,8 +285,11 @@ struct NextEventView: View {
     @Environment(\.widgetFamily) private var family
     let entry: SnapshotEntry
 
+    /// Auf dem Sperrbildschirm nur Termine, keine Todos.
+    private var events: [WidgetSnapshot.Item] { entry.items.filter { !$0.isTodo } }
+
     var body: some View {
-        if let next = entry.items.first {
+        if let next = events.first {
             if family == .accessoryInline {
                 Text("\(next.timeText) \(next.title)")
             } else {
@@ -270,7 +300,7 @@ struct NextEventView: View {
                     Text(next.title)
                         .font(.headline)
                         .lineLimit(1)
-                    if let second = entry.items.dropFirst().first {
+                    if let second = events.dropFirst().first {
                         Text("\(second.timeText) \(second.title)")
                             .font(.caption)
                             .foregroundStyle(.secondary)
@@ -296,9 +326,15 @@ struct NextEventView: View {
 
 extension WidgetSnapshot.Item {
     var timeText: String {
+        if isTodo { return String(localized: "To-do") }
         if isBirthday, let age { return String(localized: "Turns \(age)") }
         if isAllDay { return String(localized: "All day") }
         return start.formatted(date: .omitted, time: .shortened)
+    }
+
+    /// Todo, dessen Tag vor `today` liegt; steht im Widget bei heute.
+    func isOverdue(today: Date) -> Bool {
+        isTodo && start < Calendar.current.startOfDay(for: today)
     }
 }
 
@@ -326,6 +362,9 @@ enum SampleData {
                   colorHex: "#2F80ED", calendarName: "", location: nil, isBirthday: false, age: nil, initials: ["A", "M"]),
             .init(id: "3", title: String(localized: "Swimming"), start: at(1, 16), end: at(1, 17), isAllDay: false,
                   colorHex: "#9B51E0", calendarName: "", location: nil, isBirthday: false, age: nil, initials: ["M"]),
+            .init(id: "4", title: String(localized: "Pack gym bag"), start: at(1, 0), end: at(2, 0), isAllDay: true,
+                  colorHex: "#2F80ED", calendarName: "", location: nil, isBirthday: false, age: nil, initials: [],
+                  todoID: UUID()),
         ]
     }
 }

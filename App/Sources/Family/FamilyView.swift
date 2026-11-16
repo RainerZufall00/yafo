@@ -39,6 +39,7 @@ struct FamilyView: View {
     @AppStorage(CalendarDisplay.showsTodosKey) private var showsTodos = true
     @AppStorage(CalendarDisplay.showsObservancesKey) private var showsObservances = true
     @AppStorage(CalendarDisplay.showsHolidayEntriesKey) private var showsHolidayEntries = true
+    @AppStorage(CalendarDisplay.widgetShowsTodosKey) private var widgetShowsTodos = true
     @FetchRequest(sortDescriptors: []) private var appearances: FetchedResults<CalendarAppearance>
     /// Gesetzt, wenn die Ansicht als Blatt offen ist (Knopf oben rechts): zeigt „Fertig“.
     var onDone: (() -> Void)?
@@ -82,6 +83,8 @@ struct FamilyView: View {
 
                 Section {
                     Toggle("Show To-dos with Due Date", systemImage: "checklist", isOn: $showsTodos)
+                    Toggle("Due To-dos in Widget", systemImage: "widget.small", isOn: $widgetShowsTodos)
+                        .onChange(of: widgetShowsTodos) { model.refreshDerivedData() }
                     Toggle("Show Holidays as Events", systemImage: "flag", isOn: $showsHolidayEntries)
                     Toggle("Show Special Days", systemImage: "sparkles", isOn: $showsObservances)
                     birthdayColorRow

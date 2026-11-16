@@ -21,6 +21,8 @@ extension EnvironmentValues {
 /// Einstellungen der Kalenderansicht, nur auf dem Gerät.
 enum CalendarDisplay {
     static let showsTodosKey = "calendarShowsTodos"
+    /// Fällige Todos auch im Widget „Nächste Termine“; Vorgabe an.
+    static let widgetShowsTodosKey = "widgetShowsTodos"
     static let showsObservancesKey = "calendarShowsObservances"
     static let showsHolidayEntriesKey = "calendarShowsHolidayEntries"
     static let dismissedBirthdaysKey = "dismissedBirthdaySuggestions"
