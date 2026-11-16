@@ -2,6 +2,7 @@ import CloudKit
 import CoreData
 import Observation
 import SwiftUI
+import UIKit
 import WidgetKit
 import YafoKit
 
@@ -37,6 +38,9 @@ final class AppModel {
     var selectedTab: AppTab = AppModel.initialTab {
         didSet { UserDefaults.standard.set(selectedTab.rawValue, forKey: "selectedTab") }
     }
+    /// Beginn des heutigen Tages; wechselt um Mitternacht (oder bei Zeitzonen-/Uhrzeitwechsel), damit die
+    /// Ansichten „heute“ neu markieren. Über `\.today` im Environment.
+    private(set) var today = Calendar.current.startOfDay(for: .now)
     /// Zählt hoch, wenn der Kalender auf „heute“ zurückspringen soll (Tipp aufs Widget).
     private(set) var calendarResetRequest = 0
     private var backgroundSince: Date?
@@ -101,6 +105,7 @@ final class AppModel {
         #endif
         refreshAfterSync()
         processInbox()
+        watchDayChanges()
         Task { await refreshSubscriptions() }
         Task { await autoBackupIfDue() }
 
@@ -122,6 +127,24 @@ final class AppModel {
         if let list = DeepLink.list(in: url) { listScopeKey = list }
     }
 
+    /// Tageswechsel mitbekommen, solange die App läuft. Lag sie dabei im Hintergrund, holt
+    /// `didBecomeActive` das nach.
+    private func watchDayChanges() {
+        for name in [Notification.Name.NSCalendarDayChanged, UIApplication.significantTimeChangeNotification] {
+            Task {
+                for await _ in NotificationCenter.default.notifications(named: name) { refreshToday() }
+            }
+        }
+    }
+
+    func refreshToday() {
+        let start = Calendar.current.startOfDay(for: .now)
+        guard start != today else { return }
+        today = start
+        // Fälligkeiten („Heute“, „Überfällig“) und Termine von heute auch in den Widgets nachziehen.
+        refreshDerivedData()
+    }
+
     func didEnterBackground() {
         backgroundSince = .now
     }
@@ -129,6 +152,7 @@ final class AppModel {
     /// Nach längerer Pause mit dem eingestellten Tab weitermachen, außer ein Link
     /// (z. B. vom Widget) hat gerade selbst einen Tab gewählt.
     func didBecomeActive() {
+        refreshToday()
         mergeShareExtensionChanges()
         // Ohne User-ID erkennt die App das eigene Profil nicht und fragt nach dem Beitritt nicht
         // danach (z. B. iCloud beim Start noch nicht bereit). Dann bei jeder Rückkehr neu fragen.

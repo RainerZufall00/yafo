@@ -132,6 +132,18 @@ import Testing
         #expect(repository.complete(plants, today: date(11, 2)) == date(11, 5))
     }
 
+    @Test func seriesWithIntervals() {
+        let filter = repository.addTodo("Change filter", dueDate: date(1, 31), recurrenceRule: "FREQ=MONTHLY;INTERVAL=2",
+                                        to: .personal, createdBy: nil)
+        // Alle zwei Monate; der 31. fehlt im März nicht, also 31.3.
+        #expect(repository.complete(filter, today: date(1, 31)) == date(3, 31))
+        let lawn = repository.addTodo("Mow lawn", dueDate: date(5, 4), recurrenceRule: "FREQ=DAILY;INTERVAL=10",
+                                      to: .personal, createdBy: nil)
+        #expect(repository.complete(lawn, today: date(5, 4)) == date(5, 14))
+        // Zu spät erledigt: nächster Termin im Raster ab heute (4.5. + 3 × 10 Tage).
+        #expect(repository.complete(lawn, today: date(5, 30)) == date(6, 3))
+    }
+
     @Test func seriesNeedsADueDate() {
         let todo = repository.addTodo("No date", recurrenceRule: "FREQ=DAILY", to: .personal, createdBy: nil)
         #expect(todo.recurrenceRule == nil)

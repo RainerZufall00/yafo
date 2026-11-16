@@ -87,6 +87,7 @@ struct WeekPageView: View {
 
 private struct WeekDayRow: View {
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.today) private var today
     @Environment(\.calendarActions) private var actions
     let day: Date
     let isSelected: Bool
@@ -96,7 +97,7 @@ private struct WeekDayRow: View {
     let entries: [CalendarEntry]
     let onOpen: () -> Void
 
-    private var isToday: Bool { Calendar.current.isDateInToday(day) }
+    private var isToday: Bool { Calendar.current.isDate(day, inSameDayAs: today) }
     private var isWeekend: Bool { Calendar.current.isDateInWeekend(day) }
     /// Schmalste Kachel; daraus folgt, wie viele nebeneinander passen. Alle Kacheln sind gleich breit.
     private var minTileWidth: CGFloat { sizeClass == .regular ? 120 : 64 }
@@ -324,6 +325,7 @@ struct WeekStrip: View {
     let weeks: [Date]
     let selected: Date
     let onSelect: (Date) -> Void
+    @Environment(\.today) private var today
     @State private var position: Date?
 
     var body: some View {
@@ -350,7 +352,7 @@ struct WeekStrip: View {
         let cal = Calendar.current
         let end = cal.date(byAdding: .day, value: 6, to: week) ?? week
         let isSelected = week == selected
-        let isCurrent = cal.isDate(week, equalTo: .now, toGranularity: .weekOfYear)
+        let isCurrent = cal.isDate(week, equalTo: today, toGranularity: .weekOfYear)
         let sameMonth = cal.isDate(week, equalTo: end, toGranularity: .month)
         let months = sameMonth ? week.formatted(.dateTime.month(.abbreviated))
             : "\(week.formatted(.dateTime.month(.abbreviated)))–\(end.formatted(.dateTime.month(.abbreviated)))"

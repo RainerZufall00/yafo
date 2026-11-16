@@ -8,6 +8,7 @@ import YafoKit
 struct MonthView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.today) private var today
 
     /// Erster Tag des angezeigten Monats; folgt dem Blättern im Pager.
     @State private var month = MonthView.startOfMonth(.now)
@@ -89,6 +90,10 @@ struct MonthView: View {
                     screenshot = nil
                     if count > 0 { model.save() }
                 }
+            }
+            .onChange(of: today) { yesterday, _ in
+                // Stand die Auswahl auf dem alten „heute“, wandert sie zum neuen Tag mit.
+                if selectedDay == yesterday { showToday() }
             }
             .onChange(of: model.calendarResetRequest) {
                 // Tipp aufs Widget: offene Tagesseite schließen und heute zeigen.
@@ -189,7 +194,7 @@ struct MonthView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
-            if week == Self.startOfWeek(.now) {
+            if week == Self.startOfWeek(today) {
                 Text("This Week")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.white)
@@ -391,6 +396,7 @@ struct MonthStrip: View {
     let months: [Date]
     let selected: Date
     let onSelect: (Date) -> Void
+    @Environment(\.today) private var today
     @State private var position: Date?
 
     var body: some View {
@@ -415,7 +421,7 @@ struct MonthStrip: View {
 
     private func label(for month: Date) -> some View {
         let isSelected = month == selected
-        let isCurrent = Calendar.current.isDate(month, equalTo: .now, toGranularity: .month)
+        let isCurrent = Calendar.current.isDate(month, equalTo: today, toGranularity: .month)
         // Kurz wie „Nov 26“, „Jan 27“; VoiceOver liest den vollen Monat.
         return Text(month.formatted(.dateTime.month(.abbreviated).year(.twoDigits)).replacingOccurrences(of: ".", with: ""))
             .font(isSelected ? .headline : .subheadline.weight(.medium))

@@ -193,8 +193,9 @@ private struct DayBackground: View {
     let titles: [String]
     var isDropTarget = false
     let fontSize: CGFloat
+    @Environment(\.today) private var today
 
-    private var isToday: Bool { Calendar.current.isDateInToday(day.date) }
+    private var isToday: Bool { Calendar.current.isDate(day.date, inSameDayAs: today) }
     private var isWeekend: Bool { Calendar.current.isDateInWeekend(day.date) }
 
     var body: some View {

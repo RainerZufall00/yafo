@@ -176,6 +176,7 @@ private struct TodoListContent: View {
 private struct TodoRow: View {
     @ObservedObject var todo: TodoItem
     let onToggle: () -> Void
+    @Environment(\.today) private var today
 
     var body: some View {
         HStack(spacing: 12) {
@@ -193,14 +194,14 @@ private struct TodoRow: View {
                     .foregroundStyle(todo.isDone ? .secondary : .primary)
                 if let due = todo.dueDate, !todo.isDone {
                     HStack(spacing: 4) {
-                        Text(Self.dueText(due))
+                        Text(Self.dueText(due, today: today))
                         if todo.recurrenceRule != nil {
                             Image(systemName: "repeat")
                                 .accessibilityLabel("Repeating")
                         }
                     }
                     .font(.caption)
-                    .foregroundStyle(Self.dueColor(due))
+                    .foregroundStyle(Self.dueColor(due, today: today))
                 }
             }
             Spacer(minLength: 4)
@@ -211,18 +212,20 @@ private struct TodoRow: View {
         .accessibilityElement(children: .combine)
     }
 
-    static func dueText(_ due: Date) -> String {
+    static func dueText(_ due: Date, today: Date) -> String {
         let calendar = Calendar.current
-        if calendar.isDateInToday(due) { return String(localized: "Today") }
-        if calendar.isDateInTomorrow(due) { return String(localized: "Tomorrow") }
-        if calendar.isDateInYesterday(due) { return String(localized: "Yesterday") }
-        return due.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
+        switch calendar.dateComponents([.day], from: calendar.startOfDay(for: today), to: calendar.startOfDay(for: due)).day {
+        case 0: return String(localized: "Today")
+        case 1: return String(localized: "Tomorrow")
+        case -1: return String(localized: "Yesterday")
+        default: return due.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
+        }
     }
 
-    static func dueColor(_ due: Date) -> Color {
-        let today = Calendar.current.startOfDay(for: .now)
-        if due < today { return .red }
-        if Calendar.current.isDateInToday(due) { return .orange }
+    static func dueColor(_ due: Date, today: Date) -> Color {
+        let calendar = Calendar.current
+        if due < calendar.startOfDay(for: today) { return .red }
+        if calendar.isDate(due, inSameDayAs: today) { return .orange }
         return .secondary
     }
 }
@@ -238,7 +241,9 @@ struct TodoEditorView: View {
     @State private var title: String
     @State private var hasDueDate: Bool
     @State private var dueDate: Date
-    @State private var rule: String?
+    @State private var repeatChoice: TodoRepeat
+    @State private var customInterval: Int
+    @State private var customUnit: RecurrenceRule.Frequency
     @State private var assignee: Member?
 
     init(todo: TodoItem?, scope: ListScope, initialTitle: String = "", initialAssignee: Member? = nil) {
@@ -247,7 +252,10 @@ struct TodoEditorView: View {
         _title = State(initialValue: todo?.title ?? initialTitle)
         _hasDueDate = State(initialValue: todo?.dueDate != nil)
         _dueDate = State(initialValue: todo?.dueDate ?? Calendar.current.startOfDay(for: .now))
-        _rule = State(initialValue: todo?.recurrenceRule)
+        let parsed = TodoRepeat.parse(todo?.recurrenceRule)
+        _repeatChoice = State(initialValue: parsed.choice)
+        _customInterval = State(initialValue: parsed.interval)
+        _customUnit = State(initialValue: parsed.unit)
         _assignee = State(initialValue: todo?.assignee ?? initialAssignee)
     }
 
@@ -255,13 +263,13 @@ struct TodoEditorView: View {
         scope.family.map(model.repository.activeMembers(of:)) ?? []
     }
 
-    private static let rules: [(LocalizedStringKey, String)] = [
-        ("Every Day", "FREQ=DAILY"),
-        ("Every Week", "FREQ=WEEKLY"),
-        ("Every 2 Weeks", "FREQ=WEEKLY;INTERVAL=2"),
-        ("Every Month", "FREQ=MONTHLY"),
-        ("Every Year", "FREQ=YEARLY"),
-    ]
+    private var rule: String? {
+        switch repeatChoice {
+        case .never: nil
+        case .preset(let rule), .imported(let rule): rule
+        case .custom: RecurrenceRule(frequency: customUnit, interval: customInterval).rruleString
+        }
+    }
 
     var body: some View {
         NavigationStack {
@@ -276,14 +284,28 @@ struct TodoEditorView: View {
                         if let todo {
                             AlertPicker(itemID: todo.id, isDayBased: true, defaultOffset: todo.defaultAlertOffset)
                         }
-                        Picker("Repeat", selection: $rule) {
-                            Text("Never").tag(String?.none)
-                            ForEach(Self.rules, id: \.1) { label, value in
-                                Text(label).tag(String?.some(value))
+                        Picker("Repeat", selection: $repeatChoice) {
+                            Text("Never").tag(TodoRepeat.never)
+                            ForEach(TodoRepeat.presets, id: \.rule) { preset in
+                                Text(preset.label).tag(TodoRepeat.preset(preset.rule))
                             }
-                            if let rule, !Self.rules.contains(where: { $0.1 == rule }) {
-                                Text("Custom").tag(String?.some(rule))
+                            if case .imported(let rule) = repeatChoice {
+                                Text("Custom").tag(TodoRepeat.imported(rule))
                             }
+                            Text("Custom…").tag(TodoRepeat.custom)
+                        }
+                        if repeatChoice == .custom {
+                            Stepper(value: $customInterval, in: 1...99) {
+                                Text(TodoRepeat.customDescription(interval: customInterval, unit: customUnit))
+                            }
+                            Picker("Unit", selection: $customUnit) {
+                                Text("Days").tag(RecurrenceRule.Frequency.daily)
+                                Text("Weeks").tag(RecurrenceRule.Frequency.weekly)
+                                Text("Months").tag(RecurrenceRule.Frequency.monthly)
+                                Text("Years").tag(RecurrenceRule.Frequency.yearly)
+                            }
+                            .pickerStyle(.segmented)
+                            .labelsHidden()
                         }
                     }
                 } footer: {
@@ -338,5 +360,44 @@ struct TodoEditorView: View {
         }
         model.save()
         dismiss()
+    }
+}
+
+/// Wiederholung eines Todos: feste Rhythmen, ein eigener Abstand („alle 3 Wochen“, Abstand und Einheit
+/// stehen im Editor) oder eine Regel, die sich damit nicht abbilden lässt (bleibt unverändert erhalten).
+enum TodoRepeat: Hashable {
+    case never
+    case preset(String)
+    case custom
+    case imported(String)
+
+    static let presets: [(label: LocalizedStringKey, rule: String)] = [
+        ("Every Day", "FREQ=DAILY"),
+        ("Every Week", "FREQ=WEEKLY"),
+        ("Every 2 Weeks", "FREQ=WEEKLY;INTERVAL=2"),
+        ("Every Month", "FREQ=MONTHLY"),
+        ("Every 2 Months", "FREQ=MONTHLY;INTERVAL=2"),
+        ("Every 3 Months", "FREQ=MONTHLY;INTERVAL=3"),
+        ("Every Year", "FREQ=YEARLY"),
+    ]
+
+    /// Auswahl für eine gespeicherte Regel, dazu Abstand und Einheit für „Eigene“ (sonst alle 3 Wochen).
+    static func parse(_ string: String?) -> (choice: TodoRepeat, interval: Int, unit: RecurrenceRule.Frequency) {
+        guard let string else { return (.never, 3, .weekly) }
+        if presets.contains(where: { $0.rule == string }) { return (.preset(string), 3, .weekly) }
+        if let rule = RecurrenceRule(rrule: string), rule.count == nil, rule.until == nil, rule.byDay.isEmpty,
+           rule.byMonthDay.isEmpty, rule.byMonth.isEmpty, rule.otherParts.isEmpty {
+            return (.custom, rule.interval, rule.frequency)
+        }
+        return (.imported(string), 3, .weekly)
+    }
+
+    static func customDescription(interval: Int, unit: RecurrenceRule.Frequency) -> String {
+        switch unit {
+        case .daily: String(localized: "Every \(interval) days")
+        case .weekly: String(localized: "Every \(interval) weeks")
+        case .monthly: String(localized: "Every \(interval) months")
+        case .yearly: String(localized: "Every \(interval) years")
+        }
     }
 }

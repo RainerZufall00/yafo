@@ -13,6 +13,9 @@ struct CalendarActions {
 
 extension EnvironmentValues {
     @Entry var calendarActions = CalendarActions()
+    /// Beginn des heutigen Tages, aus `AppModel.today`. Ansichten, die „heute“ hervorheben, lesen es hier
+    /// statt `Date.now`; so zeichnet SwiftUI sie nach Mitternacht neu, ohne dass die App neu starten muss.
+    @Entry var today = Calendar.current.startOfDay(for: .now)
 }
 
 /// Einstellungen der Kalenderansicht, nur auf dem Gerät.

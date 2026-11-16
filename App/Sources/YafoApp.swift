@@ -13,6 +13,7 @@ struct YafoApp: App {
             RootView()
                 .environment(model)
                 .environment(\.managedObjectContext, model.persistence.viewContext)
+                .environment(\.today, model.today)
                 .task { await model.start() }
         }
     }

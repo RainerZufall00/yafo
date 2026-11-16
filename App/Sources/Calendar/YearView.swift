@@ -8,6 +8,7 @@ import YafoKit
 /// Tippen auf einen Tag öffnet ihn in der Monatsansicht.
 struct YearView: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.today) private var today
     @Environment(\.horizontalSizeClass) private var sizeClass
     let year: Date
     let style: CalendarStyle
@@ -76,7 +77,7 @@ struct YearView: View {
                 }
                 .onAppear {
                     // Im laufenden Jahr den aktuellen Monat ins Bild holen.
-                    if let current = monthRows.first(where: { calendar.isDate($0.month, equalTo: .now, toGranularity: .month) }) {
+                    if let current = monthRows.first(where: { calendar.isDate($0.month, equalTo: today, toGranularity: .month) }) {
                         proxy.scrollTo(current.month, anchor: .center)
                     }
                 }
@@ -85,9 +86,9 @@ struct YearView: View {
     }
 
     private func monthLabel(_ month: Date, calendar: Calendar) -> some View {
-        let isCurrent = calendar.isDate(month, equalTo: .now, toGranularity: .month)
+        let isCurrent = calendar.isDate(month, equalTo: today, toGranularity: .month)
         return Button {
-            onSelectDay(isCurrent ? calendar.startOfDay(for: .now) : month)
+            onSelectDay(isCurrent ? today : month)
         } label: {
             Text(month.formatted(.dateTime.month(.abbreviated)).replacingOccurrences(of: ".", with: "").uppercased())
                 .font(.system(size: metrics.labelFontSize, weight: .semibold))
@@ -236,8 +237,9 @@ private struct YearDayColumn: View {
     let titles: [String]
     let height: CGFloat
     let fontSize: CGFloat
+    @Environment(\.today) private var today
 
-    private var isToday: Bool { Calendar.current.isDateInToday(day) }
+    private var isToday: Bool { Calendar.current.isDate(day, inSameDayAs: today) }
     private var isWeekend: Bool { Calendar.current.isDateInWeekend(day) }
 
     var body: some View {

@@ -134,6 +134,7 @@ private struct EntryLink<Content: View>: View {
 private struct DayTimeline: View {
     let day: Date
     let entries: [CalendarEntry]
+    @Environment(\.today) private var today
 
     @ScaledMetric(relativeTo: .caption) private var hourHeight: CGFloat = 54
     private let labelWidth: CGFloat = 52
@@ -146,7 +147,7 @@ private struct DayTimeline: View {
         let layout = DayLayout<String>(day: day, entries: entries.map { .init(id: $0.id, start: $0.start, end: $0.end) },
                                minimumMinutes: minimumMinutes)
         let byID = Dictionary(entries.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
-        let isToday = Calendar.current.isDateInToday(day)
+        let isToday = Calendar.current.isDate(day, inSameDayAs: today)
         // Heute ab der aktuellen Stunde, sonst ab dem ersten Termin, ohne Termine ab 7 Uhr.
         let firstHour = isToday ? Calendar.current.component(.hour, from: .now)
             : layout.items.map { Int($0.startMinute / 60) }.min() ?? 8

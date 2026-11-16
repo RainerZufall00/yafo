@@ -1299,6 +1299,16 @@
         }
       }
     },
+    "Custom…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Benutzerdefiniert…"
+          }
+        }
+      }
+    },
     "Dairy & Eggs": {
       "localizations": {
         "de": {
@@ -1325,6 +1335,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Geburtsdatum"
+          }
+        }
+      }
+    },
+    "Days": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tage"
           }
         }
       }
@@ -1773,6 +1793,176 @@
         }
       }
     },
+    "Every %lld days": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Every day"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Every %lld days"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Jeden Tag"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Alle %lld Tage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Every %lld months": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Every month"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Every %lld months"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Jeden Monat"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Alle %lld Monate"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Every %lld weeks": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Every week"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Every %lld weeks"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Jede Woche"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Alle %lld Wochen"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Every %lld years": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Every year"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Every %lld years"
+                }
+              }
+            }
+          }
+        },
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Jedes Jahr"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Alle %lld Jahre"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Every 2 Months": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle 2 Monate"
+          }
+        }
+      }
+    },
     "Every 2 Weeks": {
       "localizations": {
         "de": {
@@ -1799,6 +1989,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Alle 2 Wochen am %@"
+          }
+        }
+      }
+    },
+    "Every 3 Months": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle 3 Monate"
           }
         }
       }
@@ -2611,6 +2811,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Monat"
+          }
+        }
+      }
+    },
+    "Months": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Monate"
           }
         }
       }
@@ -4251,6 +4461,16 @@
         }
       }
     },
+    "Unit": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einheit"
+          }
+        }
+      }
+    },
     "Unknown": {
       "localizations": {
         "de": {
@@ -4337,6 +4557,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wöchentliches Backup"
+          }
+        }
+      }
+    },
+    "Weeks": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wochen"
           }
         }
       }
@@ -4437,6 +4667,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Geburtsjahr bekannt"
+          }
+        }
+      }
+    },
+    "Years": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jahre"
           }
         }
       }
