@@ -180,7 +180,7 @@ struct EventEditorView: View {
                 Button("Cancel", role: .cancel) {}
             }
             .onAppear {
-                if calendar == nil { calendar = calendars.first }
+                if calendar == nil { calendar = DefaultCalendar.pick(from: calendars) }
             }
             .onChange(of: kind) {
                 // „Geburtstag Oma (1950)“ wird zu „Oma“ mit Geburtsjahr.

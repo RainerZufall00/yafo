@@ -24,6 +24,9 @@ struct FamilyView: View {
     @FetchRequest(sortDescriptors: [SortDescriptor(\.createdAt)],
                   predicate: NSPredicate(format: "family == nil"))
     private var personalCalendars: FetchedResults<EventCalendar>
+    @FetchRequest(sortDescriptors: [SortDescriptor(\.createdAt)])
+    private var allCalendars: FetchedResults<EventCalendar>
+    @AppStorage(DefaultCalendar.key, store: DefaultCalendar.defaults) private var defaultCalendarID = ""
 
     @AppStorage(LaunchTab.key) private var launchTab = LaunchTab.last.rawValue
     @State private var creatingFamily = false
@@ -82,6 +85,9 @@ struct FamilyView: View {
                 }
 
                 Section {
+                    if allCalendars.count > 1 {
+                        defaultCalendarPicker
+                    }
                     Toggle("Show To-dos with Due Date", systemImage: "checklist", isOn: $showsTodos)
                     Toggle("Due To-dos in Widget", systemImage: "widget.small", isOn: $widgetShowsTodos)
                         .onChange(of: widgetShowsTodos) { model.refreshDerivedData() }
@@ -195,6 +201,26 @@ struct FamilyView: View {
                     .disabled(promptText.trimmingCharacters(in: .whitespaces).isEmpty)
                 Button("Cancel", role: .cancel) {}
             }
+        }
+    }
+
+    /// Vorausgewählter Kalender für neue Termine; ohne Wahl der älteste (wie bisher).
+    private var defaultCalendarPicker: some View {
+        let familyCount = Set(allCalendars.compactMap(\.family)).count
+        let ids = allCalendars.compactMap { $0.id?.uuidString }
+        let selected = ids.contains(defaultCalendarID) ? defaultCalendarID : ids.first ?? ""
+        return Picker(selection: Binding(get: { selected }, set: { defaultCalendarID = $0 })) {
+            ForEach(allCalendars) { calendar in
+                if let id = calendar.id?.uuidString {
+                    if familyCount > 1, let family = calendar.family?.name {
+                        Text(verbatim: "\(calendar.displayName) · \(family)").tag(id)
+                    } else {
+                        Text(calendar.displayName).tag(id)
+                    }
+                }
+            }
+        } label: {
+            Label("Default Calendar", systemImage: "calendar.badge.plus")
         }
     }
 

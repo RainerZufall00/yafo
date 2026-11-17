@@ -1359,6 +1359,16 @@
         }
       }
     },
+    "Default Calendar": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standardkalender"
+          }
+        }
+      }
+    },
     "Delete": {
       "localizations": {
         "de": {
