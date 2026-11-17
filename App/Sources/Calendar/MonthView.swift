@@ -121,7 +121,7 @@ struct MonthView: View {
         if mode == .week {
             VStack(spacing: 0) {
                 weekHeader
-                weekPager
+                weekPager.clipsHorizontally()
                 WeekStrip(weeks: Self.pagedWeeks, selected: week) { target in
                     withAnimation(.snappy) { scrolledWeek = target }
                 }
@@ -129,7 +129,7 @@ struct MonthView: View {
         } else {
             VStack(spacing: 0) {
                 monthHeader
-                monthPager
+                monthPager.clipsHorizontally()
             }
         }
     }
@@ -412,6 +412,7 @@ struct MonthStrip: View {
         .scrollIndicators(.hidden)
         .scrollPosition(id: $position, anchor: .center)
         .contentMargins(.horizontal, 12, for: .scrollContent)
+        .clipsHorizontally()
         .frame(height: 40)
         .padding(.top, 2)
         .padding(.bottom, 6)

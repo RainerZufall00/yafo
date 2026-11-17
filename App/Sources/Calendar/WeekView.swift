@@ -341,6 +341,7 @@ struct WeekStrip: View {
         .scrollIndicators(.hidden)
         .scrollPosition(id: $position, anchor: .center)
         .contentMargins(.horizontal, 6, for: .scrollContent)
+        .clipsHorizontally()
         .frame(height: 50)
         .padding(.vertical, 4)
         .background(.bar)

@@ -138,9 +138,9 @@ Roadmap aus dem Architektur-Dokument:
     Vorschläge zum Antippen
 - [ ] 8. TestFlight, App Store
   - TestFlight läuft (Build 6). Store-Eintrag vorbereitet in `AppStore/`: Texte DE/EN, Screenshots für iPhone 6,9″/6,3″,
-    iPad 13″ und iPhone Duo innen, Datenschutz- und Support-Seiten für GitHub Pages
+    iPad 13″ und iPhone Duo innen und außen, Datenschutz- und Support-Seiten für GitHub Pages
   - Datenschutz und Support online: https://rainerzufall00.github.io/yafo/ (Branch `gh-pages`)
-  - Offen: Duo-Screenshots zugeklappt, Version 1.0
+  - Offen: Version 1.0
 
 ## Lizenz
 

@@ -520,6 +520,7 @@ struct DayPage: View {
         .scrollTargetBehavior(.paging)
         .scrollIndicators(.hidden)
         .scrollPosition(id: $scrolledDay)
+        .clipsHorizontally()
         .onChange(of: scrolledDay) {
             guard let scrolledDay, scrolledDay != day else { return }
             day = scrolledDay
