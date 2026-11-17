@@ -5,6 +5,12 @@ Alle Daten liegen in iCloud (CloudKit), ein eigener Server ist nicht nötig.
 
 Architektur und Feature-Umfang: [docs/yafo – Architektur & Features.pdf](docs/)
 
+**Website:** https://rainerzufall00.github.io/yafo/ ·
+**Datenschutz:** [Deutsch](https://rainerzufall00.github.io/yafo/datenschutz/) · [English](https://rainerzufall00.github.io/yafo/privacy/) ·
+**Support:** [Deutsch](https://rainerzufall00.github.io/yafo/support/) · [English](https://rainerzufall00.github.io/yafo/support/en/) ·
+**Fehler und Wünsche:** [Issues](https://github.com/RainerZufall00/yafo/issues) ·
+**Store-Texte:** [AppStore/listing.md](AppStore/listing.md)
+
 ## Aufbau
 
 | Ordner | Inhalt |
@@ -57,7 +63,7 @@ cd YafoKit && swift test
 
 ## TestFlight
 
-Version und Build-Nummer stehen in `Config/Base.xcconfig` und gelten für App und Extensions.
+Die Version steht in `Config/Base.xcconfig` und gilt für App und Extensions; die Build-Nummer setzt der Workflow.
 Export-Compliance (`ITSAppUsesNonExemptEncryption = NO`) und Privacy Manifests sind gesetzt.
 
 1. Einmalig: App in App Store Connect anlegen (Bundle-ID `de.yafo.app`).
@@ -66,8 +72,8 @@ Export-Compliance (`ITSAppUsesNonExemptEncryption = NO`) und Privacy Manifests s
    (iCloud angemeldet, legt alle Typen und Felder in Development an), dann im
    [CloudKit Console](https://icloud.developer.apple.com) unter `iCloud.de.yafo.app` › Schema
    *Deploy Schema Changes…* wählen.
-3. `CURRENT_PROJECT_VERSION` erhöhen, in Xcode *Any iOS Device* wählen, *Product › Archive*, im Organizer
-   *Distribute App › TestFlight & App Store*.
+3. Hochladen über GitHub Actions: *Actions › TestFlight › Run workflow* (`gh workflow run testflight.yml -f version=1.0`).
+   Der Workflow archiviert, signiert und lädt hoch, Build-Nummer = UTC-Zeit `yyMMddHHmm` – kein Mac nötig.
 
 ## Stand
 
@@ -140,6 +146,7 @@ Roadmap aus dem Architektur-Dokument:
   - TestFlight läuft (Build 6). Store-Eintrag vorbereitet in `AppStore/`: Texte DE/EN, Screenshots für iPhone 6,9″/6,3″,
     iPad 13″ und iPhone Duo innen und außen, Datenschutz- und Support-Seiten für GitHub Pages
   - Datenschutz und Support online: https://rainerzufall00.github.io/yafo/ (Branch `gh-pages`)
+  - Alle Store-Texte zum Kopieren: `AppStore/listing.md` (aus `AppStore/metadata`, `AppStore/Tools/make-listing.py`)
   - Offen: Version 1.0
 
 ## Lizenz

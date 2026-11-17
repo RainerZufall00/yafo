@@ -28,9 +28,11 @@ AppStore/
     compose-screenshots.swift  Überschrift, Rahmen, Hintergrund in den Farben des App-Icons
     make-website.py            baut Website/site aus Datenschutz.md, Privacy.md und contact.json
     publish-website.sh         veröffentlicht Website/site auf GitHub Pages (Branch gh-pages)
+    make-listing.py            schreibt listing.md aus metadata/ (nach jeder Textänderung laufen lassen)
   Datenschutz.md          Datenschutzerklärung (Deutsch) – Quelle für die Website
   Privacy.md              dieselbe auf Englisch
   Website/                Öffentliche Seiten für Support und Datenschutz (contact.json = Kontaktdaten, site/ = Ergebnis)
+  listing.md              alle Texte zum Kopieren nach App Store Connect, mit Zeichenzahl (erzeugt)
 ```
 
 ## Screenshots neu erzeugen
