@@ -201,7 +201,7 @@ struct EventEditorView: View {
                 Button("Cancel", role: .cancel) {}
             }
             .onAppear {
-                if calendar == nil { calendar = calendars.first }
+                if calendar == nil { calendar = DefaultCalendar.pick(from: calendars) }
                 // Nur einmal laden: onAppear kommt nach jeder Unterseite (Kalenderauswahl) wieder.
                 if !alertLoaded {
                     alert = model.repository.alertSetting(for: event?.id)

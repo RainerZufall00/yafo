@@ -77,7 +77,7 @@ struct ScreenshotImportView: View {
                 }
             }
             .task { await read() }
-            .onAppear { if calendar == nil { calendar = calendars.first } }
+            .onAppear { if calendar == nil { calendar = DefaultCalendar.pick(from: calendars) } }
         }
     }
 
