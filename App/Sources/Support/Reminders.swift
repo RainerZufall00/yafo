@@ -53,12 +53,29 @@ enum ReminderScheduler {
     }
 }
 
-/// Auswahl der eigenen Erinnerung für einen Termin oder ein Todo.
+/// Auswahl der eigenen Erinnerung für einen gespeicherten Termin oder ein Todo, sofort gesichert.
 /// „Standard“ folgt der Vorgabe am Eintrag, alles andere gilt nur für mich.
 struct AlertPicker: View {
     @Environment(AppModel.self) private var model
     let itemID: UUID?
     /// Ganztägig und Todos: Offsets relativ zu 0 Uhr des Tages.
+    let isDayBased: Bool
+    let defaultOffset: Double
+
+    var body: some View {
+        AlertSettingPicker(selection: Binding(
+            get: { model.repository.alertSetting(for: itemID) },
+            set: { setting in
+                model.repository.setAlert(setting, for: itemID)
+                model.save()
+            }
+        ), isDayBased: isDayBased, defaultOffset: defaultOffset)
+    }
+}
+
+/// Die Auswahl selbst; im Termin-Editor gebunden an einen Entwurf, der erst beim Sichern gilt.
+struct AlertSettingPicker: View {
+    @Binding var selection: AlertSetting
     let isDayBased: Bool
     let defaultOffset: Double
 
@@ -70,24 +87,20 @@ struct AlertPicker: View {
     private var options: [Double] { isDayBased ? Self.dayOptions : Self.timeOptions }
 
     var body: some View {
-        Picker("Reminder", systemImage: "bell", selection: Binding(
-            get: { model.repository.alertSetting(for: itemID) },
-            set: { setting in
-                model.repository.setAlert(setting, for: itemID)
-                model.save()
-            }
-        )) {
-            Text("Default (\(Self.describe(defaultOffset, isDayBased: isDayBased)))").tag(AlertSetting.standard)
+        Picker("Reminder", systemImage: "bell", selection: $selection) {
+            Text("Default (\(AlertPicker.describe(defaultOffset, isDayBased: isDayBased)))").tag(AlertSetting.standard)
             Text("None").tag(AlertSetting.muted)
             ForEach(options, id: \.self) { offset in
-                Text(Self.describe(offset, isDayBased: isDayBased)).tag(AlertSetting.offset(offset))
+                Text(AlertPicker.describe(offset, isDayBased: isDayBased)).tag(AlertSetting.offset(offset))
             }
-            if case .offset(let own) = model.repository.alertSetting(for: itemID), !options.contains(own) {
-                Text(Self.describe(own, isDayBased: isDayBased)).tag(AlertSetting.offset(own))
+            if case .offset(let own) = selection, !options.contains(own) {
+                Text(AlertPicker.describe(own, isDayBased: isDayBased)).tag(AlertSetting.offset(own))
             }
         }
     }
+}
 
+extension AlertPicker {
     static func describe(_ offset: Double, isDayBased: Bool) -> String {
         if isDayBased {
             // Offset vor 0 Uhr: Tage davor und Uhrzeit an jenem Tag.

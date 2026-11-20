@@ -205,7 +205,7 @@ public final class Repository {
         event.createdBy = createdBy
         apply(EventDraft(title: title, start: start, end: end, isAllDay: isAllDay, calendar: calendar,
                          participants: participants, recurrenceRule: recurrenceRule), to: event)
-        event.defaultAlertOffset = isAllDay ? AlertDefaults.allDayEventOffset : AlertDefaults.timedEventOffset
+        event.defaultAlertOffset = AlertDefaults.eventOffset(isAllDay: isAllDay)
         return event
     }
 

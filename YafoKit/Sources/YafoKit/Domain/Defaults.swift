@@ -10,6 +10,11 @@ nonisolated public enum AlertDefaults {
     public static let todoOffset: Double = -9 * 60 * 60
     /// Geburtstage: am Tag selbst um 9 Uhr.
     public static let birthdayOffset: Double = -9 * 60 * 60
+
+    /// Vorgabe für einen Termin mit bzw. ohne Uhrzeit.
+    public static func eventOffset(isAllDay: Bool) -> Double {
+        isAllDay ? allDayEventOffset : timedEventOffset
+    }
 }
 
 /// Standardfarben je Kalendertyp (siehe Farbsystem in docs/).

@@ -131,6 +131,10 @@ extension Repository {
         event.title = draft.title
         event.start = Self.wholeSeconds(draft.start)
         event.end = Self.wholeSeconds(max(draft.end, draft.start))
+        if event.isAllDay != draft.isAllDay {
+            // Die Vorgabe zählt bei Ganztägigem ab 0 Uhr, sonst ab Beginn: beim Umschalten neu setzen.
+            event.defaultAlertOffset = AlertDefaults.eventOffset(isAllDay: draft.isAllDay)
+        }
         event.isAllDay = draft.isAllDay
         event.timeZone = draft.isAllDay ? nil : (event.timeZone ?? TimeZone.current.identifier)
         event.location = draft.location

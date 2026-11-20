@@ -96,6 +96,20 @@ import Testing
         #expect(plan(as: nil).first?.fireDate == at(3, 9, 30))
     }
 
+    @Test func switchingAllDayResetsTheDefault() {
+        let event = repository.createEvent(title: "Dentist", start: at(5, 10), end: at(5, 11), isAllDay: false,
+                                           in: personal, createdBy: nil)
+        repository.update(event, with: EventDraft(title: "Dentist", start: at(5, 0), end: at(6, 0),
+                                                  isAllDay: true, calendar: personal))
+        #expect(event.defaultAlertOffset == AlertDefaults.allDayEventOffset)
+        #expect(plan(as: nil).first?.fireDate == at(4, 18))
+
+        repository.update(event, with: EventDraft(title: "Dentist", start: at(5, 10), end: at(5, 11),
+                                                  isAllDay: false, calendar: personal))
+        #expect(event.defaultAlertOffset == AlertDefaults.timedEventOffset)
+        #expect(plan(as: nil).first?.fireDate == at(5, 9, 30))
+    }
+
     @Test func seriesProduceOneReminderPerOccurrenceUpToTheLimit() {
         repository.createEvent(title: "Daily", start: at(3, 7), end: at(3, 8), isAllDay: false,
                                in: personal, recurrenceRule: "FREQ=DAILY", createdBy: nil)

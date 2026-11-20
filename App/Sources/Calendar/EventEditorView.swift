@@ -30,6 +30,9 @@ struct EventEditorView: View {
     @State private var kind: EventKind
     /// Bei Geburtstagen: Jahr im Datum ist das Geburtsjahr.
     @State private var birthYearKnown: Bool
+    /// Eigene Erinnerung; gilt erst beim Sichern, weil ein neuer Termin noch keine ID hat.
+    @State private var alert: AlertSetting = .standard
+    @State private var alertLoaded = false
 
     @FetchRequest(sortDescriptors: [SortDescriptor(\.createdAt)])
     private var calendars: FetchedResults<EventCalendar>
@@ -96,6 +99,22 @@ struct EventEditorView: View {
             || ruleString != initialRule
     }
 
+    /// Ganztägig und Geburtstage erinnern relativ zum Tag, sonst zum Beginn.
+    private var alertIsDayBased: Bool { kind == .birthday || isAllDay }
+
+    /// Vorgabe am Termin; nach dem Umschalten von Ganztägig bzw. für neue Termine die ab Werk.
+    private var defaultAlertOffset: Double {
+        if kind == .birthday { return AlertDefaults.birthdayOffset }
+        if let event, !event.isBirthday, isAllDay == initialAllDay { return event.defaultAlertOffset }
+        return AlertDefaults.eventOffset(isAllDay: isAllDay)
+    }
+
+    private var alertSection: some View {
+        Section {
+            AlertSettingPicker(selection: $alert, isDayBased: alertIsDayBased, defaultOffset: defaultAlertOffset)
+        }
+    }
+
     var body: some View {
         NavigationStack {
             Form {
@@ -111,6 +130,7 @@ struct EventEditorView: View {
                 }
                 if kind == .birthday {
                     birthdaySection
+                    alertSection
                 } else {
                     Section {
                         TextField("Title", text: $title)
@@ -123,6 +143,7 @@ struct EventEditorView: View {
                         DatePicker("Ends", selection: $end, in: start...,
                                    displayedComponents: isAllDay ? .date : [.date, .hourAndMinute])
                     }
+                    alertSection
                     repeatSection
                 }
                 Section("Calendar") {
@@ -181,6 +202,15 @@ struct EventEditorView: View {
             }
             .onAppear {
                 if calendar == nil { calendar = calendars.first }
+                // Nur einmal laden: onAppear kommt nach jeder Unterseite (Kalenderauswahl) wieder.
+                if !alertLoaded {
+                    alert = model.repository.alertSetting(for: event?.id)
+                    alertLoaded = true
+                }
+            }
+            .onChange(of: alertIsDayBased) {
+                // Eine eigene Zeit passt nicht mehr, wenn sie sich auf den Tag statt den Beginn bezieht.
+                if case .offset = alert { alert = .standard }
             }
             .onChange(of: kind) {
                 // „Geburtstag Oma (1950)“ wird zu „Oma“ mit Geburtsjahr.
@@ -295,8 +325,9 @@ struct EventEditorView: View {
                                isAllDay: isAllDay, location: location.isEmpty ? nil : location,
                                notes: notes.isEmpty ? nil : notes, calendar: calendar, participants: participants,
                                recurrenceRule: ruleString, geo: geo)
+        let saved: Event
         if let event {
-            model.repository.update(event, occurrence: originalStart, with: draft, scope: scope)
+            saved = model.repository.update(event, occurrence: originalStart, with: draft, scope: scope)
         } else {
             let created = model.repository.createEvent(title: draft.title, start: start, end: end, isAllDay: isAllDay,
                                                        in: calendar, participants: participants,
@@ -305,9 +336,18 @@ struct EventEditorView: View {
             created.location = draft.location
             created.geo = draft.location == nil ? nil : geo
             created.notes = draft.notes
+            saved = created
         }
+        saveAlert(for: saved)
         model.save()
         dismiss()
+    }
+
+    /// Eigene Erinnerung auf den Termin übertragen, der die Änderung trägt. Nach dem Teilen einer
+    /// Serie oder dem Wechsel in einen anderen Store ist das ein neuer Termin mit neuer ID.
+    private func saveAlert(for event: Event) {
+        guard alert != model.repository.alertSetting(for: event.id) else { return }
+        model.repository.setAlert(alert, for: event.id)
     }
 }
 
@@ -316,13 +356,14 @@ extension EventEditorView {
         let name = title.trimmingCharacters(in: .whitespaces)
         let year = birthYearKnown ? Calendar.current.component(.year, from: start) : nil
         let notes = notes.isEmpty ? nil : notes
-        if let event {
+        let saved = if let event {
             model.repository.updateBirthday(event, name: name, day: start, birthYear: year,
                                             calendar: calendar, notes: notes)
         } else {
             model.repository.createBirthday(name: name, day: start, birthYear: year, in: calendar,
                                             notes: notes, createdBy: model.creatorID(for: calendar))
         }
+        saveAlert(for: saved)
         model.save()
         dismiss()
     }
