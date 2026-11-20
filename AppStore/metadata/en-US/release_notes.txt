@@ -1,1 +1,3 @@
-The first version of yafo: family calendar, shopping list and to-dos – shared via iCloud.
+- New: choose a reminder right when you create an event – birthdays included.
+- Fixed: after switching an event to "All day", its reminder came at the wrong time (11:30 pm the day before instead of 6 pm).
+- Fixed: on the folded iPhone Duo, the next calendar page peeked out at the edge.

@@ -99,10 +99,12 @@ https://rainerzufall00.github.io/yafo/
 https://rainerzufall00.github.io/yafo/datenschutz/
 ```
 
-### Neuerungen in dieser Version (94/4000) – erst ab dem zweiten Update
+### Neuerungen in dieser Version (316/4000) – erst ab dem zweiten Update
 
 ```text
-Die erste Version von yafo: Familienkalender, Einkaufsliste und Todos – gemeinsam über iCloud.
+- Neu: Die Erinnerung lässt sich schon beim Anlegen eines Termins wählen – auch bei Geburtstagen.
+- Behoben: Nach dem Umschalten auf „Ganztägig“ kam die Erinnerung zur falschen Zeit (am Vortag um 23:30 statt um 18 Uhr).
+- Behoben: Auf dem zugeklappten iPhone Duo schaute im Kalender die nächste Seite am Rand hervor.
 ```
 
 ## English (U.S.) (en-US)
@@ -195,10 +197,12 @@ https://rainerzufall00.github.io/yafo/
 https://rainerzufall00.github.io/yafo/privacy/
 ```
 
-### What's New in This Version (89/4000) – only from the second version on
+### What's New in This Version (286/4000) – only from the second version on
 
 ```text
-The first version of yafo: family calendar, shopping list and to-dos – shared via iCloud.
+- New: choose a reminder right when you create an event – birthdays included.
+- Fixed: after switching an event to "All day", its reminder came at the wrong time (11:30 pm the day before instead of 6 pm).
+- Fixed: on the folded iPhone Duo, the next calendar page peeked out at the edge.
 ```
 
 ## App Review Information

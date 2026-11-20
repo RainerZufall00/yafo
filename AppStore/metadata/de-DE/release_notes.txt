@@ -1,1 +1,3 @@
-Die erste Version von yafo: Familienkalender, Einkaufsliste und Todos – gemeinsam über iCloud.
+- Neu: Die Erinnerung lässt sich schon beim Anlegen eines Termins wählen – auch bei Geburtstagen.
+- Behoben: Nach dem Umschalten auf „Ganztägig“ kam die Erinnerung zur falschen Zeit (am Vortag um 23:30 statt um 18 Uhr).
+- Behoben: Auf dem zugeklappten iPhone Duo schaute im Kalender die nächste Seite am Rand hervor.
