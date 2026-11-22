@@ -146,9 +146,9 @@ struct ExportView: View {
             Text("Backup")
         } footer: {
             if let last = model.lastAutoBackup {
-                Text("Saved weekly to the yafo folder in iCloud Drive, the last five are kept. Last backup: \(last.formatted(date: .abbreviated, time: .shortened)).")
+                Text("Saved weekly, the last five are kept. You find them under Restore from Backup, not in the Files app. Last backup: \(last.formatted(date: .abbreviated, time: .shortened)).")
             } else {
-                Text("Saved weekly to the yafo folder in iCloud Drive, the last five are kept.")
+                Text("Saved weekly, the last five are kept. You find them under Restore from Backup, not in the Files app.")
             }
         }
     }

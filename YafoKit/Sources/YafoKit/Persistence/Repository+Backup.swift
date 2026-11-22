@@ -193,6 +193,16 @@ nonisolated public struct Backup: Codable, Equatable, Sendable {
         formatter.dateFormat = "yyyy-MM-dd HHmm"
         return "yafo-Backup \(formatter.string(from: date)).json"
     }
+
+    /// Zeitpunkt aus einem Namen von `fileName(at:)`; `nil` für andere Dateien.
+    public static func date(fromFileName name: String) -> Date? {
+        let prefix = "yafo-Backup ", suffix = ".json"
+        guard name.hasPrefix(prefix), name.hasSuffix(suffix) else { return nil }
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd HHmm"
+        return formatter.date(from: String(name.dropFirst(prefix.count).dropLast(suffix.count)))
+    }
 }
 
 public enum BackupError: LocalizedError {

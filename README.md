@@ -132,7 +132,8 @@ Roadmap aus dem Architektur-Dokument:
     in der Beschreibung), Termine, Einkauf und Todos als CSV (UTF-8 mit BOM für Excel)
   - Kopie in einen Gerätekalender per EventKit; erneutes Kopieren ersetzt die früheren Kopien
   - JSON-Backup zum Teilen und Wiederherstellen (nur fehlende Einträge, verlorene Familien neu mit
-    einem selbst als Owner), wöchentlich automatisch in den yafo-Ordner in iCloud Drive, die letzten fünf
+    einem selbst als Owner), wöchentlich automatisch in den iCloud-Container außerhalb von `Documents`
+    (nicht in der Dateien-App sichtbar, Auswahl beim Wiederherstellen), die letzten fünf
   - Offen: Gerätekalender-Kopie automatisch aktuell halten
 - [x] 7. Screenshot zu Termin
   - Bild teilen (Share Extension) oder im Kalender „+“ lange drücken › „Termin aus Screenshot“

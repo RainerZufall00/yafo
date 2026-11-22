@@ -29,7 +29,7 @@ Kalender, Einkauf & Todos
 Ein Kalender, eine Einkaufsliste und Todos für die ganze Familie – geteilt über iCloud, ohne Konto, ohne Werbung, ohne Tracking.
 ```
 
-### Beschreibung (2704/4000)
+### Beschreibung (2712/4000)
 
 ```text
 yafo bringt den Familienalltag an einen Ort: ein gemeinsamer Kalender, eine Einkaufsliste und Todos – für alle in der Familie, auf iPhone und iPad. Alles liegt in eurer iCloud. Kein Konto, kein eigener Server, keine Werbung, kein Tracking.
@@ -68,7 +68,7 @@ ERINNERUNGEN UND WIDGETS
 DEINE DATEN GEHÖREN DIR
 • Alles wird über deine iCloud synchronisiert und geteilt. Der Entwickler sieht keine eurer Daten.
 • Import aus Gerätekalendern, Google-Kalender-Adressen (ICS) und .ics-Dateien, Geburtstage aus den Kontakten.
-• Export als ICS und CSV, dazu ein automatisches Backup in deinem iCloud Drive.
+• Export als ICS und CSV, dazu ein automatisches wöchentliches Backup in deiner iCloud.
 
 Bedienung nach Wahl: klassisch mit Tabs oder per Wischen – Todos links, Einkauf rechts, Monate nach oben und unten.
 
@@ -127,7 +127,7 @@ Calendar, shopping & to-dos
 One calendar, one shopping list and to-dos for the whole family – shared via iCloud, with no account, no ads and no tracking.
 ```
 
-### Description (2697/4000)
+### Description (2698/4000)
 
 ```text
 yafo brings family life together in one place: a shared calendar, a shopping list and to-dos – for everyone in the family, on iPhone and iPad. Everything lives in your iCloud. No account, no server of our own, no ads, no tracking.
@@ -166,7 +166,7 @@ REMINDERS AND WIDGETS
 YOUR DATA IS YOURS
 • Everything syncs and is shared through your iCloud. The developer sees none of your data.
 • Import from device calendars, Google Calendar addresses (ICS) and .ics files, birthdays from your contacts.
-• Export as ICS and CSV, plus an automatic backup in your iCloud Drive.
+• Export as ICS and CSV, plus an automatic weekly backup in your iCloud.
 
 Your choice of navigation: classic tabs or swiping – to-dos on the left, shopping on the right, months up and down.
 
@@ -207,7 +207,7 @@ https://rainerzufall00.github.io/yafo/privacy/
 
 ## App Review Information
 
-### Notes (2840/4000)
+### Notes (2870/4000)
 
 ```text
 No account, no login, no in-app purchases, no ads. The app works without any credentials.
@@ -231,7 +231,7 @@ PERMISSIONS (all optional; calendars, contacts and camera are asked only when th
 - Notifications (asked at first launch): local reminders for events and to-dos, no marketing. Remote notifications are only silent CloudKit pushes for syncing.
 
 EXTERNAL SERVICES
-- Apple CloudKit and iCloud Drive (user's own private and shared databases; weekly JSON backup in the user's iCloud Drive).
+- Apple CloudKit and iCloud Drive (user's own private and shared databases; weekly JSON backup in the app's iCloud container, not shown in iCloud Drive).
 - OpenHolidays API (openholidaysapi.org) to download school holiday dates for Germany, Austria and Switzerland when the user turns them on for a calendar. Only the region is sent.
 - ICS/webcal calendar addresses that the user enters (e.g. a Google Calendar address), fetched directly by the device.
 - Apple MapKit for place search in the location field.

@@ -19,7 +19,7 @@ PERMISSIONS (all optional; calendars, contacts and camera are asked only when th
 - Notifications (asked at first launch): local reminders for events and to-dos, no marketing. Remote notifications are only silent CloudKit pushes for syncing.
 
 EXTERNAL SERVICES
-- Apple CloudKit and iCloud Drive (user's own private and shared databases; weekly JSON backup in the user's iCloud Drive).
+- Apple CloudKit and iCloud Drive (user's own private and shared databases; weekly JSON backup in the app's iCloud container, not shown in iCloud Drive).
 - OpenHolidays API (openholidaysapi.org) to download school holiday dates for Germany, Austria and Switzerland when the user turns them on for a calendar. Only the region is sent.
 - ICS/webcal calendar addresses that the user enters (e.g. a Google Calendar address), fetched directly by the device.
 - Apple MapKit for place search in the location field.

@@ -344,7 +344,7 @@ private struct FamilyPage: View {
                        "Scan the QR code of someone who is already in.", action: join)
                     .disabled(!model.sharing.isAvailable)
                 option("arrow.counterclockwise.circle.fill", "Restore a Backup",
-                       "Bring back calendars and lists from a yafo backup file.") { restoring = true }
+                       "Bring back calendars and lists from a yafo backup.") { restoring = true }
                 if !model.sharing.isAvailable {
                     Label("Sign in to iCloud in Settings to share with your family.", systemImage: "icloud.slash")
                         .font(.footnote)

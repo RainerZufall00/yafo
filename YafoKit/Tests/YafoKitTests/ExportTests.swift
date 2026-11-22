@@ -177,5 +177,8 @@ import Testing
         #expect(throws: BackupError.self) { try Backup.decode(Data(#"{"format":"other","version":1,"createdAt":"2026-11-03T08:00:00Z","families":[],"members":[],"calendars":[],"events":[],"comments":[],"shoppingItems":[],"todos":[],"subscriptions":[],"appearances":[],"alertPreferences":[]}"#.utf8)) }
         #expect(throws: (any Error).self) { try Backup.decode(Data("nonsense".utf8)) }
         #expect(Backup.fileName(at: local(11, 3, 8)) == "yafo-Backup 2026-11-03 0800.json")
+        #expect(Backup.date(fromFileName: "yafo-Backup 2026-11-03 0800.json") == local(11, 3, 8))
+        #expect(Backup.date(fromFileName: "yafo-Backup 2026-11-03 0800.json.icloud") == nil)
+        #expect(Backup.date(fromFileName: "yafo Everything.ics") == nil)
     }
 }

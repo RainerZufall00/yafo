@@ -743,6 +743,16 @@
         }
       }
     },
+    "Automatic Backups": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatische Backups"
+          }
+        }
+      }
+    },
     "Baby": {
       "localizations": {
         "de": {
@@ -897,12 +907,12 @@
         }
       }
     },
-    "Bring back calendars and lists from a yafo backup file.": {
+    "Bring back calendars and lists from a yafo backup.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kalender und Listen aus einer yafo-Backup-Datei zurückholen."
+            "value": "Kalender und Listen aus einem yafo-Backup zurückholen."
           }
         }
       }
@@ -1043,6 +1053,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Gerätekalender wählen"
+          }
+        }
+      }
+    },
+    "Choose File…": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Datei auswählen …"
           }
         }
       }
@@ -3633,6 +3653,16 @@
         }
       }
     },
+    "Restore Backup": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup wiederherstellen"
+          }
+        }
+      }
+    },
     "Restore Backup?": {
       "localizations": {
         "de": {
@@ -3723,22 +3753,32 @@
         }
       }
     },
-    "Saved weekly to the yafo folder in iCloud Drive, the last five are kept.": {
+    "Saved weekly, the last five are kept. They are stored with yafo in iCloud and don't appear in the Files app. To keep one as a file, share it.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Wird wöchentlich im yafo-Ordner in iCloud Drive gesichert, die letzten fünf bleiben erhalten."
+            "value": "Wird wöchentlich gesichert, die letzten fünf bleiben erhalten. Sie liegen bei yafo in iCloud und erscheinen nicht in der Dateien-App. Zum Aufbewahren als Datei einfach teilen."
           }
         }
       }
     },
-    "Saved weekly to the yafo folder in iCloud Drive, the last five are kept. Last backup: %@.": {
+    "Saved weekly, the last five are kept. You find them under Restore from Backup, not in the Files app.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Wird wöchentlich im yafo-Ordner in iCloud Drive gesichert, die letzten fünf bleiben erhalten. Letztes Backup: %@."
+            "value": "Wird wöchentlich gesichert, die letzten fünf bleiben erhalten. Du findest sie unter „Aus Backup wiederherstellen“, nicht in der Dateien-App."
+          }
+        }
+      }
+    },
+    "Saved weekly, the last five are kept. You find them under Restore from Backup, not in the Files app. Last backup: %@.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wird wöchentlich gesichert, die letzten fünf bleiben erhalten. Du findest sie unter „Aus Backup wiederherstellen“, nicht in der Dateien-App. Letztes Backup: %@."
           }
         }
       }
@@ -3829,6 +3869,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Profil in „%@“ einrichten"
+          }
+        }
+      }
+    },
+    "Share": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teilen"
           }
         }
       }

@@ -27,7 +27,7 @@ Apple stores the data encrypted. The developer has no access to it. Apple's iClo
 
 ## Backup and export
 
-Once a week yafo saves a backup file in the yafo folder of your iCloud Drive (the last five; without iCloud, locally on the device). Exports as ICS, CSV or backup file are only created when you start them, and only go where you share them.
+Once a week yafo saves a backup file in the app's iCloud storage (the last five; without iCloud, locally on the device). These files don't appear in iCloud Drive, only in yafo when you restore. Exports as ICS, CSV or backup file are only created when you start them, and only go where you share them.
 
 ## Holidays, school holidays and calendar subscriptions
 

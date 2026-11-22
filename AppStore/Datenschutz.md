@@ -27,7 +27,7 @@ Apple speichert die Daten verschlüsselt. Der Entwickler hat keinen Zugriff dara
 
 ## Backup und Export
 
-yafo legt wöchentlich ein Backup als Datei im yafo-Ordner deines iCloud Drive ab (die letzten fünf; ohne iCloud lokal auf dem Gerät). Exporte als ICS, CSV oder Backup-Datei entstehen nur, wenn du sie startest, und gehen nur dorthin, wohin du sie teilst.
+yafo legt wöchentlich ein Backup als Datei im iCloud-Speicher der App ab (die letzten fünf; ohne iCloud lokal auf dem Gerät). Diese Dateien sind nicht in iCloud Drive zu sehen, sondern nur in yafo beim Wiederherstellen. Exporte als ICS, CSV oder Backup-Datei entstehen nur, wenn du sie startest, und gehen nur dorthin, wohin du sie teilst.
 
 ## Feiertage, Schulferien und Kalender-Abos
 

@@ -150,7 +150,7 @@ SUPPORT = {
 <h3>Wie funktioniert „Termin aus Screenshot“?</h3>
 <p>Teile ein Bild an yafo oder halte im Kalender „+“ gedrückt und wähle „Termin aus Screenshot“. yafo erkennt Datum, Uhrzeit, Ort und Wiederholung auf dem Gerät und zeigt eine Vorschau zum Anpassen. Mit Apple Intelligence ist die Erkennung genauer.</p>
 <h3>Wie sichere ich meine Daten?</h3>
-<p>yafo legt jede Woche automatisch ein Backup in deinem iCloud Drive ab (Ordner „yafo“). Unter Familie › „Export &amp; Backup“ kannst du jederzeit ein Backup teilen oder wiederherstellen sowie Termine als ICS und Listen als CSV exportieren.</p>
+<p>yafo sichert jede Woche automatisch ein Backup in deiner iCloud, die letzten fünf bleiben erhalten. Sie erscheinen nicht in iCloud Drive, sondern unter Familie › „Aus Backup wiederherstellen …“. Unter „Export &amp; Backup“ kannst du jederzeit ein Backup als Datei teilen oder wiederherstellen sowie Termine als ICS und Listen als CSV exportieren.</p>
 <h3>Werden meine Daten irgendwo anders gespeichert?</h3>
 <p>Nein. yafo hat keinen eigenen Server und kein Konto. Mehr dazu in der <a href="../datenschutz/">Datenschutzerklärung</a>.</p>"""),
     "en": ("Support", """<h1>yafo Help</h1>
@@ -168,7 +168,7 @@ SUPPORT = {
 <h3>How does “Event from Screenshot” work?</h3>
 <p>Share a picture to yafo, or long-press “+” in the calendar and choose “Event from Screenshot”. yafo picks out date, time, place and repetition on your device and shows a preview to adjust. With Apple Intelligence, recognition is more accurate.</p>
 <h3>How do I back up my data?</h3>
-<p>yafo automatically saves a backup to your iCloud Drive every week (folder “yafo”). Under Family › “Export &amp; Backup” you can share or restore a backup at any time and export events as ICS and lists as CSV.</p>
+<p>yafo automatically saves a backup to your iCloud every week and keeps the last five. They don't appear in iCloud Drive; you find them under Family › “Restore from Backup…”. Under “Export &amp; Backup” you can share a backup as a file or restore one at any time and export events as ICS and lists as CSV.</p>
 <h3>Is my data stored anywhere else?</h3>
 <p>No. yafo has no server of its own and no account. More in the <a href="../../privacy/">privacy policy</a>.</p>"""),
 }

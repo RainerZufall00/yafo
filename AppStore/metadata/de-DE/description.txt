@@ -34,7 +34,7 @@ ERINNERUNGEN UND WIDGETS
 DEINE DATEN GEHÖREN DIR
 • Alles wird über deine iCloud synchronisiert und geteilt. Der Entwickler sieht keine eurer Daten.
 • Import aus Gerätekalendern, Google-Kalender-Adressen (ICS) und .ics-Dateien, Geburtstage aus den Kontakten.
-• Export als ICS und CSV, dazu ein automatisches Backup in deinem iCloud Drive.
+• Export als ICS und CSV, dazu ein automatisches wöchentliches Backup in deiner iCloud.
 
 Bedienung nach Wahl: klassisch mit Tabs oder per Wischen – Todos links, Einkauf rechts, Monate nach oben und unten.
 
