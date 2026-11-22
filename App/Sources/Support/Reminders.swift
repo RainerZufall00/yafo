@@ -34,22 +34,28 @@ enum ReminderScheduler {
     private static func body(of reminder: PlannedReminder) -> String {
         switch reminder.kind {
         case let .event(start, isAllDay, location):
-            let day = dayText(start)
+            let day = dayText(start, firing: reminder.fireDate)
             let when = isAllDay ? day : "\(day), \(start.formatted(date: .omitted, time: .shortened))"
             return [when, location].compactMap { $0 }.joined(separator: " · ")
         case let .birthday(age):
             if let age { return String(localized: "Turns \(age)") }
             return String(localized: "Birthday")
         case let .todo(due):
-            return String(localized: "Due \(dayText(due))")
+            return String(localized: "Due \(dayText(due, firing: reminder.fireDate))")
         }
     }
 
-    private static func dayText(_ date: Date) -> String {
+    /// „Heute“/„Morgen“ aus Sicht der Mitteilung, nicht des Einplanens: Eine gestern eingeplante
+    /// Erinnerung für einen Termin heute Abend hieße sonst „Morgen“.
+    private static func dayText(_ date: Date, firing fireDate: Date) -> String {
         let calendar = Calendar.current
-        if calendar.isDateInToday(date) { return String(localized: "Today") }
-        if calendar.isDateInTomorrow(date) { return String(localized: "Tomorrow") }
-        return date.formatted(.dateTime.weekday(.wide).day().month(.wide))
+        let days = calendar.dateComponents([.day], from: calendar.startOfDay(for: fireDate),
+                                           to: calendar.startOfDay(for: date)).day
+        switch days {
+        case 0: return String(localized: "Today")
+        case 1: return String(localized: "Tomorrow")
+        default: return date.formatted(.dateTime.weekday(.wide).day().month(.wide))
+        }
     }
 }
 
