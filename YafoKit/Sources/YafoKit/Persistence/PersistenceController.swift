@@ -140,9 +140,30 @@ public final class PersistenceController {
         object.objectID.persistentStore == sharedStore
     }
 
+    /// Wer einen Datensatz zuletzt in iCloud gespeichert hat und wann, aus den Metadaten der
+    /// Synchronisation (ohne Netz). `nil` ohne iCloud oder solange er noch nicht hochgeladen ist.
+    /// `currentUserID` ersetzt den Platzhalter, mit dem CloudKit den eigenen Account bezeichnet.
+    public func lastCloudChange(of object: NSManagedObject, currentUserID: String?) -> CloudChange? {
+        guard cloudContainerIdentifier != nil, !object.objectID.isTemporaryID,
+              let record = container.record(for: object.objectID),
+              var user = record.lastModifiedUserRecordID?.recordName else { return nil }
+        // In der Datenbank des Owners heißt er selbst so; in der geteilten nennt die Zone ihn beim Namen.
+        if user == CKCurrentUserDefaultName { user = record.recordID.zoneID.ownerName }
+        if user == CKCurrentUserDefaultName { user = currentUserID ?? user }
+        return CloudChange(userID: user, created: record.creationDate, modified: record.modificationDate)
+    }
+
     public func save() throws {
         if viewContext.hasChanges {
             try viewContext.save()
         }
     }
+}
+
+/// Letzte Änderung eines Datensatzes laut CloudKit.
+nonisolated public struct CloudChange: Equatable, Sendable {
+    /// User-Record-Name dessen, der zuletzt gespeichert hat (wie `Member.cloudKitUserID`).
+    public var userID: String
+    public var created: Date?
+    public var modified: Date?
 }

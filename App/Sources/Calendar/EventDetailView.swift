@@ -12,6 +12,8 @@ struct EventDetailView: View {
 
     @State private var editing = false
     @State private var confirmingDelete = false
+    /// „Geändert von … · wann“, nur bei Familienterminen.
+    @State private var changeText: String?
 
     private var occurrence: Occurrence { event.occurrence(originalStart: originalStart) }
 
@@ -23,6 +25,22 @@ struct EventDetailView: View {
     private var isForeign: Bool {
         guard let creator else { return false }
         return creator != model.me(in: event.calendar?.family)
+    }
+
+    /// Wer zuletzt geändert hat, laut CloudKit (dem passenden Familienmitglied zugeordnet), und wann.
+    /// Ohne iCloud-Daten bleibt nur der Zeitpunkt aus `updatedAt`. Kurz nach dem Anlegen gilt ein
+    /// Termin nicht als geändert.
+    private func lastChangeText() -> String? {
+        guard let family = event.calendar?.family else { return nil }
+        let cloud = model.persistence.lastCloudChange(of: event, currentUserID: model.userID)
+        guard let modified = cloud?.modified ?? event.updatedAt,
+              let created = cloud?.created ?? event.createdAt,
+              modified.timeIntervalSince(created) > 120 else { return nil }
+        let when = modified.formatted(date: .abbreviated, time: .shortened)
+        if let id = cloud?.userID, let member = family.members?.first(where: { $0.cloudKitUserID == id }) {
+            return String(localized: "Changed by \(member.displayLabel) · \(when)")
+        }
+        return String(localized: "Changed \(when)")
     }
 
     var body: some View {
@@ -107,10 +125,18 @@ struct EventDetailView: View {
                 CommentsSection(event: event, me: model.me(in: event.calendar?.family))
                     .id("comments")
             }
-            if let creator {
+            if creator != nil || changeText != nil {
                 Section {
-                    Text("Created by \(creator.displayLabel)")
-                        .foregroundStyle(.secondary)
+                    VStack(alignment: .leading, spacing: 2) {
+                        if let creator {
+                            Text("Created by \(creator.displayLabel)")
+                        }
+                        if let changeText {
+                            Text(changeText)
+                        }
+                    }
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
                 }
             }
         }
@@ -123,6 +149,7 @@ struct EventDetailView: View {
         }
         #endif
         }
+        .task(id: event.updatedAt) { changeText = lastChangeText() }
         .navigationTitle(event.isBirthday ? "Birthday" : "Event")
         .navigationBarTitleDisplayMode(.inline)
         // Bearbeiten und Löschen oben, damit beides auch im halbhohen Blatt gleich erreichbar ist.

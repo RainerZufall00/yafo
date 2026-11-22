@@ -1,2 +1,3 @@
 - New: weekly backups are now stored invisibly in iCloud instead of the yafo folder in iCloud Drive. When you restore, they are listed right there and can also be shared as a file.
 - Fixed: reminders could say "Tomorrow" instead of "Today" when they were scheduled the day before.
+- New: at the bottom of an event you can now see who changed it last and when.

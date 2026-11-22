@@ -1,2 +1,3 @@
 - Neu: Die wöchentlichen Backups liegen jetzt unsichtbar in iCloud statt im yafo-Ordner von iCloud Drive. Beim Wiederherstellen stehen sie direkt zur Auswahl und lassen sich von dort auch als Datei teilen.
 - Behoben: Erinnerungen konnten „Morgen“ statt „Heute“ anzeigen, wenn sie am Vortag eingeplant wurden.
+- Neu: Unten im Termin steht unauffällig, wer ihn zuletzt geändert hat und wann.

@@ -997,6 +997,26 @@
         }
       }
     },
+    "Changed %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geändert: %@"
+          }
+        }
+      }
+    },
+    "Changed by %@ · %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geändert von %@ · %@"
+          }
+        }
+      }
+    },
     "Child": {
       "localizations": {
         "de": {

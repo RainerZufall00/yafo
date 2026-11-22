@@ -99,11 +99,12 @@ https://rainerzufall00.github.io/yafo/
 https://rainerzufall00.github.io/yafo/datenschutz/
 ```
 
-### Neuerungen in dieser Version (308/4000) – erst ab dem zweiten Update
+### Neuerungen in dieser Version (389/4000) – erst ab dem zweiten Update
 
 ```text
 - Neu: Die wöchentlichen Backups liegen jetzt unsichtbar in iCloud statt im yafo-Ordner von iCloud Drive. Beim Wiederherstellen stehen sie direkt zur Auswahl und lassen sich von dort auch als Datei teilen.
 - Behoben: Erinnerungen konnten „Morgen“ statt „Heute“ anzeigen, wenn sie am Vortag eingeplant wurden.
+- Neu: Unten im Termin steht unauffällig, wer ihn zuletzt geändert hat und wann.
 ```
 
 ## English (U.S.) (en-US)
@@ -196,11 +197,12 @@ https://rainerzufall00.github.io/yafo/
 https://rainerzufall00.github.io/yafo/privacy/
 ```
 
-### What's New in This Version (280/4000) – only from the second version on
+### What's New in This Version (359/4000) – only from the second version on
 
 ```text
 - New: weekly backups are now stored invisibly in iCloud instead of the yafo folder in iCloud Drive. When you restore, they are listed right there and can also be shared as a file.
 - Fixed: reminders could say "Tomorrow" instead of "Today" when they were scheduled the day before.
+- New: at the bottom of an event you can now see who changed it last and when.
 ```
 
 ## App Review Information
