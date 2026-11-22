@@ -99,12 +99,10 @@ https://rainerzufall00.github.io/yafo/
 https://rainerzufall00.github.io/yafo/datenschutz/
 ```
 
-### Neuerungen in dieser Version (316/4000) – erst ab dem zweiten Update
+### Neuerungen in dieser Version (205/4000) – erst ab dem zweiten Update
 
 ```text
-- Neu: Die Erinnerung lässt sich schon beim Anlegen eines Termins wählen – auch bei Geburtstagen.
-- Behoben: Nach dem Umschalten auf „Ganztägig“ kam die Erinnerung zur falschen Zeit (am Vortag um 23:30 statt um 18 Uhr).
-- Behoben: Auf dem zugeklappten iPhone Duo schaute im Kalender die nächste Seite am Rand hervor.
+- Neu: Die wöchentlichen Backups liegen jetzt unsichtbar in iCloud statt im yafo-Ordner von iCloud Drive. Beim Wiederherstellen stehen sie direkt zur Auswahl und lassen sich von dort auch als Datei teilen.
 ```
 
 ## English (U.S.) (en-US)
@@ -197,12 +195,10 @@ https://rainerzufall00.github.io/yafo/
 https://rainerzufall00.github.io/yafo/privacy/
 ```
 
-### What's New in This Version (286/4000) – only from the second version on
+### What's New in This Version (180/4000) – only from the second version on
 
 ```text
-- New: choose a reminder right when you create an event – birthdays included.
-- Fixed: after switching an event to "All day", its reminder came at the wrong time (11:30 pm the day before instead of 6 pm).
-- Fixed: on the folded iPhone Duo, the next calendar page peeked out at the edge.
+- New: weekly backups are now stored invisibly in iCloud instead of the yafo folder in iCloud Drive. When you restore, they are listed right there and can also be shared as a file.
 ```
 
 ## App Review Information

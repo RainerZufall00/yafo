@@ -1,3 +1,1 @@
-- New: choose a reminder right when you create an event – birthdays included.
-- Fixed: after switching an event to "All day", its reminder came at the wrong time (11:30 pm the day before instead of 6 pm).
-- Fixed: on the folded iPhone Duo, the next calendar page peeked out at the edge.
+- New: weekly backups are now stored invisibly in iCloud instead of the yafo folder in iCloud Drive. When you restore, they are listed right there and can also be shared as a file.

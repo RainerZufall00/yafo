@@ -4,7 +4,7 @@ DEVELOPMENT_TEAM =
 
 // Version für App und Extensions (müssen übereinstimmen). Vor jedem Upload zu TestFlight
 // CURRENT_PROJECT_VERSION erhöhen; MARKETING_VERSION nur bei einer neuen Version (1.0 = Build 2611171345).
-MARKETING_VERSION = 1.0.1
+MARKETING_VERSION = 1.0.2
 CURRENT_PROJECT_VERSION = 11
 
 #include? "Local.xcconfig"
